@@ -10,7 +10,7 @@ public class Main {
 
         AppGameContainer app;
 		try {
-			app = new AppGameContainer(new GameStateController("ld26-jam"));
+			app = new AppGameContainer(new GameStateController("Ludum Dare 26 - Kiasaki - Dagothig"));
 	        //app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
 			app.setDisplayMode(800, 600, false);
 	        app.setForceExit(true);
