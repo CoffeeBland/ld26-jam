@@ -12,6 +12,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import ld26_kiasaki_dagothig.World;
+import ld26_kiasaki_dagothig.entity.Machine;
+import ld26_kiasaki_dagothig.entity.MachineImpl;
 import ld26_kiasaki_dagothig.helpers.Renderable;
 
 public class BuildMenu implements Renderable {
@@ -19,6 +21,7 @@ public class BuildMenu implements Renderable {
 	private boolean activated;
 	private World world;
 	private List<IconButton> icons = new ArrayList<IconButton>();
+	private List<Machine> availableMachines = new ArrayList<Machine>();
 	
 	public boolean getActivated(){
 		return activated;
@@ -29,6 +32,9 @@ public class BuildMenu implements Renderable {
 	
 	public BuildMenu(World pWorld){
 		this.world = pWorld;
+		availableMachines.add(new MachineImpl());
+		availableMachines.get(0).setCost(3);
+		availableMachines.get(0).setImage(new Image("/res/sprites/"));
 	}
 	
 	@Override
@@ -51,6 +57,19 @@ public class BuildMenu implements Renderable {
 			
 			for (IconButton tIB : icons)
 				tIB.draw(gc, g);
+			
+			g.setColor(Color.black);
+			int ox = gc.getWidth()/2-400 + 40;
+			int oy = gc.getHeight()/2-276 + 24;
+			for (int j = 0; j < 31; j++){
+				for (int k = 0; k < 24; k++){
+					g.drawLine(j*24 + ox, k*24 + oy, j*24 + ox, k*24 + oy);
+				}				
+			}
+			
+			for (Machine tM : availableMachines){
+				tM.render(-ox, -oy);
+			}
 			
 		}
 	}

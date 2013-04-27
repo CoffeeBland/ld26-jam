@@ -32,7 +32,7 @@ public class IconButton extends Rectangle {
 	
 	public void draw(GameContainer gc, Graphics g){
 		
-		if (bghover != null && this.contains(gc.getInput().getMouseX(), gc.getInput().getMouseY())){
+		if (bghover != null && activated && this.contains(gc.getInput().getMouseX(), gc.getInput().getMouseY())){
 			g.setColor(Color.white);
 			g.fill(this);
 		}else{
