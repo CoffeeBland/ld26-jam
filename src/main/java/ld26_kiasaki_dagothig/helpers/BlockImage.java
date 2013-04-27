@@ -15,7 +15,7 @@ public class BlockImage
 		Image img = images.get(pRef);
 		if (img == null)
 		{
-			img = new Image(pRef);
+			img = new Image("Sprites/" + pRef);
 			images.put(pRef, img);
 		}
 		return img;
@@ -34,7 +34,7 @@ public class BlockImage
 	
 	public void update(int delta)
 	{
-		if (animDuration <= 0)
+		if (animCount <= 0)
 			return;
 		anim -= delta;
 		while (anim < 0)
@@ -45,11 +45,30 @@ public class BlockImage
 				if (animRepeat)
 					srcX = 0;
 				else
-					animDuration = -1;
+					animCount = -1;
 		}
 	}
 	public void render(int pScrollX, int pScrollY)
 	{
 		image.draw(x - pScrollX, y - pScrollY, w, h, srcX, srcY, w, h, color);
+	}
+
+	public BlockImage(Image pImage)
+	{
+		w = pImage.getWidth();
+		h = pImage.getHeight();
+		image = pImage;
+		
+		animCount = -1;
+	}
+	public BlockImage(Image pImage, int pAnimCount, int pAnimDuration, boolean pAnimRepeat)
+	{
+		w = pImage.getWidth() / pAnimCount;
+		h = pImage.getHeight();
+		image = pImage;
+		
+		animCount = pAnimCount;
+		animDuration = pAnimDuration;
+		animRepeat = pAnimRepeat;
 	}
 }

@@ -40,7 +40,7 @@ public class RouterImpl extends MachineImpl implements Router
 	public void render(int pScrollX, int pScrollY) throws SlickException
 	{
 		super.render(pScrollX, pScrollY);
-		fleche.image.setCenterOfRotation(fleche.w, fleche.h);
+		fleche.image.setCenterOfRotation(fleche.w / 2, fleche.h / 2);
 		fleche.image.setRotation(rotation);
 		fleche.render(pScrollX, pScrollY);
 	}

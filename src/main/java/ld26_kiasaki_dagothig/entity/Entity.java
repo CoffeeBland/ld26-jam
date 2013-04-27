@@ -18,6 +18,9 @@ public interface Entity
 	public float getH();
 	public void setH(float h) ;
 	
+	public int getAngle();
+	public void setAngle(int pAngle);
+	
 	public BlockImage getImage();
 	public void setImage(BlockImage image);
 	

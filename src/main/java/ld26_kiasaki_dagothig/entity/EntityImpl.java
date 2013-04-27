@@ -34,6 +34,15 @@ public abstract class EntityImpl implements Entity
 		this.h = h;
 	}
 	
+	public int getAngle()
+	{
+		return angle;
+	}
+	public void setAngle(int pAngle)
+	{
+		angle = pAngle;
+	}
+	
 	public BlockImage getImage() {
 		return image;
 	}
@@ -54,6 +63,7 @@ public abstract class EntityImpl implements Entity
 	public float y = 0;
 	public float w = 0;
 	public float h = 0;
+	public int angle = 0;
 	
 	public BlockImage image = null;
 	public BlockColor color = null;
@@ -66,9 +76,14 @@ public abstract class EntityImpl implements Entity
 	@Override
 	public void render(int pScrollX, int pScrollY) throws SlickException
 	{
-		getImage().x = Math.round(x);
-		getImage().y = Math.round(y);
+		getImage().x = Math.round(getX());
+		getImage().y = Math.round(getY());
 		getImage().color = getColor().computeColor();
+		if (getAngle() != 0)
+		{
+			getImage().image.setCenterOfRotation(getW() / 2, getH() / 2);
+			getImage().image.setRotation(getAngle());
+		}
 		getImage().render(pScrollX, pScrollY);
 	}
 }
