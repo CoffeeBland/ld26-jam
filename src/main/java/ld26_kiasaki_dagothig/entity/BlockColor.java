@@ -9,7 +9,8 @@ public enum BlockColor
 	Blue(0, 0, 255),
 	Green(0, 255, 0),
 	Yellow(255, 255, 0),
-	Orange(255, 128, 0);
+	Orange(255, 128, 0),
+	Brown(128, 128, 128);
 	
 	public int r,g,b;
 	
@@ -19,8 +20,11 @@ public enum BlockColor
 		g = pG;
 		b = pB;
 	}
+	private Color color = null;
 	public Color computeColor()
 	{
-		return new Color(r, g, b);
+		if (color == null)
+			color = new Color(r, g, b);
+		return color;
 	}
 }
