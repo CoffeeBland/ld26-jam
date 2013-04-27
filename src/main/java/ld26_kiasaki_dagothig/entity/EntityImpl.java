@@ -66,7 +66,7 @@ public abstract class EntityImpl implements Entity
 	public int angle = 0;
 	
 	public BlockImage image = null;
-	public BlockColor color = null;
+	public BlockColor color = BlockColor.White;
 	
 	@Override
 	public void update(int d) throws SlickException

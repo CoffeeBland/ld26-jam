@@ -1,5 +1,7 @@
 package ld26_kiasaki_dagothig.entity;
 
+import ld26_kiasaki_dagothig.helpers.BlockImage;
+
 import org.newdawn.slick.SlickException;
 
 public class BlockImpl extends EntityImpl implements Block
@@ -10,9 +12,10 @@ public class BlockImpl extends EntityImpl implements Block
 		return shape;
 	}
 	@Override
-	public void setShape(BlockShape shape) 
+	public void setShape(BlockShape shape) throws SlickException
 	{
 		this.shape = shape;
+		this.image = new BlockImage(BlockImage.getImage(shape.name() + ".png"));
 	}
 	
 	public BlockShape shape;

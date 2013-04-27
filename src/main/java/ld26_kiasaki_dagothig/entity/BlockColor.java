@@ -10,7 +10,8 @@ public enum BlockColor
 	Green(0, 255, 0),
 	Yellow(255, 255, 0),
 	Orange(255, 128, 0),
-	Brown(128, 128, 128);
+	Brown(128, 64, 32),
+	White(255, 255, 255);
 	
 	public int r,g,b;
 	

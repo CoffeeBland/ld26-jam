@@ -15,7 +15,7 @@ public class BlockImage
 		Image img = images.get(pRef);
 		if (img == null)
 		{
-			img = new Image("Sprites/" + pRef);
+			img = new Image("res/sprites/" + pRef);
 			images.put(pRef, img);
 		}
 		return img;
@@ -23,7 +23,7 @@ public class BlockImage
 	
 	public int x, y, w, h;
 	public int srcX = 0, srcY = 0;
-	public Color color;
+	public Color color = Color.white;
 	
 	private int anim;
 	public int animCount = 1;
@@ -50,7 +50,9 @@ public class BlockImage
 	}
 	public void render(int pScrollX, int pScrollY)
 	{
-		image.draw(x - pScrollX, y - pScrollY, w, h, srcX, srcY, w, h, color);
+		image.draw(x - pScrollX, y - pScrollY, x - pScrollX + w, y - pScrollY + h, 
+				   srcX, srcY, srcX + w, srcY + h,
+				   color);
 	}
 
 	public BlockImage(Image pImage)

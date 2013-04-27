@@ -2,6 +2,7 @@ package ld26_kiasaki_dagothig.entity;
 
 import java.util.List;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 public interface Factory 
@@ -17,11 +18,11 @@ public interface Factory
 	
 	public Machine getMachine(int pTileX, int pTileY);
 	
-	public void receiveBlock(Block pBlock);
+	public void receiveBlock(Block pBlock) throws SlickException;
 	public List<Block> getTransformedBlocks();
 	
 	public void update(int d) throws SlickException;
-	public void render(int pScrollX, int pScrollY) throws SlickException;
+	public void render(Graphics g, int pScrollX, int pScrollY) throws SlickException;
 
 	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException;
 	public void addRouter(int pTileX, int pTileY, int pEntryAngle) throws SlickException;

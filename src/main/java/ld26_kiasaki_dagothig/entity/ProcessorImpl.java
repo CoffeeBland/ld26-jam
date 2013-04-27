@@ -2,6 +2,8 @@ package ld26_kiasaki_dagothig.entity;
 
 import java.util.List;
 
+import org.newdawn.slick.SlickException;
+
 public class ProcessorImpl extends MachineImpl implements Processor
 {
 	public List<BlockShape> getShapeIns() 
@@ -115,7 +117,7 @@ public class ProcessorImpl extends MachineImpl implements Processor
 	}
 
 	@Override
-	public boolean processBlock(Block pBlock) 
+	public boolean processBlock(Block pBlock) throws SlickException
 	{
 		pBlock.setColor(transform(pBlock.getColor()));
 		if (getShapeIns().contains(pBlock.getShape()))
@@ -127,7 +129,7 @@ public class ProcessorImpl extends MachineImpl implements Processor
 	}
 
 	@Override
-	public void sendBlock(Block pBlock) 
+	public void sendBlock(Block pBlock) throws SlickException
 	{
 		if(processBlock(pBlock))
 			super.sendBlock(pBlock);

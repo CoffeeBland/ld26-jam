@@ -58,7 +58,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	}
 	public void setIn(Machine in, boolean autoAssignOut) 
 	{
-		if (getIn() != null)
+		if (getIn() != null && autoAssignOut)
 			getIn().setOut(null, false);
 		this.in = in;
 		
@@ -96,7 +96,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	}
 	public void setOut(Machine out, boolean autoAssignIn) 
 	{
-		if (getOut() != null)
+		if (getOut() != null && autoAssignIn)
 			getOut().setIn(null, false);
 		this.out = out;
 		
@@ -207,7 +207,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		progress.put(pBlock, 0f);
 	}
 	@Override
-	public void sendBlock(Block pBlock) 
+	public void sendBlock(Block pBlock) throws SlickException
 	{
 		progress.remove(pBlock);
 		out.receiveBlock(pBlock);
@@ -233,7 +233,6 @@ public class MachineImpl extends EntityImpl implements Machine
 		super.update(d);
 		getForeGround().x = Math.round(getX());
 		getForeGround().y = Math.round(getY());
-		getForeGround().color = getColor().computeColor();
 		for (Block block : progress.keySet())
 		{
 			getProgress().put(block, getProgress().get(block) + d);

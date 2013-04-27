@@ -2,6 +2,8 @@ package ld26_kiasaki_dagothig.entity;
 
 import java.util.List;
 
+import org.newdawn.slick.SlickException;
+
 public interface Processor extends Machine
 {
 	public List<BlockShape> getShapeIns();
@@ -11,5 +13,5 @@ public interface Processor extends Machine
 	public void setShapeOut(BlockShape shapeOut);
 
 	public BlockColor transform(BlockColor pColor);
-	public boolean processBlock(Block pBlock);
+	public boolean processBlock(Block pBlock) throws SlickException;
 }

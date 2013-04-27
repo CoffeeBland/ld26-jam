@@ -2,6 +2,8 @@ package ld26_kiasaki_dagothig.entity;
 
 import java.util.TreeMap;
 
+import org.newdawn.slick.SlickException;
+
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 
 public interface Machine extends Entity, TileBased
@@ -31,7 +33,7 @@ public interface Machine extends Entity, TileBased
 	public void setProgress(TreeMap<Block, Float> progress);
 
 	public void receiveBlock(Block pBlock);
-	public void sendBlock(Block pBlock);
+	public void sendBlock(Block pBlock) throws SlickException;
 	public int repair();
 	public int destroy();
 }
