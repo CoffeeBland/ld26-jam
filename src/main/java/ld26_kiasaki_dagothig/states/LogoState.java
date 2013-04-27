@@ -1,5 +1,7 @@
 package ld26_kiasaki_dagothig.states;
 
+import ld26_kiasaki_dagothig.helpers.ColorTools;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -37,11 +39,12 @@ public class LogoState extends BasicGameState {
     }
 
     public void update(GameContainer container, StateBasedGame sbg, int deltaMS) throws SlickException {
-        Input input = container.getInput();
+    	ColorTools.visualSeekAlpha(colMult, 1.0f, 0.02f);
+    	Input input = container.getInput();
         boolean skipToStart = input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) || input.isKeyDown(Input.KEY_SPACE) || input.isKeyDown(Input.KEY_ESCAPE);
         boolean goToStartScreen = startTime + logoDuration < container.getTime();
         if (skipToStart || goToStartScreen) {
-            sbg.enterState(GameState.ID, new FadeOutTransition(Color.white, 700), new FadeInTransition(Color.white));
+            sbg.enterState(MenuState.ID, new FadeOutTransition(Color.white, 700), new FadeInTransition(Color.white));
         }
     }
 
