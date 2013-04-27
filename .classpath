@@ -32,5 +32,16 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/ibxm.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ld26-Kiasaki-Dagotig/lib/natives/macosx"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/slick.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.slick2d.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
