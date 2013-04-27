@@ -1,12 +1,8 @@
 package ld26_kiasaki_dagothig.entity;
 
-import java.awt.Graphics;
-
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 
 public interface Entity 
 {
@@ -28,6 +24,6 @@ public interface Entity
 	public BlockColor getColor();
 	public void setColor(BlockColor color);
 	
-	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException;
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, int pScrollX, int pScrollY) throws SlickException;
+	public void update(int d) throws SlickException;
+	public void render(int pScrollX, int pScrollY) throws SlickException;
 }
