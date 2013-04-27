@@ -74,19 +74,19 @@ public class MachineImpl extends EntityImpl implements Machine
 				alignMaxY = getY() + getH() > in.getY();
 		if (alignMinX && alignMaxX)
 		{
-			entryY = Math.round(in.getY() + in.getH() / 2);
-			if (in.getX() < getX())
-				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
-			else
-				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
-		}
-		else if (alignMinY && alignMaxY)
-		{
-			entryX = Math.round(in.getX() + in.getW() / 2);
+			entryX = Math.round(getX() + getW() / 2);
 			if (in.getY() < getY())
 				entryY = Math.round(getY() + TileBased.TILE_SIZE / 2);
 			else
 				entryY = Math.round(getY() + getH() - TileBased.TILE_SIZE / 2);
+		}
+		else if (alignMinY && alignMaxY)
+		{
+			entryY = Math.round(getY() + getH() / 2);
+			if (in.getX() < getX())
+				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
+			else
+				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
 		}
 	}
 	
@@ -112,19 +112,19 @@ public class MachineImpl extends EntityImpl implements Machine
 				alignMaxY = getY() + getH() > out.getY();
 		if (alignMinX && alignMaxX)
 		{
-			entryY = Math.round(out.getY() + out.getH() / 2);
-			if (out.getX() < getX())
-				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
-			else
-				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
-		}
-		else if (alignMinY && alignMaxY)
-		{
-			entryX = Math.round(out.getX() + out.getW() / 2);
+			entryX = Math.round(getX() + getW() / 2);
 			if (out.getY() < getY())
 				entryY = Math.round(getY() + TileBased.TILE_SIZE / 2);
 			else
 				entryY = Math.round(getY() + getH() - TileBased.TILE_SIZE / 2);
+		}
+		else if (alignMinY && alignMaxY)
+		{
+			entryY = Math.round(getY() + getH() / 2);
+			if (out.getX() < getX())
+				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
+			else
+				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
 		}
 	}
 	

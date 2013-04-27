@@ -21,9 +21,13 @@ public class FactoryImpl implements Factory
 	}
 
 	@Override
-	public boolean spaceAvailable(int pX, int pY, int pW, int pH) 
+	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH) 
 	{
-		return false;
+		for (int tileX = pTileX; tileX < pTileX + pTileW; tileX++)
+			for (int tileY = pTileY; tileY < pTileY + pTileH; tileY++)
+				if (getMachine(tileX, tileY) != null)
+					return false;
+		return true;
 	}
 	
 	public Machine entryPoint, exitPoint;
@@ -46,8 +50,12 @@ public class FactoryImpl implements Factory
 	}
 
 	@Override
-	public Machine getMachine(int pX, int pY)
+	public Machine getMachine(int pTileX, int pTileY)
 	{
+		for (Machine machine : getMachines())
+			if (pTileX + 1 > machine.getTileX() && pTileX < machine.getTileX() + machine.getTileWidth() &&
+				pTileY + 1 > machine.getTileY() && pTileY < machine.getTileY() + machine.getTileHeight())
+				return machine;
 		return null;
 	}
 	
@@ -83,16 +91,91 @@ public class FactoryImpl implements Factory
 	}
 
 	@Override
-	public void addPipe(int pX, int pY, int pAngle1, int pAngle2)
+	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle)
 	{
+		Machine pipe = new MachineImpl();
+		pipe.setTileX(pTileX);
+		pipe.setTileY(pTileY);
+		pipe.setTileWidth(1);
+		pipe.setTileHeight(1);
+		switch (pEntryAngle)
+		{
+			case 0:
+				pipe.setIn(getMachine(pTileX + 1, pTileY), true);
+				break;
+			case 90:
+				pipe.setIn(getMachine(pTileX, pTileY + 1), true);
+				break;
+			case 180:
+				pipe.setIn(getMachine(pTileX - 1, pTileY), true);
+				break;
+			case 270:
+				pipe.setIn(getMachine(pTileX, pTileY - 1), true);
+				break;
+		}
+		switch (pExitAngle)
+		{
+			case 0:
+				pipe.setOut(getMachine(pTileX + 1, pTileY), true);
+				break;
+			case 90:
+				pipe.setOut(getMachine(pTileX, pTileY + 1), true);
+				break;
+			case 180:
+				pipe.setOut(getMachine(pTileX - 1, pTileY), true);
+				break;
+			case 270:
+				pipe.setOut(getMachine(pTileX, pTileY - 1), true);
+				break;
+		}
+		getMachines().add(pipe);
 	}
 	@Override
-	public void addRouter(int pX, int pY, int pEntryAngle) 
+	public void addRouter(int pTileX, int pTileY, int pEntryAngle) 
 	{
+		Router router = new RouterImpl();
+		router.setTileX(pTileX);
+		router.setTileY(pTileY);
+		router.setTileWidth(1);
+		router.setTileHeight(1);
+		switch (pEntryAngle)
+		{
+			case 0:
+				router.setIn(getMachine(pTileX + 1, pTileY), true);
+				break;
+			case 90:
+				router.setIn(getMachine(pTileX, pTileY + 1), true);
+				break;
+			case 180:
+				router.setIn(getMachine(pTileX - 1, pTileY), true);
+				break;
+			case 270:
+				router.setIn(getMachine(pTileX, pTileY - 1), true);
+				break;
+		}
+		if (pEntryAngle != 0)
+			router.setPossibleOut(0, getMachine(pTileX + 1, pTileY));
+		if (pEntryAngle != 90)
+			router.setPossibleOut(0, getMachine(pTileX, pTileY + 1));
+		if (pEntryAngle != 180)
+			router.setPossibleOut(0, getMachine(pTileX - 1, pTileY));
+		if (pEntryAngle != 270)
+			router.setPossibleOut(0, getMachine(pTileX, pTileY - 1));
+		router.changeDirection();
+		
+		getMachines().add(router);
 	}
 	@Override
-	public void addProcessor(int pX, int pY, int pW, int pH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) 
+	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) 
 	{
+		Processor processor = new ProcessorImpl();
+		processor.setTileX(pTileX);
+		processor.setTileY(pTileY);
+		processor.setTileWidth(pTileW);
+		processor.setTileHeight(pTileH);
+		processor.setShapeIns(pAcceptedShapes);
+		processor.setShapeOut(pResultShape);
+		processor.setColor(pColor);
 	}
 	@Override
 	public int destroy(Machine pMachine)
