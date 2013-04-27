@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.states;
 
+import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 
 import org.newdawn.slick.Color;
@@ -18,33 +19,37 @@ public class GameState extends BasicGameState {
 	private GameContainer gc;
 	private StateBasedGame sbg;
 	
+	private World world;
+	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
 		this.sbg = sbg;
+		
+		world = new World();
+		world.init(gc, sbg);
+		
 		gc.setMinimumLogicUpdateInterval(1000/60);
 		gc.setMaximumLogicUpdateInterval(1000/60);
 	}
+	
+	@Override
+	public void keyReleased(int key, char c) {
+		if (key == Input.KEY_ESCAPE) {
+			exitGame();					
+		}
+	} 
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		g.setColor(new Color(255, 255, 255));
 		g.fillRect(0, 0, gc.getWidth(), gc.getWidth());
-		//world.render(gc, sbg, g);
+		world.render(gc, sbg, g);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		Input tI = gc.getInput();
-		tI.addKeyListener(new KeyListenerImpl(){
-			@Override
-			public void keyPressed(int key, char c) {
-				if (key == Input.KEY_ESCAPE) {
-					exitGame();					
-				}
-			} 
-		});
-		//world.update(gc, sbg, delta);
+		world.update(gc, sbg, delta);
 	}
 	
 	public void exitGame(){

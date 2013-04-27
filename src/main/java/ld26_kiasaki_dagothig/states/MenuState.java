@@ -40,14 +40,6 @@ public class MenuState extends BasicGameState {
 		uFontSmall.loadGlyphs();
 		
 		Input tI = gc.getInput();
-		tI.addKeyListener(new KeyListenerImpl(){
-			@Override
-			public void keyPressed(int key, char c) {
-				if (key == Input.KEY_ESCAPE) {
-					exitGame();					
-				}
-			} 
-		});
 		tI.addMouseListener(new MouseListenerImpl(){
 			public void mouseReleased(int button, int x, int y) {
 				System.out.println(x + ":" + y);
@@ -58,6 +50,13 @@ public class MenuState extends BasicGameState {
 		});
 		
 	}
+	
+	@Override
+	public void keyReleased(int key, char c) {
+		if (key == Input.KEY_ESCAPE) {
+			exitGame();					
+		}
+	}	
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
