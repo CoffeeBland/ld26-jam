@@ -46,6 +46,12 @@ public class FactoryImpl implements Factory
 	}
 
 	@Override
+	public Machine getMachine(int pX, int pY)
+	{
+		return null;
+	}
+	
+	@Override
 	public void receiveBlock(Block pBlock)
 	{
 		getEntryPoint().sendBlock(pBlock);
@@ -87,5 +93,11 @@ public class FactoryImpl implements Factory
 	@Override
 	public void addProcessor(int pX, int pY, int pW, int pH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) 
 	{
+	}
+	@Override
+	public int destroy(Machine pMachine)
+	{
+		getMachines().remove(pMachine);
+		return pMachine.destroy();
 	}
 }

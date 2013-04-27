@@ -218,7 +218,15 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		return (int)(cost * 0.1);
 	}
-
+	@Override
+	public int destroy() 
+	{
+		setIn(null, false);
+		setOut(null, false);
+		
+		return (int)(cost * 0.5);
+	}
+	
 	@Override
 	public void update(int d) throws SlickException 
 	{

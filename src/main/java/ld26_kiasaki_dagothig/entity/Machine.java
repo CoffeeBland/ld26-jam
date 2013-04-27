@@ -33,4 +33,5 @@ public interface Machine extends Entity, TileBased
 	public void receiveBlock(Block pBlock);
 	public void sendBlock(Block pBlock);
 	public int repair();
+	public int destroy();
 }
