@@ -209,7 +209,6 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		progress.put(pBlock, 0f);
 	}
-
 	@Override
 	public void sendBlock(Block pBlock) 
 	{
