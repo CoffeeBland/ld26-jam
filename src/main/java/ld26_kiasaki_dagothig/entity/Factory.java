@@ -23,8 +23,8 @@ public interface Factory
 	public void update(int d) throws SlickException;
 	public void render(int pScrollX, int pScrollY) throws SlickException;
 
-	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle);
-	public void addRouter(int pTileX, int pTileY, int pEntryAngle);
-	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape, BlockColor pColor);
+	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException;
+	public void addRouter(int pTileX, int pTileY, int pEntryAngle) throws SlickException;
+	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape, BlockColor pColor) throws SlickException;
 	public int destroy(Machine pMachine);
 }

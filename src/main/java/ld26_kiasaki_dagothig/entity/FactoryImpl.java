@@ -3,6 +3,8 @@ package ld26_kiasaki_dagothig.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.helpers.BlockImage;
+
 import org.newdawn.slick.SlickException;
 
 public class FactoryImpl implements Factory
@@ -91,13 +93,18 @@ public class FactoryImpl implements Factory
 	}
 
 	@Override
-	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle)
+	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException
 	{
 		Machine pipe = new MachineImpl();
+		int angle = pExitAngle - pEntryAngle;
+		while (angle < 0)
+			angle += 360;
+		pipe.setImage(new BlockImage(BlockImage.getImage("Pipe_" + (angle) + ".png")));
 		pipe.setTileX(pTileX);
 		pipe.setTileY(pTileY);
 		pipe.setTileWidth(1);
 		pipe.setTileHeight(1);
+		pipe.setAngle(pEntryAngle);
 		switch (pEntryAngle)
 		{
 			case 0:
@@ -131,13 +138,15 @@ public class FactoryImpl implements Factory
 		getMachines().add(pipe);
 	}
 	@Override
-	public void addRouter(int pTileX, int pTileY, int pEntryAngle) 
+	public void addRouter(int pTileX, int pTileY, int pEntryAngle) throws SlickException 
 	{
 		Router router = new RouterImpl();
+		router.setImage(new BlockImage(BlockImage.getImage("Router.png")));
 		router.setTileX(pTileX);
 		router.setTileY(pTileY);
 		router.setTileWidth(1);
 		router.setTileHeight(1);
+		router.setAngle(pEntryAngle);
 		switch (pEntryAngle)
 		{
 			case 0:
@@ -162,13 +171,14 @@ public class FactoryImpl implements Factory
 		if (pEntryAngle != 270)
 			router.setPossibleOut(0, getMachine(pTileX, pTileY - 1));
 		router.changeDirection();
-		
 		getMachines().add(router);
+
 	}
 	@Override
-	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) 
+	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) throws SlickException 
 	{
 		Processor processor = new ProcessorImpl();
+		processor.setImage(new BlockImage(BlockImage.getImage("Processor_" + pTileW + "x" + pTileH + ".png")));
 		processor.setTileX(pTileX);
 		processor.setTileY(pTileY);
 		processor.setTileWidth(pTileW);
