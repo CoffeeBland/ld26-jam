@@ -4,10 +4,12 @@ import java.util.List;
 
 public interface Processor extends Machine
 {
-	public List<BlockShape> shapeIns = null;
-	public BlockShape shapeOut = null;
-	public BlockColor transformationColor = null;
-	
+	public List<BlockShape> getShapeIns();
+	public void setShapeIns(List<BlockShape> shapeIns);
+
+	public BlockShape getShapeOut();
+	public void setShapeOut(BlockShape shapeOut);
+
 	public BlockColor transform(BlockColor pColor);
-	public void processBlock(Block pBlock);
+	public boolean processBlock(Block pBlock);
 }
