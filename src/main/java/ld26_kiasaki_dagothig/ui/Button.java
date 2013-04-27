@@ -25,7 +25,7 @@ public class Button extends Rectangle {
 	public void setFont(UnicodeFont pFont){
 		this.font = pFont;
 	}
-	public void setTest(String pText){
+	public void setText(String pText){
 		this.text = pText;
 	}
 	
