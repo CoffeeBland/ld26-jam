@@ -42,14 +42,14 @@ public class FactoryImpl implements Factory
 		return true;
 	}
 	
-	public Machine entryPoint, exitPoint;
+	public Pipe entryPoint, exitPoint;
 	@Override
-	public Machine getEntryPoint() 
+	public Pipe getEntryPoint() 
 	{
 		return entryPoint;
 	}
 	@Override
-	public Machine getExitPoint()
+	public Pipe getExitPoint()
 	{
 		return exitPoint;
 	}
@@ -107,12 +107,32 @@ public class FactoryImpl implements Factory
 			machine.render(pScrollX - x, pScrollY - y);
 	}
 
-	public FactoryImpl(int pTileXAmount, int pTileYAmount, int pX, int pY)
+	public FactoryImpl(int pTileXAmount, int pTileYAmount, int pX, int pY) throws SlickException
 	{
 		tileXAmount = pTileXAmount;
 		tileYAmount = pTileYAmount;
 		x = pX;
 		y = pY;
+		
+		entryPoint = new PipeImpl();
+		getEntryPoint().setTileX(0);
+		getEntryPoint().setTileY(getTileYAmount() - 1);
+		getEntryPoint().setTileWidth(1);
+		getEntryPoint().setTileHeight(1);
+		getEntryPoint().setAngle(180);
+		getEntryPoint().setAngleOut(0);
+		getEntryPoint().calculateSprite();
+		getMachines().add(getEntryPoint());
+		
+		exitPoint = new PipeImpl();
+		getExitPoint().setTileX(getTileXAmount() - 1);
+		getExitPoint().setTileY(getTileYAmount() - 1);
+		getExitPoint().setTileWidth(1);
+		getExitPoint().setTileHeight(1);
+		getExitPoint().setAngle(0);
+		getExitPoint().setAngleOut(180);
+		getExitPoint().calculateSprite();
+		getMachines().add(getExitPoint());
 	}
 
 	@Override
