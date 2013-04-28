@@ -32,6 +32,8 @@ public class FactoryImpl implements Factory
 		return y;
 	}
 	
+	public int shake = 0;
+	
 	@Override
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH) 
 	{
@@ -92,17 +94,30 @@ public class FactoryImpl implements Factory
 	@Override
 	public void update(int d) throws SlickException 
 	{
+		if (shake > 0)
+			shake-=d;
+		
 		for (Machine machine : getMachines())
 		{
+			boolean tmpWorking = machine.isWorking();
 			machine.update(d);
 			if (!machine.isWorking())
-				if (Math.random() < 0.025)
+			{
+				int repeat = 1;
+				if (tmpWorking)
 				{
-					BlockImage img = new BlockImage(BlockImage.getImage("Explosion.png"), 5, 200, false);
-					img.x = (int)(machine.getX() - 16 + ( machine.getW()) * Math.random()) + getX();
-					img.y = (int)(machine.getY() - 16 + (machine.getH()) * Math.random()) + getY();
-					addSFX(img);
+					shake = 400;
+					repeat = 500;
 				}
+				for (int index = 0; index < repeat; index++)
+					if (Math.random() < 0.025)
+					{
+						BlockImage img = new BlockImage(BlockImage.getImage("Explosion.png"), 5, 200, false);
+						img.x = (int)(machine.getX() - 16 + ( machine.getW()) * Math.random()) + getX();
+						img.y = (int)(machine.getY() - 16 + (machine.getH()) * Math.random()) + getY();
+						addSFX(img);
+					}
+			}
 		}
 		
 		for (int index = sfxs.size() - 1; index >= 0; index--)
@@ -114,27 +129,54 @@ public class FactoryImpl implements Factory
 	@Override
 	public void render(Graphics g, int pScrollX, int pScrollY) throws SlickException 
 	{
+		int scrollX = pScrollX, scrollY = pScrollY;
+		if (shake > 0)
+		{
+			scrollX += (Math.random() - 0.5) * 5;
+			scrollY += (Math.random() - 0.5) * 5;
+		}
 		g.setColor(background);
-		g.fillRect(x - pScrollX, y - pScrollY, getTileXAmount() * TileBased.TILE_SIZE, getTileYAmount() * TileBased.TILE_SIZE);
+		g.fillRect(x - scrollX, y - scrollY, getTileXAmount() * TileBased.TILE_SIZE, getTileYAmount() * TileBased.TILE_SIZE);
 		g.setColor(grid);
 		g.setLineWidth(2);
 		for (int tileX = 0; tileX <= getTileXAmount(); tileX++)
-			g.drawLine(x + tileX * TileBased.TILE_SIZE - pScrollX, y - pScrollY,
-					   x + tileX * TileBased.TILE_SIZE - pScrollX, y - pScrollY + getTileYAmount() * TileBased.TILE_SIZE);
+			g.drawLine(x + tileX * TileBased.TILE_SIZE - scrollX, y - scrollY,
+					   x + tileX * TileBased.TILE_SIZE - scrollX, y - scrollY + getTileYAmount() * TileBased.TILE_SIZE);
 		for (int tileY = 0; tileY <= getTileYAmount(); tileY++)
-			g.drawLine(x - pScrollX, y + tileY * TileBased.TILE_SIZE - pScrollY, 
-					   x - pScrollX + getTileXAmount() * TileBased.TILE_SIZE, y + tileY * TileBased.TILE_SIZE - pScrollY);
+			g.drawLine(x - scrollX, y + tileY * TileBased.TILE_SIZE - scrollY, 
+					   x - scrollX + getTileXAmount() * TileBased.TILE_SIZE, y + tileY * TileBased.TILE_SIZE - scrollY);
 		
 		for (Machine machine : getMachines())
-			machine.render(pScrollX - x, pScrollY - y);
+			machine.render(scrollX - x, scrollY - y);
 		for (Machine machine : getMachines())
-			machine.renderBlock(pScrollX - x, pScrollY - y);
+			machine.renderBlock(scrollX - x, scrollY - y);
 		for (Machine machine : getMachines())
-			machine.renderForeground(pScrollX - x, pScrollY - y);
+			machine.renderForeground(scrollX - x, scrollY - y);
 		
 		for (BlockImage sfx : sfxs)
-			sfx.render(pScrollX, pScrollY);
+			sfx.render(scrollX, scrollY);
+
+		for (int tileX = -1; tileX <= getTileXAmount(); tileX++)
+		{
+			roof.x = tileX * TileBased.TILE_SIZE + getX();
+			roof.y = getY() - 32;
+			roof.render(pScrollX, pScrollY);
+			floor.x = tileX * TileBased.TILE_SIZE + getX();
+			floor.y = getY() + getTileYAmount() * TileBased.TILE_SIZE;
+			floor.render(pScrollX, pScrollY);
+		}
+		for (int tileY = 0; tileY < getTileYAmount(); tileY++)
+		{
+			wall.x = getX() -18;
+			wall.y = tileY * TileBased.TILE_SIZE + getY();
+			wall.render(pScrollX, pScrollY);
+			wall.x = getX() + getTileXAmount() * TileBased.TILE_SIZE;
+			wall.render(pScrollX, pScrollY);
+		}
 	}
+	BlockImage roof = new BlockImage(BlockImage.getImage("Roof.png"));
+	BlockImage floor = new BlockImage(BlockImage.getImage("Floor.png"));
+	BlockImage wall = new BlockImage(BlockImage.getImage("Brickwall.png"));
 
 	public FactoryImpl(int pTileXAmount, int pTileYAmount, int pX, int pY) throws SlickException
 	{
@@ -145,7 +187,7 @@ public class FactoryImpl implements Factory
 		
 		entryPoint = new PipeImpl();
 		getEntryPoint().setTileX(0);
-		getEntryPoint().setTileY(getTileYAmount() - 1);
+		getEntryPoint().setTileY(getTileYAmount() - 2);
 		getEntryPoint().setTileWidth(1);
 		getEntryPoint().setTileHeight(1);
 		getEntryPoint().setAngle(180);
@@ -155,7 +197,7 @@ public class FactoryImpl implements Factory
 		
 		exitPoint = new ExitPoint(this);
 		getExitPoint().setTileX(getTileXAmount() - 1);
-		getExitPoint().setTileY(getTileYAmount() - 1);
+		getExitPoint().setTileY(getTileYAmount() - 2);
 		getExitPoint().setTileWidth(1);
 		getExitPoint().setTileHeight(1);
 		getExitPoint().setAngle(180);
