@@ -42,7 +42,10 @@ public interface Machine extends Entity, TileBased
 	public void receiveBlock(Block pBlock);
 	public void sendBlock(Block pBlock) throws SlickException;
 	public int repair();
+	public int repairCost();
 	public int destroy();
+	
+	public int getCostFromSize(int pTileW, int pTileH);
 	
 	public void renderFull(int pScrollX, int pScrollY) throws SlickException;
 	public void renderBlock(int pScrollX, int pScrollY) throws SlickException;

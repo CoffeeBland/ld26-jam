@@ -3,6 +3,8 @@ package ld26_kiasaki_dagothig.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.helpers.BlockImage;
+
 import org.newdawn.slick.SlickException;
 
 public class ProcessorImpl extends MachineImpl implements Processor

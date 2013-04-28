@@ -14,6 +14,7 @@ import ld26_kiasaki_dagothig.entity.Pipe;
 import ld26_kiasaki_dagothig.entity.PipeImpl;
 import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.Router;
+import ld26_kiasaki_dagothig.entity.RouterImpl;
 import ld26_kiasaki_dagothig.entity.TileBased;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
@@ -78,7 +79,8 @@ public class World
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine"));
 		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe"));
-		icons.add(new IconButton(492, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy!"));
+		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy!"));
+		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router"));
 		
 		factory = new FactoryImpl(24, 24, gc.getWidth()/2-288, 100);
 		
@@ -215,6 +217,9 @@ public class World
 				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
 					// Destroy!
 					destroySelection();
+				}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
+					// Add router!
+					enterPlaceRouter();
 				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
 					enterSelectMode((int)mx, (int)my);
 				}
@@ -259,9 +264,7 @@ public class World
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
 				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
-				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
-					tmpPipe.setAngle(tmpPipe.getAngle()+90);
-				}
+				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
 				tmpPipe.calculateSprite();
 			}
 		}
@@ -296,7 +299,8 @@ public class World
 		}
 		buildMenu.update(gc, sbg, d);
 		currencybar.update(gc, sbg, d);
-		factory.update(d);
+		if (!gd.getPaused())
+			factory.update(d);
 		gd.update(d);
 	}
 	
@@ -354,11 +358,26 @@ public class World
 		activateIcons(false);
 		currentSelection = new Rectangle(-1, -1, 0, 0);
 	}
+	public void	enterPlaceRouter() throws SlickException{
+		Router tRouter = new RouterImpl();
+		tRouter.setCost(25);
+		tRouter.calculateSprite();
+		tRouter.setTileHeight(1);
+		tRouter.setTileWidth(1);
+		enterPlaceMachine(tRouter);
+		activateIcons(false);
+		currentSelection = new Rectangle(-1, -1, 0, 0);
+	}
 	public void enterSelectMode(int pMx, int pMy){
 		currentSelection.setX(clampCursorToTileMapXCeil(pMx-24, 1));
 		currentSelection.setY(clampCursorToTileMapYCeil(pMy-24, 1));
 		Machine tmpMach = factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY());
 		if (tmpMach != null) {
+			if (tmpMach instanceof Router)
+			{
+				((Router)tmpMach).updateOuts(factory);
+				((Router)tmpMach).changeDirection();
+			}
 			currentSelection.setX(tmpMach.getTileX());
 			currentSelection.setY(tmpMach.getTileY());
 			currentSelection.setWidth(tmpMach.getTileWidth());

@@ -302,25 +302,7 @@ public class FactoryImpl implements Factory
 		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - router.getAngle()) == 180))
 			router.setIn(mach, true);
 		
-		// 0°
-		mach = getMachine(pTileX + 1, pTileY);
-		if (pEntryAngle != 0 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 180))
-			router.setPossibleOut(0, mach);
-
-		// 90°
-		mach = getMachine(pTileX - 1, pTileY);
-		if (pEntryAngle != 90 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 270))
-			router.setPossibleOut(90, mach);
-
-		// 180°
-		mach = getMachine(pTileX, pTileY + 1);
-		if (pEntryAngle != 180 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 0))
-			router.setPossibleOut(180, mach);
-
-		// 270°
-		mach = getMachine(pTileX, pTileY - 1);
-		if (pEntryAngle != 270 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 90))
-			router.setPossibleOut(270, mach);
+		router.updateOuts(this);
 		
 		router.changeDirection();
 		getMachines().add(router);
@@ -330,7 +312,7 @@ public class FactoryImpl implements Factory
 	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) throws SlickException 
 	{
 		Processor processor = new ProcessorImpl();
-		processor.setCost((20 - (pTileW * pTileH)) * 10);
+		processor.setCost(processor.getCostFromSize(pTileW, pTileH));
 		processor.setImage(new BlockImage(BlockImage.getImage("Processor_" + pTileW + "x" + pTileH + ".png")));
 		processor.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeGround_" + pTileW + "x" + pTileH + ".png")));
 		processor.setTileX(pTileX);

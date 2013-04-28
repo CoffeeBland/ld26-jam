@@ -70,4 +70,10 @@ public class PipeImpl extends MachineImpl implements Pipe
 		setImage(new BlockImage(BlockImage.getImage("Pipe_" + (angle) + ".png")));
 		setForeGround(new BlockImage(BlockImage.getImage("PipeForeground_" + (angle) + ".png")));
 	}
+	
+	@Override
+	public void renderForeground(int pScrollX, int pScrollY) throws SlickException
+	{
+		
+	}
 }

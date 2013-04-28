@@ -192,11 +192,17 @@ public class MachineImpl extends EntityImpl implements Machine
 		getProgress().remove(pBlock);
 		out.receiveBlock(pBlock);
 	}
-
+	
+	@Override
+	public int repairCost() 
+	{
+		return (int)(cost * 0.1);
+	}
 	@Override
 	public int repair()
 	{
-		return (int)(cost * 0.1);
+		setWorking(true);
+		return repairCost();
 	}
 	@Override
 	public int destroy() 
@@ -211,8 +217,6 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void update(int d) throws SlickException 
 	{
 		super.update(d);
-		getForeGround().x = Math.round(getX());
-		getForeGround().y = Math.round(getY());
 		List<Block> blocksToSend = new ArrayList<Block>();
 		if (getProgressDuration() != Integer.MAX_VALUE)
 		{
@@ -256,6 +260,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	@Override
 	public void renderForeground(int pScrollX, int pScrollY) throws SlickException
 	{
+		getForeGround().x = Math.round(getX());
+		getForeGround().y = Math.round(getY());
 		getForeGround().image.setCenterOfRotation(getW() / 2, getH() / 2);
 		getForeGround().image.setRotation(getAngle());
 		
@@ -273,5 +279,11 @@ public class MachineImpl extends EntityImpl implements Machine
 		setY(pY);
 		setTileWidth(pTileWidth);
 		setTileHeight(pTileHeight);
+	}
+	
+	@Override
+	public int getCostFromSize(int pTileW, int pTileH) 
+	{
+		return (20 - (pTileW * pTileH)) * 10;
 	}
 }
