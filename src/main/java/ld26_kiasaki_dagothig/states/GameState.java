@@ -38,9 +38,9 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void keyReleased(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		/*if (key == Input.KEY_ESCAPE) {
 			exitGame();					
-		}
+		}*/
 	} 
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)

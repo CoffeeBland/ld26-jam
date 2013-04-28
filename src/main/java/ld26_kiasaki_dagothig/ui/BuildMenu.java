@@ -46,7 +46,7 @@ public class BuildMenu implements Renderable {
 	public BuildMenu(World pWorld){
 		this.world = pWorld;
 		availableMachines.add(new ProcessorImpl());
-		availableMachines.get(0).setCost(3);
+		availableMachines.get(0).setCost(30);
 		availableMachines.get(0).setColor(BlockColor.Red);
 		availableMachines.get(0).setTileWidth(2);
 		availableMachines.get(0).setTileHeight(2);
@@ -134,22 +134,29 @@ public class BuildMenu implements Renderable {
 			float my = gc.getInput().getMouseY();
 			if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 				if(icons.get(0).contains(mx, my)){
-					this.setActivated(false);
-					world.activateIcons(true);
+					close();
 				}
 				int btnox = gc.getWidth()/2-400 + 664;
 				int btnoy = gc.getHeight()/2-276 + 24;
 				int i = 0;
 				for (Processor tM : availableMachines){
 					if ((new Rectangle(btnox + i*48, btnoy + i*48, 94, 46)).contains(mx, my)){
-						this.setActivated(false);
-						world.activateIcons(true);
+						close();
 						world.enterPlaceMachine(tM);
 					}
 					i++;
 				}
 			}// mouse was pressed
+			if (gc.getInput().isKeyDown(Input.KEY_ESCAPE)){
+				close();
+			}
 		}// is activated
 	}
 
+	public void close(){
+		this.setActivated(false);
+		world.activateIcons(true);
+		world.activateIconsTiedToSelection(false);
+	}
+	
 }

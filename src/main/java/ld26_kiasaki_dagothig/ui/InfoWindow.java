@@ -15,12 +15,12 @@ public class InfoWindow {
 	
 	public static void renderWindow(Graphics g, UnicodeFont pFont, String pText, String pTextLine2){
 		g.setColor(black60);
-		g.fillRect(212, 710, 600, 52);
+		g.fillRect(212, 712, 600, 52);
 		g.setColor(black75);
-		g.drawRect(212, 710, 600, 52);
-		pFont.drawString(222, 720, pText);
+		g.drawRect(212, 712, 600, 52);
+		pFont.drawString(222, 722, pText);
 		if (pTextLine2 != null){
-			pFont.drawString(222, 720+pFont.getLineHeight(), pTextLine2);
+			pFont.drawString(222, 722+pFont.getLineHeight(), pTextLine2);
 		}
 	}
 	
