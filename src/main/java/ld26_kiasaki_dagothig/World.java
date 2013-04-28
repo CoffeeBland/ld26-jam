@@ -60,6 +60,8 @@ public class World
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
+	private final Color darkBrick = new Color(194,52,32);
+	private final Color skyColor = new Color(213, 235, 246);
 	private BlockImage grass, groundImg, sky, panel;
 	
 	public World(GameDirector pGameDirector){
@@ -71,17 +73,17 @@ public class World
 		this.gc = gc;
 		
 		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
-		btnNeeded = new Button(gc.getWidth() - 164, 266, 144, 48, uFontSmall, null, "NEEDED");
-		btnDone = new Button(gc.getWidth() - 164, 426, 144, 48, uFontSmall, null, "DONE");
+		btnNeeded = new Button(gc.getWidth() - 164, gc.getHeight() - 500, 144, 48, uFontSmall, null, "NEEDED");
+		btnDone = new Button(gc.getWidth() - 164, gc.getHeight() - 320, 144, 48, uFontSmall, null, "DONE");
 		icons = new ArrayList<IconButton>();
 		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play"));
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
-		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine"));
-		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe"));
-		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy!"));
-		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router"));
+		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine [b]"));
+		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe [x]"));
+		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy! [d]"));
+		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router [r]"));
 		
-		factory = new FactoryImpl(24, 24, gc.getWidth()/2-288, 100);
+		factory = new FactoryImpl(24, 24, gc.getWidth()/2-288, gc.getHeight() - 24 * 24 - 92);
 		
 		currencybar.init(gc, sbg);
 		buildMenu.init(gc, sbg);
@@ -95,9 +97,12 @@ public class World
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 
+		g.setColor(skyColor);
+		g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
 		if (sky == null)
 			sky = new BlockImage(BlockImage.getImage("Sky.png"));
-		sky.render(0, 0);
+		for (int index = 0; index < gc.getWidth(); index += sky.w)
+			sky.render(-index, 0);
 
 		if (groundImg == null)
 			groundImg = new BlockImage(BlockImage.getImage("Ground.png"));
@@ -113,7 +118,7 @@ public class World
 		{
 			panel = new BlockImage(BlockImage.getImage("Pancarte.png"));
 			panel.x = gc.getWidth() - 180;
-			panel.y = 260;
+			panel.y = gc.getHeight() - 510;
 		}
 		panel.render(0, 0);
 		

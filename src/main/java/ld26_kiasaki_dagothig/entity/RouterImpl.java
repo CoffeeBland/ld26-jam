@@ -40,8 +40,8 @@ public class RouterImpl extends PipeImpl implements Router
 		{
 			if (in.getOut() == this)
 				in.setOut(null, false);
-			ins.remove(in);
 		}
+		ins.clear();
 		setOut(null, true);
 		
 		return (int)(cost * 0.5);
