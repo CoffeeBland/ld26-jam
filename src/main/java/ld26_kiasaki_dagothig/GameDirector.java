@@ -14,8 +14,7 @@ import ld26_kiasaki_dagothig.entity.Block;
 import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
-import ld26_kiasaki_dagothig.entity.Processor;
-import ld26_kiasaki_dagothig.entity.ProcessorImpl;
+import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 
 public class GameDirector {
@@ -36,11 +35,12 @@ public class GameDirector {
 	
 	private long newLevelMessageFadeStart = 2500;
 	private long newLevelMessageFadeDuration = 2500;
+	private BlockImage truck;
+	private int truckPosition = -160;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
-	public List<Block> blocksBuilded = new ArrayList<Block>();
 	
- 	public GameDirector(){
+	public GameDirector(){
 		this(1);
 	}
 	public GameDirector(int pLevel){
@@ -51,13 +51,11 @@ public class GameDirector {
 	public void setWorld(World pW){
 		world = pW;
 		world.getCurrencyBar().addCurrency(500);
-		setLevel(level);
+		setLevel(1);
 	}
 	public void setLevel(int pLevel){
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
-		world.buildMenu.setAvailbleMachines(getCurrentLevel().getProcessorShop());
-		blocksBuilded = new ArrayList<Block>();
 	}
 	public GameLevel getCurrentLevel(){
 		return levels.get(level-1);
@@ -77,22 +75,31 @@ public class GameDirector {
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
 		if (!paused){
-			if (feedTimer > 0){
-				feedTimer -= delta;
-			}else if (getCurrentLevel().getTruckContent().getQty() > 0){
-				feedTimer = 1000;
-				world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
-				getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+			if (truckPosition == world.factory.getX() - 172)
+			{
+				if (feedTimer > 0){
+					feedTimer -= delta;
+				}else if (getCurrentLevel().getTruckContent().getQty() > 0){
+					feedTimer = 1000;
+					world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
+					getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+				}
 			}
-		}
-		if (world.factory.getTransformedBlocks().size() > 0){
-			blocksBuilded.addAll(world.factory.getTransformedBlocks());
-			for (Block tB : world.factory.getTransformedBlocks()){
-				Order tmpBlo = getCurrentLevel().getNeededByBlock(tB);
-				if (tmpBlo != null)
-					tmpBlo.qty--;
+			else
+			{
+				if (getCurrentLevel().getTruckContent().getQty() > 0)
+				{
+					truckPosition += delta * 0.1f;
+					if (truckPosition > world.factory.getX() - 172)
+						truckPosition = world.factory.getX() - 172;
+				}
+				else
+				{
+					truckPosition -= delta * 0.1f;
+					if (truckPosition < -160)
+						truckPosition = -160;
+				}
 			}
-			world.factory.getTransformedBlocks().clear();
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -108,8 +115,13 @@ public class GameDirector {
 		// Render the needed stuff
 		Order tOrder = getCurrentLevel().getTruckContent();
 		try {
-			tOrder.getBlock().render(-30, -(433));
-			uSmallFont.drawString(50, 436, "x " + tOrder.getQty());
+			if (truck == null)
+				truck = new BlockImage(BlockImage.getImage("Truck.png"));
+			truck.x = truckPosition;
+			truck.y = gc.getHeight() - 204;
+			truck.render(0, 0);
+			tOrder.getBlock().render(-28 - (truckPosition + 48), -(truck.y + 45));
+			uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -149,15 +161,12 @@ public class GameDirector {
 		// Level 1
 		List<Order> tNeeded = new ArrayList<Order>();
 		List<Order> tPossibleOrders = new ArrayList<Order>();
-		List<Processor> tProcessorShop = new ArrayList<Processor>();
-		
 		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 10);
-		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 10));
-		tProcessorShop.add(new ProcessorImpl(50, BlockColor.Red, 4, 4));
-		tProcessorShop.get(0).getShapeIns().add(BlockShape.Circle);
-		tProcessorShop.get(0).setShapeOut(BlockShape.Square);
 		
-		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 10));
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Green, 5, 10));
+		
+		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent));
 		
 	}
 	
