@@ -126,8 +126,7 @@ public class ProcessorImpl extends MachineImpl implements Processor
 			pBlock.setShape(getShapeOut());
 			return true;
 		}
-		return true;
-		//return false;
+		return false;
 	}
 
 	@Override

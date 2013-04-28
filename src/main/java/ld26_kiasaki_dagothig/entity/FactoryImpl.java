@@ -380,7 +380,6 @@ public class FactoryImpl implements Factory
 					processor.setOut(mach, true);
 			}
 		}
-		System.out.println(processor.getIn());
 		getMachines().add(processor);
 	}
 	@Override
