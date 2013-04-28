@@ -15,6 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.entity.BlockColor;
+import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
@@ -38,25 +39,15 @@ public class BuildMenu implements Renderable {
 	public void setActivated(boolean pActivated){
 		this.activated = pActivated;
 	}
-	
 	public void addAvailbleMachine(Processor pMachine){
 		availableMachines.add(pMachine);
+	}
+	public void setAvailbleMachines(List<Processor> pMachines){
+		availableMachines = pMachines;
 	}
 	
 	public BuildMenu(World pWorld){
 		this.world = pWorld;
-		availableMachines.add(new ProcessorImpl());
-		availableMachines.get(0).setCost(30);
-		availableMachines.get(0).setColor(BlockColor.Red);
-		availableMachines.get(0).setTileWidth(2);
-		availableMachines.get(0).setTileHeight(2);
-		try {
-			availableMachines.get(0).setImage(new BlockImage(BlockImage.getImage("Processor_2x2.png")));
-			availableMachines.get(0).setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_2x2.png")));
-		} catch (SlickException e) {
-			System.out.println("Failed to load images in BuildMenu");
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
@@ -99,16 +90,18 @@ public class BuildMenu implements Renderable {
 			for (Processor tM : availableMachines){
 				tM.renderFull(-ox, -oy);
 				// Takes
-				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 4,  "Takes:");
-				uFontSmallBlack.drawString(ox + 168, oy + i*48 + 4,  "Anything");
+				uFontSmallBlack.drawString(ox + 120,  oy + i*48 + 4,  "Takes:");
+				String tTakes = "";
+				for (BlockShape tBS : tM.getShapeIns()){
+					tTakes += tBS.name().toString() + ", ";
+				}
+				uFontSmallBlack.drawString(ox + 192, oy + i*48 + 4,  tTakes.substring(0, tTakes.length()-2));
 				// Gives
-				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 28, "Gives:");
-				uFontSmallBlack.drawString(ox + 168, oy + i*48 + 28, "Reder triangles");
+				uFontSmallBlack.drawString(ox + 120,  oy + i*48 + 28, "Gives:");
+				uFontSmallBlack.drawString(ox + 192, oy + i*48 + 28, tM.getColor().name()+"er "+tM.getShapeOut().name().toLowerCase());
 				// Costs
 				uFontSmallBlack.drawString(ox + 408, oy + i*48 + 4,  "Costs:");
-				uFontSmallBlack.drawString(ox + 480, oy + i*48 + 4,  "3 x");
-				g.setColor(new Color(128, 64, 32));
-				g.fillRect(ox + 529, oy + i*48+1, 24, 24);
+				uFontSmallBlack.drawString(ox + 480, oy + i*48 + 4,  tM.getCost() + " $");
 				// Build button
 				int tmpBtnX = ox + 624;
 				int tmpBtnY = oy + i*48;

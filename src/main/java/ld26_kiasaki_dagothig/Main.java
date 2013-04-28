@@ -8,7 +8,7 @@ import org.newdawn.slick.SlickException;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Starting v0.1 of ld26Jam by Paul (kiasaki and dagothig)");
+		System.out.println("Starting v0.4 of ld26Jam by Paul (kiasaki and dagothig)");
 
         AppGameContainer app;
 		try {

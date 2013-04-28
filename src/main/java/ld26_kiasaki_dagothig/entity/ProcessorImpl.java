@@ -9,6 +9,21 @@ import org.newdawn.slick.SlickException;
 
 public class ProcessorImpl extends MachineImpl implements Processor
 {
+	public ProcessorImpl(){}
+	public ProcessorImpl(int pCost, BlockColor pColor, int pTWitdth, int pTHeight){
+		this.setCost(pCost);
+		this.setColor(pColor);
+		this.setTileWidth(pTWitdth);
+		this.setTileHeight(pTHeight);
+		try {
+			this.setImage(new BlockImage(BlockImage.getImage("Processor_"+pTWitdth+"x"+pTHeight+".png")));
+			this.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_"+pTWitdth+"x"+pTHeight+".png")));
+		} catch (SlickException e) {
+			System.out.println("Failed to load images in ProcessorImplConstructor");
+			e.printStackTrace();
+		}
+	}
+
 	public List<BlockShape> getShapeIns() 
 	{
 		return shapeIns;
