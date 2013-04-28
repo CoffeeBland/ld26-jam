@@ -39,22 +39,22 @@ public class RouterImpl extends PipeImpl implements Router
 				{
 					case 0:
 						mach = pFactory.getMachine(getTileX() + 1, getTileY());
-						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngle() == 180)))
+						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 180)))
 							mach.setOut(this, false);
 						break;
 					case 90:
 						mach = pFactory.getMachine(getTileX(), getTileY() + 1);
-						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngle() == 270)))
+						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 270)))
 							mach.setOut(this, false);
 						break;
 					case 180:
 						mach = pFactory.getMachine(getTileX() - 1, getTileY());
-						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngle() == 0)))
+						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 0)))
 							mach.setOut(this, false);
 						break;
 					case 270:
 						mach = pFactory.getMachine(getTileX(), getTileY() - 1);
-						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngle() == 90)))
+						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 90)))
 							mach.setOut(this, false);
 						break;
 				}
@@ -83,28 +83,28 @@ public class RouterImpl extends PipeImpl implements Router
 		Machine mach;
 		// 0°
 		mach = pFactory.getMachine(getTileX() + 1, getTileY());
-		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 180))
+		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 180) || mach instanceof Router)
 			setPossibleOut(0, mach);
 		else
 			setPossibleOut(0, null);
 		
 		// 90°
-		mach = pFactory.getMachine(getTileX() - 1, getTileY());
-		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 270))
+		mach = pFactory.getMachine(getTileX(), getTileY() + 1);
+		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 270) || mach instanceof Router)
 			setPossibleOut(90, mach);
 		else
 			setPossibleOut(90, null);
 
 		// 180°
-		mach = pFactory.getMachine(getTileX(), getTileY() + 1);
-		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 0))
+		mach = pFactory.getMachine(getTileX() - 1, getTileY());
+		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 0) || mach instanceof Router)
 			setPossibleOut(180, mach);
 		else
 			setPossibleOut(180, null);
 		
 		// 270°
 		mach = pFactory.getMachine(getTileX(), getTileY() - 1);
-		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 90))
+		if ((mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngle() == 90) || mach instanceof Router)
 			setPossibleOut(270, mach);
 		else
 			setPossibleOut(270, null);
