@@ -56,7 +56,7 @@ public class World
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
 	private final Color darkBrick = new Color(194,52,32);
-	private BlockImage grass, groundImg, sky;
+	private BlockImage grass, groundImg, sky, panel;
 	
 	public World(GameDirector pGameDirector){
 		this.gd = pGameDirector;
@@ -101,6 +101,15 @@ public class World
 			groundImg.x = index;
 			groundImg.render(0, 0);
 		}
+
+		// Panel
+		if (panel == null)
+		{
+			panel = new BlockImage(BlockImage.getImage("Pancarte.png"));
+			panel.x = gc.getWidth() - 180;
+			panel.y = 260;
+		}
+		panel.render(0, 0);
 		
 		if (grass == null)
 			grass = new BlockImage(BlockImage.getImage("Grass.png"));
@@ -128,16 +137,7 @@ public class World
 		// Pipe to factory
 		g.setColor(darkGray);
 		g.fillRect(gc.getWidth()/2-302-44, 630, 44, 24);
-		
-		// Panel
-		g.setColor(darkBrick);
-		g.fillRect(gc.getWidth() - 164, 76, 144, 600);
-		g.setColor(darkGray);
-		g.fillRect(gc.getWidth() - 164 + 22, 676, 100, 24);
-		// Pipe to output panel
-		g.setColor(darkGray);
-		g.fillRect(gc.getWidth()/2+302, 630, 44, 24);
-		
+
 		factory.render(g, scrollX, scrollY);
 		
 		// Selection

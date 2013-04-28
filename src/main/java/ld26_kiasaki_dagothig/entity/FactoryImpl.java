@@ -186,6 +186,7 @@ public class FactoryImpl implements Factory
 		y = pY;
 		
 		entryPoint = new PipeImpl();
+		entryPoint.setDeletable(false);
 		getEntryPoint().setTileX(0);
 		getEntryPoint().setTileY(getTileYAmount() - 2);
 		getEntryPoint().setTileWidth(1);
@@ -196,6 +197,7 @@ public class FactoryImpl implements Factory
 		getMachines().add(getEntryPoint());
 		
 		exitPoint = new ExitPoint(this);
+		exitPoint.setDeletable(false);
 		getExitPoint().setTileX(getTileXAmount() - 1);
 		getExitPoint().setTileY(getTileYAmount() - 2);
 		getExitPoint().setTileWidth(1);
@@ -341,7 +343,12 @@ public class FactoryImpl implements Factory
 	@Override
 	public int destroy(Machine pMachine)
 	{
-		getMachines().remove(pMachine);
-		return pMachine.destroy();
+		if (pMachine.isDeletable())
+		{
+			getMachines().remove(pMachine);
+			return pMachine.destroy();
+		}
+		else
+			return 0;
 	}
 }
