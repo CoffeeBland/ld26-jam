@@ -343,7 +343,7 @@ public class World
 	}
 	public void	enterPlacePipe() throws SlickException{
 		Pipe tPipe = new PipeImpl();
-		if (lastMachineBeingPlaced instanceof Pipe){
+		if (lastMachineBeingPlaced instanceof Pipe && !(lastMachineBeingPlaced instanceof Router)){
 			tPipe.setAngle(lastMachineBeingPlaced.getAngle());
 			tPipe.setAngleOut(((Pipe) lastMachineBeingPlaced).getAngleOut());
 		}else{
@@ -374,10 +374,7 @@ public class World
 		Machine tmpMach = factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY());
 		if (tmpMach != null) {
 			if (tmpMach instanceof Router)
-			{
-				((Router)tmpMach).updateOuts(factory);
-				((Router)tmpMach).changeDirection();
-			}
+				((Router)tmpMach).changeDirection(factory);
 			currentSelection.setX(tmpMach.getTileX());
 			currentSelection.setY(tmpMach.getTileY());
 			currentSelection.setWidth(tmpMach.getTileWidth());

@@ -304,7 +304,7 @@ public class FactoryImpl implements Factory
 		
 		router.updateOuts(this);
 		
-		router.changeDirection();
+		router.changeDirection(this);
 		getMachines().add(router);
 
 	}
