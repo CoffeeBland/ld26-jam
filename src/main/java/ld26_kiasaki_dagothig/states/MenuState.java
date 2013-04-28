@@ -58,7 +58,6 @@ public class MenuState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
-		
 		// Rect Start game
 		g.setColor(Color.white);
 		g.fillRect(gc.getWidth()/2-125, gc.getHeight()/2-30, 250, 60);
@@ -84,6 +83,11 @@ public class MenuState extends BasicGameState {
 	
 	private StateBasedGame getStateBasedGame(){
 		return sbg;
+	}
+	
+	@Override
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
 	}
 
 	@Override

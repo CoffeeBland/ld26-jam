@@ -9,22 +9,22 @@ import ld26_kiasaki_dagothig.states.*;
 
 public class GameStateController extends StateBasedGame {
 
+	private boolean inited = false;
+	
 	public GameStateController(String name) {
 		super(name);
 	}
 
 	@Override
-    public void initStatesList(GameContainer gc) throws SlickException {
-        addState(new LogoState());
-        addState(new MenuState());
-        addState(new GameState());
-        addState(new GameOverState());
-        enterState(LogoState.ID);
+    public void initStatesList(GameContainer gc) throws SlickException {        
+        if (!inited){
+        	addState(new LogoState());
+            addState(new MenuState());
+            addState(new GameState());
+            addState(new GameOverState());	
+            enterState(LogoState.ID);
+        }
+        inited = true;
     }
-	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        g.setColor(Color.white);
-        g.drawString("Loading...", gc.getWidth()/2-50, 10);
-	}
 
 }
