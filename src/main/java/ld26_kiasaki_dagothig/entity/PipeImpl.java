@@ -16,7 +16,7 @@ public class PipeImpl extends MachineImpl implements Pipe
 	@Override
 	public void setAngleOut(int pAngle)
 	{
-		angleOut = pAngle;
+		angleOut = pAngle % 360;
 		switch (getAngleOut())
 		{
 			case 0:
@@ -40,7 +40,7 @@ public class PipeImpl extends MachineImpl implements Pipe
 	@Override
 	public void setAngle(int pAngle)
 	{
-		super.setAngle(pAngle);
+		super.setAngle(pAngle % 360);
 		switch (getAngle())
 		{
 			case 0:

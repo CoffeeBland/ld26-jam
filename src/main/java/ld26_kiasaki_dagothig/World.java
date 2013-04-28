@@ -12,6 +12,7 @@ import ld26_kiasaki_dagothig.entity.PipeImpl;
 import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.Router;
 import ld26_kiasaki_dagothig.entity.TileBased;
+import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
@@ -30,7 +31,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class World 
+public class World
 {
 	private GameDirector gd;
 	
@@ -55,6 +56,7 @@ public class World
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
 	private final Color darkBrick = new Color(194,52,32);
+	private BlockImage grass, groundImg, sky;
 	
 	public World(GameDirector pGameDirector){
 		this.gd = pGameDirector;
@@ -86,6 +88,31 @@ public class World
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
+
+		if (sky == null)
+			sky = new BlockImage(BlockImage.getImage("Sky.png"));
+		sky.render(0, 0);
+
+		if (groundImg == null)
+			groundImg = new BlockImage(BlockImage.getImage("Ground.png"));
+		groundImg.y = gc.getHeight() - 86;
+		for (int index = 0; index < gc.getWidth(); index += 86)
+		{
+			groundImg.x = index;
+			groundImg.render(0, 0);
+		}
+		
+		if (grass == null)
+			grass = new BlockImage(BlockImage.getImage("Grass.png"));
+		grass.y = gc.getHeight() - 92;
+		for (int index = -4; index < gc.getWidth(); index += 24)
+		{
+			if (index < factory.getX() - 24 || index > factory.getX() + factory.getTileXAmount() * TileBased.TILE_SIZE)
+			{
+				grass.x = index;
+				grass.render(0, 0);
+			}
+		}
 		
 		// Top bar BG
 		g.setColor(lightGray);
@@ -111,22 +138,16 @@ public class World
 		g.setColor(darkGray);
 		g.fillRect(gc.getWidth()/2+302, 630, 44, 24);
 		
-		// Border
-		g.setColor(darkBrick);
-		g.fillRect(gc.getWidth()/2-300, 76, 600, 624);
-		
-		// Factory square
-		g.setColor(Color.blue);
-		g.fillRect(gc.getWidth()/2-288, 100, 576, 576);
-		g.setColor(Color.white);
-		g.drawString("Factory", gc.getWidth()/2-278, 110);
-		
 		factory.render(g, scrollX, scrollY);
+		
+		// Selection
 		if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
 			int tmpBWFade = (int) Math.abs( (gc.getTime() % 512) - 255 );
 			g.setColor(new Color(tmpBWFade, tmpBWFade, tmpBWFade, 128));
-			g.fill(rectangleTileToPixel(currentSelection));
-			g.draw(rectangleTileToPixel(currentSelection));
+			Rectangle filler = rectangleTileToPixel(currentSelection);
+			filler.setHeight(filler.getHeight() + 1);
+			filler.setWidth(filler.getWidth() + 1);
+			g.fill(filler);
 		}
 		
 		for (IconButton tIB : icons)
@@ -226,8 +247,10 @@ public class World
 		{
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngle((tmpPipe.getAngle() + 90) % 360);
-				tmpPipe.setAngleOut((tmpPipe.getAngleOut() + 90) % 360);
+				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
+				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
+					tmpPipe.setAngle(tmpPipe.getAngle()+90);
+				}
 				tmpPipe.calculateSprite();
 			}
 		}
@@ -235,9 +258,9 @@ public class World
 		{
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngleOut((tmpPipe.getAngleOut() + 90) % 360);
+				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
 				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
-					tmpPipe.setAngleOut((tmpPipe.getAngleOut()+90)%360);
+					tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
 				}
 				tmpPipe.calculateSprite();
 			}

@@ -40,7 +40,7 @@ public abstract class EntityImpl implements Entity
 	}
 	public void setAngle(int pAngle)
 	{
-		angle = pAngle;
+		angle = pAngle % 360;
 	}
 	
 	public BlockImage getImage() {
