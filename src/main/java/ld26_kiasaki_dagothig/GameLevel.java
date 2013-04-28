@@ -1,10 +1,13 @@
 package ld26_kiasaki_dagothig;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.entity.Block;
 import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
+import ld26_kiasaki_dagothig.entity.Processor;
 
 public class GameLevel {
 
@@ -12,14 +15,25 @@ public class GameLevel {
 	private String name;
 	private List<Order> needed;
 	private List<Order> possibleOrders;
+	private List<Processor> processorShop = new ArrayList<Processor>();
 	private Order truckContent;
 	
-	public GameLevel(int pLevel, String pName, List<Order> pNeeded, List<Order> pPossibleOrders, Order pTruckContent){
+	public GameLevel(int pLevel, String pName, List<Order> pNeeded, List<Order> pPossibleOrders, Order pTruckContent, List<Processor> tProcessorShop){
 		level = pLevel;
 		name = pName;
 		needed= pNeeded;
 		possibleOrders = pPossibleOrders;
 		truckContent = pTruckContent;
+		processorShop = tProcessorShop;
+	}
+	
+	public Order getNeededByBlock(Block tBlock){
+		for (Order tO : getNeeded()){
+			if (tO.getBlock().equals(tBlock)){
+				return tO;
+			}
+		}
+		return null;
 	}
 	
 	public int getLevel() {
@@ -51,6 +65,12 @@ public class GameLevel {
 	}
 	public void setTruckContent(Order truckContent) {
 		this.truckContent = truckContent;
+	}
+	public List<Processor> getProcessorShop() {
+		return processorShop;
+	}
+	public void setProcessorShop(List<Processor> processorShop) {
+		this.processorShop = processorShop;
 	}
 	
 }

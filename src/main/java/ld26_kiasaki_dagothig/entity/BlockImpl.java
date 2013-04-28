@@ -28,4 +28,15 @@ public class BlockImpl extends EntityImpl implements Block
 		getImage().color = getColor().computeColor();
 		getImage().render(pScrollX, pScrollY);
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if (o instanceof Block){
+			if (((Block) o).getColor().equals(this.color) && ((Block) o).getShape().equals(this.shape)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

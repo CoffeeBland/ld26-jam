@@ -55,8 +55,8 @@ public class World
 	public Factory factory;
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
-	private final BuildMenu buildMenu = new BuildMenu(this);
-	private final CurrencyBar currencybar = new CurrencyBar(this);
+	public final BuildMenu buildMenu = new BuildMenu(this);
+	public final CurrencyBar currencybar = new CurrencyBar(this);
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
@@ -193,8 +193,8 @@ public class World
 					machineBeingPlaced.getW(), machineBeingPlaced.getH());
 		}
 		
-		buildMenu.render(gc, sbg, g);
 		gd.render(gc, sbg, g);
+		buildMenu.render(gc, sbg, g);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
