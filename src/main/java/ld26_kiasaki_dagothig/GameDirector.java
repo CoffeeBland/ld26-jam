@@ -18,6 +18,10 @@ public class GameDirector {
 	private int level;
 	private World world;
 	private boolean paused;
+	public boolean getPaused()
+	{
+		return paused;
+	}
 	
 	private Color black = new Color(0, 0 ,0);
 	private Color white = new Color(255, 255, 255);

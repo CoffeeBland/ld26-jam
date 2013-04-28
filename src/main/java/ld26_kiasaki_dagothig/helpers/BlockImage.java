@@ -71,6 +71,7 @@ public class BlockImage
 		
 		animCount = pAnimCount;
 		animDuration = pAnimDuration;
+		anim = animDuration;
 		animRepeat = pAnimRepeat;
 	}
 }
