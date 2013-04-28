@@ -6,11 +6,14 @@ import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.state.StateBasedGame;
 
+import ld26_kiasaki_dagothig.entity.Block;
 import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.BlockShape;
+import ld26_kiasaki_dagothig.entity.Order;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 
 public class GameDirector {
@@ -26,6 +29,7 @@ public class GameDirector {
 	private Color black = new Color(0, 0 ,0);
 	private Color white = new Color(255, 255, 255);
 	private UnicodeFont uFont = FontFactory.get().getFont(60, java.awt.Color.WHITE);
+	private UnicodeFont uSmallFont = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	private long newLevelMessageFadeStart = 2500;
 	private long newLevelMessageFadeDuration = 2500;
@@ -73,6 +77,25 @@ public class GameDirector {
 			g.fillRoundRect(300, 300, gc.getWidth()-600, gc.getHeight()-600, 20);
 			uFont.drawString(gc.getWidth()/2 - uFont.getWidth("Level " + level)/2, gc.getHeight()/2 - 32, "Level " + level, white);
 		}
+		
+		// Render the needed stuff
+		Order tOrder = levels.get(level-1).getTruckContent();
+		//tOrder.getBlock().render(-gc.getWidth() + 154, -(303));
+		//uSmallFont.drawString(gc.getWidth() - 134, 306, "x " + tOrder.getQty() + " (" + tOrder.getValue() + "$)");
+		
+		// Render the needed stuff
+		int i = 0;
+		for (Order tB : levels.get(level-1).getNeeded()){
+			try {
+				tB.getBlock().render(-gc.getWidth() + 154, -(303+i));
+				uSmallFont.drawString(gc.getWidth() - 134, 306+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+			i+=22;
+		}
+		
+		
 	}
 	public void checkIcons(){
 		world.getIcon(0).setActivated(paused);
@@ -81,10 +104,14 @@ public class GameDirector {
 	
 	private void generateLevels(){
 		// Level 1
-		List<BlockShape> tOutShapes = new ArrayList<BlockShape>();
-		List<BlockColor> tOutColors = new ArrayList<BlockColor>();
+		List<Order> tNeeded = new ArrayList<Order>();
+		List<Order> tPossibleOrders = new ArrayList<Order>();
+		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 10);
 		
-		levels.add(new GameLevel(1, "Starting out!", tOutShapes, tOutColors));
+		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 10));
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Green, 5, 10));
+		
+		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent));
 		
 	}
 	

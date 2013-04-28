@@ -72,8 +72,8 @@ public class World
 		this.gc = gc;
 		
 		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
-		btnNeeded = new Button(gc.getWidth() - 164, 76, 144, 48, uFontSmall, null, "NEEDED");
-		btnDone = new Button(gc.getWidth() - 164, 376, 144, 48, uFontSmall, null, "DONE");
+		btnNeeded = new Button(gc.getWidth() - 164, 266, 144, 48, uFontSmall, null, "NEEDED");
+		btnDone = new Button(gc.getWidth() - 164, 426, 144, 48, uFontSmall, null, "DONE");
 		icons = new ArrayList<IconButton>();
 		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play"));
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
@@ -82,7 +82,7 @@ public class World
 		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy!"));
 		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router"));
 		
-		factory = new FactoryImpl(24, 24, 224, 100);
+		factory = new FactoryImpl(24, 24, gc.getWidth()/2-288, 100);
 		
 		currencybar.init(gc, sbg);
 		buildMenu.init(gc, sbg);
