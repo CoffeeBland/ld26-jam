@@ -39,6 +39,10 @@ public class BuildMenu implements Renderable {
 		this.activated = pActivated;
 	}
 	
+	public void addAvailbleMachine(Processor pMachine){
+		availableMachines.add(pMachine);
+	}
+	
 	public BuildMenu(World pWorld){
 		this.world = pWorld;
 		availableMachines.add(new ProcessorImpl());
@@ -93,7 +97,7 @@ public class BuildMenu implements Renderable {
 			
 			int i = 0;
 			for (Processor tM : availableMachines){
-				tM.render(-ox, -oy);
+				tM.renderFull(-ox, -oy);
 				// Takes
 				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 4,  "Takes:");
 				uFontSmallBlack.drawString(ox + 168, oy + i*48 + 4,  "Anything");

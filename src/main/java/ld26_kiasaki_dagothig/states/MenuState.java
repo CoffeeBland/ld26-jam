@@ -32,12 +32,16 @@ public class MenuState extends BasicGameState {
 		this.gc = gc;
 		this.sbg = sbg;
 		
+		final StateBasedGame tSbg = sbg;  
+		
 		Input tI = gc.getInput();
 		tI.addMouseListener(new MouseListenerImpl(){
 			public void mouseReleased(int button, int x, int y) {
 				System.out.println(x + ":" + y);
-				if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
-					getStateBasedGame().enterState(GameState.ID);
+				if(tSbg.getCurrentStateID() == ID){
+					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
+						getStateBasedGame().enterState(GameState.ID);
+					}
 				}
 			}
 		});

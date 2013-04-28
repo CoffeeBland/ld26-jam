@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.states;
 
+import ld26_kiasaki_dagothig.GameDirector;
 import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 
@@ -20,13 +21,15 @@ public class GameState extends BasicGameState {
 	private StateBasedGame sbg;
 	
 	private World world;
+	private GameDirector gd;
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
 		this.sbg = sbg;
 		
-		world = new World();
+		gd = new GameDirector();
+		world = new World(gd);
 		world.init(gc, sbg);
 		
 		gc.setMinimumLogicUpdateInterval(1000/60);
@@ -54,6 +57,13 @@ public class GameState extends BasicGameState {
 	
 	public void exitGame(){
 		sbg.enterState(GameOverState.ID, new FadeOutTransition(Color.white, 700), new FadeInTransition(Color.white));
+	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+		gd = new GameDirector();
+		world = new World(gd);
+		world.init(gc, sbg);
 	}
 
 	public int getID() {
