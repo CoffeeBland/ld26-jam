@@ -14,6 +14,7 @@ public class GameLevel {
 	private int level;
 	private String name;
 	private List<Order> needed;
+	private List<Order> originalNeeded;
 	private List<Order> possibleOrders;
 	private List<Processor> processorShop = new ArrayList<Processor>();
 	private Order truckContent;
@@ -21,7 +22,8 @@ public class GameLevel {
 	public GameLevel(int pLevel, String pName, List<Order> pNeeded, List<Order> pPossibleOrders, Order pTruckContent, List<Processor> tProcessorShop){
 		level = pLevel;
 		name = pName;
-		needed= pNeeded;
+		needed = pNeeded;
+		originalNeeded = new ArrayList<Order>(pNeeded);
 		possibleOrders = pPossibleOrders;
 		truckContent = pTruckContent;
 		processorShop = tProcessorShop;
@@ -53,6 +55,12 @@ public class GameLevel {
 	}
 	public void setNeeded(List<Order> needed) {
 		this.needed = needed;
+	}
+	public List<Order> getOriginalNeeded() {
+		return originalNeeded;
+	}
+	public void setOriginalNeeded(List<Order> originalNeeded) {
+		this.originalNeeded = originalNeeded;
 	}
 	public List<Order> getPossibleOrders() {
 		return possibleOrders;
