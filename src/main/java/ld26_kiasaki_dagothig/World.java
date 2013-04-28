@@ -139,15 +139,6 @@ public class World
 		g.fillRect(0, 0, gc.getWidth(), 48);
 		g.setColor(darkGray);
 		g.fillRect(0, 48, gc.getWidth(), 6);
-		
-		// Truck
-		g.setColor(Color.blue);
-		g.fillRect(20, 700-300, 144, 300);
-		g.setColor(Color.white);
-		g.drawString("Truck", 30, 700-290);
-		// Pipe to factory
-		g.setColor(darkGray);
-		g.fillRect(gc.getWidth()/2-302-44, 630, 44, 24);
 
 		factory.render(g, scrollX, scrollY);
 		
