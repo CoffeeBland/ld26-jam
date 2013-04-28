@@ -2,6 +2,8 @@ package ld26_kiasaki_dagothig.entity;
 
 import java.util.List;
 
+import ld26_kiasaki_dagothig.helpers.BlockImage;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -22,6 +24,8 @@ public interface Factory
 	
 	public void receiveBlock(Block pBlock) throws SlickException;
 	public List<Block> getTransformedBlocks();
+	
+	public void addSFX(BlockImage pImage);
 	
 	public void update(int d) throws SlickException;
 	public void render(Graphics g, int pScrollX, int pScrollY) throws SlickException;

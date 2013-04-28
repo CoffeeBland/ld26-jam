@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.SlickException;
@@ -24,9 +25,9 @@ public class ProcessorImpl extends MachineImpl implements Processor
 		this.shapeOut = shapeOut;
 	}
 
-	public List<BlockShape> shapeIns = null;
-	public BlockShape shapeOut = null;
-	public BlockColor transformationColor = null;
+	public List<BlockShape> shapeIns = new ArrayList<BlockShape>();
+	public BlockShape shapeOut = BlockShape.Square;
+	public BlockColor transformationColor = BlockColor.White;
 	
 	@Override
 	public BlockColor transform(BlockColor pColor) 
@@ -134,6 +135,9 @@ public class ProcessorImpl extends MachineImpl implements Processor
 		if(processBlock(pBlock))
 			super.sendBlock(pBlock);
 		else
+		{
 			setWorking(false);
+			getProgress().remove(pBlock);
+		}
 	}
 }

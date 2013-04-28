@@ -83,11 +83,33 @@ public class FactoryImpl implements Factory
 		return transformedBlocks;
 	}
 
+	public List<BlockImage> sfxs = new ArrayList<BlockImage>();
+	public void addSFX(BlockImage pImage)
+	{
+		sfxs.add(pImage);
+	}
+	
 	@Override
 	public void update(int d) throws SlickException 
 	{
 		for (Machine machine : getMachines())
+		{
 			machine.update(d);
+			if (!machine.isWorking())
+				if (Math.random() < 0.025)
+				{
+					BlockImage img = new BlockImage(BlockImage.getImage("Explosion.png"), 5, 200, false);
+					img.x = (int)(machine.getX() - 16 + ( machine.getW()) * Math.random()) + getX();
+					img.y = (int)(machine.getY() - 16 + (machine.getH()) * Math.random()) + getY();
+					addSFX(img);
+				}
+		}
+		
+		for (int index = sfxs.size() - 1; index >= 0; index--)
+			if (sfxs.get(index).animCount < 0)
+				sfxs.remove(index);
+			else
+				sfxs.get(index).update(d);
 	}
 	@Override
 	public void render(Graphics g, int pScrollX, int pScrollY) throws SlickException 
@@ -109,6 +131,9 @@ public class FactoryImpl implements Factory
 			machine.renderBlock(pScrollX - x, pScrollY - y);
 		for (Machine machine : getMachines())
 			machine.renderForeground(pScrollX - x, pScrollY - y);
+		
+		for (BlockImage sfx : sfxs)
+			sfx.render(pScrollX, pScrollY);
 	}
 
 	public FactoryImpl(int pTileXAmount, int pTileYAmount, int pX, int pY) throws SlickException
@@ -143,46 +168,59 @@ public class FactoryImpl implements Factory
 	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException
 	{
 		Pipe pipe = new PipeImpl();
+		pipe.setTileX(pTileX);
+		pipe.setTileY(pTileY);
+		pipe.setTileWidth(1);
+		pipe.setTileHeight(1);
 		pipe.setAngle(pEntryAngle);
 		pipe.setAngleOut(pExitAngle);
 		int angle = pExitAngle - pEntryAngle;
 		while (angle < 0)
 			angle += 360;
 		pipe.calculateSprite();
-		pipe.setTileX(pTileX);
-		pipe.setTileY(pTileY);
-		pipe.setTileWidth(1);
-		pipe.setTileHeight(1);
+		Machine mach;
 		switch (pEntryAngle)
 		{
 			case 0:
-				pipe.setIn(getMachine(pTileX + 1, pTileY), true);
+				mach = getMachine(pTileX + 1, pTileY);
 				break;
 			case 90:
-				pipe.setIn(getMachine(pTileX, pTileY + 1), true);
+				mach = getMachine(pTileX, pTileY + 1);
 				break;
 			case 180:
-				pipe.setIn(getMachine(pTileX - 1, pTileY), true);
+				mach = getMachine(pTileX - 1, pTileY);
 				break;
 			case 270:
-				pipe.setIn(getMachine(pTileX, pTileY - 1), true);
+				mach = getMachine(pTileX, pTileY - 1);
+				break;
+			default:
+				mach = getMachine(pTileX + 1, pTileY);
 				break;
 		}
+		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - pipe.getAngle()) == 180))
+			pipe.setIn(mach, true);
+		
 		switch (pExitAngle)
 		{
 			case 0:
-				pipe.setOut(getMachine(pTileX + 1, pTileY), true);
+				mach = getMachine(pTileX + 1, pTileY);
 				break;
 			case 90:
-				pipe.setOut(getMachine(pTileX, pTileY + 1), true);
+				mach = getMachine(pTileX, pTileY + 1);
 				break;
 			case 180:
-				pipe.setOut(getMachine(pTileX - 1, pTileY), true);
+				mach = getMachine(pTileX - 1, pTileY);
 				break;
 			case 270:
-				pipe.setOut(getMachine(pTileX, pTileY - 1), true);
+				mach = getMachine(pTileX, pTileY - 1);
+				break;
+			default:
+				mach = getMachine(pTileX - 1, pTileY);
 				break;
 		}
+		if (mach != null && (mach instanceof Processor || Math.abs(mach.getAngle() - pipe.getAngleOut()) == 180))
+			pipe.setOut(mach, true);
+		
 		getMachines().add(pipe);
 	}
 	@Override
@@ -196,29 +234,48 @@ public class FactoryImpl implements Factory
 		router.setTileWidth(1);
 		router.setTileHeight(1);
 		router.setAngle(pEntryAngle);
+		Machine mach;
 		switch (pEntryAngle)
 		{
 			case 0:
-				router.setIn(getMachine(pTileX + 1, pTileY), true);
+				mach = getMachine(pTileX + 1, pTileY);
 				break;
 			case 90:
-				router.setIn(getMachine(pTileX, pTileY + 1), true);
+				mach = getMachine(pTileX, pTileY + 1);
 				break;
 			case 180:
-				router.setIn(getMachine(pTileX - 1, pTileY), true);
+				mach = getMachine(pTileX - 1, pTileY);
 				break;
 			case 270:
-				router.setIn(getMachine(pTileX, pTileY - 1), true);
+				mach = getMachine(pTileX, pTileY - 1);
+				break;
+			default:
+				mach = getMachine(pTileX + 1, pTileY);
 				break;
 		}
-		if (pEntryAngle != 0)
-			router.setPossibleOut(0, getMachine(pTileX + 1, pTileY));
-		if (pEntryAngle != 90)
-			router.setPossibleOut(90, getMachine(pTileX, pTileY + 1));
-		if (pEntryAngle != 180)
-			router.setPossibleOut(180, getMachine(pTileX - 1, pTileY));
-		if (pEntryAngle != 270)
-			router.setPossibleOut(270, getMachine(pTileX, pTileY - 1));
+		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - router.getAngle()) == 180))
+			router.setIn(mach, true);
+		
+		// 0°
+		mach = getMachine(pTileX + 1, pTileY);
+		if (pEntryAngle != 0 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 180))
+			router.setPossibleOut(0, mach);
+
+		// 90°
+		mach = getMachine(pTileX - 1, pTileY);
+		if (pEntryAngle != 90 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 270))
+			router.setPossibleOut(90, mach);
+
+		// 180°
+		mach = getMachine(pTileX, pTileY + 1);
+		if (pEntryAngle != 180 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 0))
+			router.setPossibleOut(180, mach);
+
+		// 270°
+		mach = getMachine(pTileX, pTileY - 1);
+		if (pEntryAngle != 270 && (mach instanceof Processor || mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 90))
+			router.setPossibleOut(270, mach);
+		
 		router.changeDirection();
 		getMachines().add(router);
 

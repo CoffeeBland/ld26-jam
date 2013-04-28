@@ -14,6 +14,13 @@ public interface Machine extends Entity, TileBased
 	public Machine getOut();
 	public void setOut(Machine out, boolean autoAssignIn);
 	
+	public int getEntryX();
+	public int getEntryY();
+	public int getMiddleX();
+	public int getMiddleY();
+	public int getOutX();
+	public int getOutY();
+	
 	public boolean isWorking();
 	public void setWorking(boolean working);
 	
