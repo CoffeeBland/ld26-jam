@@ -130,8 +130,20 @@ public class GameDirector {
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
 			try {
-				tB.getBlock().render(-gc.getWidth() + 154, -(303+i));
-				uSmallFont.drawString(gc.getWidth() - 134, 306+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
+				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+			i+=22;
+		}
+		
+		// Render the done stuff
+		i = 0;
+		for (Block tB : blocksBuilded){
+			try {
+				tB.render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
+				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " );// TODO
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
