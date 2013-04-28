@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.states;
 
+import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 import ld26_kiasaki_dagothig.helpers.MouseListenerImpl;
 
@@ -22,22 +23,14 @@ public class MenuState extends BasicGameState {
 	public static final int ID = 2;
 	private GameContainer gc;
 	private StateBasedGame sbg;
-	UnicodeFont uFont;
-	UnicodeFont uFontSmall;
+	UnicodeFont uFont = FontFactory.get().getFont(32, java.awt.Color.BLACK);
+	UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
 		this.sbg = sbg;
-		uFont = new UnicodeFont("res/fonts/slkscr.ttf", 32, false, false);
-		uFont.getEffects().add(new ColorEffect(java.awt.Color.black));
-		uFont.addAsciiGlyphs();
-		uFont.loadGlyphs();
-		uFontSmall = new UnicodeFont("res/fonts/slkscr.ttf", 18, false, false);
-		uFontSmall.getEffects().add(new ColorEffect());
-		uFontSmall.addAsciiGlyphs();
-		uFontSmall.loadGlyphs();
 		
 		Input tI = gc.getInput();
 		tI.addMouseListener(new MouseListenerImpl(){

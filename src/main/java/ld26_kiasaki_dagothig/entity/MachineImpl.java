@@ -58,7 +58,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	}
 	public void setIn(Machine in, boolean autoAssignOut) 
 	{
-		if (getIn() != null && autoAssignOut)
+		if (getIn() != null && autoAssignOut) 
 			getIn().setOut(null, false);
 		this.in = in;
 		

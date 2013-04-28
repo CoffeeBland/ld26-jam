@@ -9,11 +9,16 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 import ld26_kiasaki_dagothig.World;
+import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.Machine;
 import ld26_kiasaki_dagothig.entity.MachineImpl;
+import ld26_kiasaki_dagothig.helpers.BlockImage;
+import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.Renderable;
 
 public class BuildMenu implements Renderable {
@@ -22,6 +27,10 @@ public class BuildMenu implements Renderable {
 	private World world;
 	private List<IconButton> icons = new ArrayList<IconButton>();
 	private List<Machine> availableMachines = new ArrayList<Machine>();
+	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
+	private UnicodeFont uFont = FontFactory.get().getFont(26, java.awt.Color.WHITE);
+	private UnicodeFont uFontBlack = FontFactory.get().getFont(26, java.awt.Color.DARK_GRAY);
+	private UnicodeFont uFontSmallBlack = FontFactory.get().getFont(16, java.awt.Color.BLACK);
 	
 	public boolean getActivated(){
 		return activated;
@@ -34,7 +43,16 @@ public class BuildMenu implements Renderable {
 		this.world = pWorld;
 		availableMachines.add(new MachineImpl());
 		availableMachines.get(0).setCost(3);
-		availableMachines.get(0).setImage(new Image("/res/sprites/"));
+		availableMachines.get(0).setColor(BlockColor.Red);
+		availableMachines.get(0).setH(48);
+		availableMachines.get(0).setW(48);
+		try {
+			availableMachines.get(0).setImage(new BlockImage(BlockImage.getImage("Processor_2x2.png")));
+			availableMachines.get(0).setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_2x2.png")));
+		} catch (SlickException e) {
+			System.out.println("Failed to load images in BuildMenu");
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -55,8 +73,12 @@ public class BuildMenu implements Renderable {
 			g.setColor(new Color(245,245,245));
 			g.fillRect(gc.getWidth()/2-400, gc.getHeight()/2-276, 800, 600);
 			
+			// Icons
 			for (IconButton tIB : icons)
 				tIB.draw(gc, g);
+			
+			// Title
+			uFontSmall.drawString(gc.getWidth()/2-380, gc.getHeight()/2-300-uFontSmall.getLineHeight()/2, "Build a machine");
 			
 			g.setColor(Color.black);
 			int ox = gc.getWidth()/2-400 + 40;
@@ -67,8 +89,33 @@ public class BuildMenu implements Renderable {
 				}				
 			}
 			
+			int i = 0;
 			for (Machine tM : availableMachines){
 				tM.render(-ox, -oy);
+				// Takes
+				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 4,  "Takes:");
+				uFontSmallBlack.drawString(ox + 168, oy + i*48 + 4,  "Anything");
+				// Gives
+				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 28, "Gives:");
+				uFontSmallBlack.drawString(ox + 168, oy + i*48 + 28, "Reder triangles");
+				// Costs
+				uFontSmallBlack.drawString(ox + 408, oy + i*48 + 4,  "Costs:");
+				uFontSmallBlack.drawString(ox + 480, oy + i*48 + 4,  "3 x");
+				g.setColor(new Color(128, 64, 32));
+				g.fillRect(ox + 529, oy + i*48+1, 24, 24);
+				// Build button
+				int tmpBtnX = ox + 624;
+				int tmpBtnY = oy + i*48;
+				g.setColor(new Color(41,125,44));
+				g.fillRect(tmpBtnX+1, tmpBtnY+1, 95, 47);
+				g.setColor(new Color(46,173,52));
+				g.fillRect(tmpBtnX+3, tmpBtnY+3, 91, 43);
+				g.setColor(new Color(36,199,44));
+				g.fillRect(tmpBtnX+1, tmpBtnY+2, 2, 44);
+				g.fillRect(tmpBtnX+1, tmpBtnY+3 + 43, 94, 2);
+				//uFontBlack.drawString(tmpBtnX+47-uFontBlack.getWidth("BUILD")/2, tmpBtnY+10, "BUILD");
+				uFont.drawString(tmpBtnX+48-uFont.getWidth("BUILD")/2, tmpBtnY+11, "BUILD");
+				i++;
 			}
 			
 		}
@@ -79,11 +126,24 @@ public class BuildMenu implements Renderable {
 		if (activated) {
 			float mx = gc.getInput().getMouseX();
 			float my = gc.getInput().getMouseY();
-			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON) && icons.get(0).contains(mx, my)){
-				this.setActivated(false);
-				world.activateIcons(true);
-			}
-		}
+			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+				if(icons.get(0).contains(mx, my)){
+					this.setActivated(false);
+					world.activateIcons(true);
+				}
+				int btnox = gc.getWidth()/2-400 + 664;
+				int btnoy = gc.getHeight()/2-276 + 24;
+				int i = 0;
+				for (Machine tM : availableMachines){
+					if ((new Rectangle(btnox + i*48, btnoy + i*48, 94, 46)).contains(mx, my)){
+						this.setActivated(false);
+						world.activateIcons(true);
+						world.enterPlaceMachine(tM);
+					}
+					i++;
+				}
+			}// mouse was pressed
+		}// is activated
 	}
 
 }
