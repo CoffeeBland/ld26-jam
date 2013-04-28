@@ -56,7 +56,7 @@ public class World
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
-	private final CurrencyBar currencybar = new CurrencyBar();
+	private final CurrencyBar currencybar = new CurrencyBar(this);
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
