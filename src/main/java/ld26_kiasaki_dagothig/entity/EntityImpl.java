@@ -79,11 +79,9 @@ public abstract class EntityImpl implements Entity
 		getImage().x = Math.round(getX());
 		getImage().y = Math.round(getY());
 		getImage().color = getColor().computeColor();
-		if (getAngle() != 0)
-		{
-			getImage().image.setCenterOfRotation(getW() / 2, getH() / 2);
-			getImage().image.setRotation(getAngle());
-		}
+		getImage().image.setCenterOfRotation(getW() / 2, getH() / 2);
+		getImage().image.setRotation(getAngle());
+		
 		getImage().render(pScrollX, pScrollY);
 	}
 }

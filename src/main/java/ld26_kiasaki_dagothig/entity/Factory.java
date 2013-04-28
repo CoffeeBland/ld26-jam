@@ -13,8 +13,8 @@ public interface Factory
 	public int getY();
 	
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH);
-	public Machine getEntryPoint();
-	public Machine getExitPoint();
+	public Pipe getEntryPoint();
+	public Pipe getExitPoint();
 	
 	public List<Machine> getMachines();
 	

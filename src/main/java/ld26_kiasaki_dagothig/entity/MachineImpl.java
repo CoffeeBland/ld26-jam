@@ -261,11 +261,9 @@ public class MachineImpl extends EntityImpl implements Machine
 		super.render(pScrollX, pScrollY);
 		for (Block block : getProgress().keySet())
 			block.render(pScrollX, pScrollY);
-		if (getAngle() != 0)
-		{
-			getForeGround().image.setCenterOfRotation(getW() / 2, getH() / 2);
-			getForeGround().image.setRotation(getAngle());
-		}
+		getForeGround().image.setCenterOfRotation(getW() / 2, getH() / 2);
+		getForeGround().image.setRotation(getAngle());
+		
 		getForeGround().render(pScrollX, pScrollY);
 	}
 	
