@@ -56,7 +56,7 @@ public class World
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
-	private final CurrencyBar currencybar = new CurrencyBar();
+	private final CurrencyBar currencybar = new CurrencyBar(this);
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
@@ -260,6 +260,11 @@ public class World
 				enterPlacePipe();
 			}
 		}
+		if (gc.getInput().isKeyPressed(Input.KEY_R)) {
+			if (machineBeingPlaced == null && !buildMenu.getActivated()){
+				enterPlaceRouter();
+			}
+		}
 		if (gc.getInput().isKeyPressed(Input.KEY_C)) {
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
@@ -278,7 +283,7 @@ public class World
 				tmpPipe.calculateSprite();
 			}
 		}
-		if (gc.getInput().isKeyPressed(Input.KEY_DELETE) && icons.get(4).getActivated()){
+		if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
 			// Destroy selection
 			destroySelection();	
 		}

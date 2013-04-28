@@ -7,9 +7,13 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
+import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.Renderable;
+import ld26_kiasaki_dagothig.states.GameOverState;
 
 public class CurrencyBar implements Renderable {
 
@@ -17,6 +21,7 @@ public class CurrencyBar implements Renderable {
 	private UnicodeFont uFontBig = FontFactory.get().getFont(32, java.awt.Color.WHITE);
 	private Color golden = new Color(247,226,2);
 	private int currency = 0;
+	private World world;
 	
 	public int getCurrency() {
 		return currency;
@@ -31,6 +36,10 @@ public class CurrencyBar implements Renderable {
 		this.currency -= currency;
 	}
 
+	public CurrencyBar(World pWorld){
+		this.world = pWorld;
+	}
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
@@ -46,6 +55,9 @@ public class CurrencyBar implements Renderable {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
+		if (this.currency < 0){
+			sbg.enterState(GameOverState.ID, new FadeOutTransition(Color.white, 700), new FadeInTransition(Color.white));
+		}
 	}
 
 }
