@@ -19,12 +19,12 @@ public class GameDirector {
 	private World world;
 	private boolean paused;
 	
-	private Color black = Color.black;
-	private Color white = Color.white;
+	private Color black = new Color(0, 0 ,0);
+	private Color white = new Color(255, 255, 255);
 	private UnicodeFont uFont = FontFactory.get().getFont(60, java.awt.Color.WHITE);
 	
-	private long newLevelMessageFadeStart;
-	private long newLevelMessageFadeDuration = 4000;
+	private long newLevelMessageFadeStart = 2500;
+	private long newLevelMessageFadeDuration = 2500;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
 	
@@ -43,7 +43,7 @@ public class GameDirector {
 	}
 	public void setLevel(int pLevel){
 		level = pLevel;
-		newLevelMessageFadeStart = System.currentTimeMillis();
+		newLevelMessageFadeStart = 2500;
 	}
 	
 	public void start(){
@@ -55,22 +55,19 @@ public class GameDirector {
 		checkIcons();
 	}
 	
+	public void update(int delta)
+	{
+		if (newLevelMessageFadeStart > 0)
+			newLevelMessageFadeStart -= delta;
+	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
-		if (newLevelMessageFadeStart != 0){
-			float tPercentFadeCompleted = ((float)System.currentTimeMillis() - (float)newLevelMessageFadeStart) / (float)newLevelMessageFadeDuration;
-			tPercentFadeCompleted = ((tPercentFadeCompleted*2f) - 1f);
-			if (tPercentFadeCompleted < 0){
-				tPercentFadeCompleted *= -1;
-			}
-			System.out.println(tPercentFadeCompleted);
+		if (newLevelMessageFadeStart > 0){
+			float tPercentFadeCompleted = (float)newLevelMessageFadeStart / (float)newLevelMessageFadeDuration;
 			black.a = tPercentFadeCompleted;
 			white.a = tPercentFadeCompleted;
 			g.setColor(black);
-			g.fillRoundRect(40, 40, gc.getWidth()-80, gc.getHeight()-80, 20);
-			uFont.drawString(gc.getWidth()/2 - uFont.getWidth("Level " + level)/2, gc.getHeight()/2 - 100, "Level " + level, white);
-			if (System.currentTimeMillis() - newLevelMessageFadeStart > newLevelMessageFadeDuration){
-				newLevelMessageFadeStart = 0;
-			}
+			g.fillRoundRect(300, 300, gc.getWidth()-600, gc.getHeight()-600, 20);
+			uFont.drawString(gc.getWidth()/2 - uFont.getWidth("Level " + level)/2, gc.getHeight()/2 - 32, "Level " + level, white);
 		}
 	}
 	public void checkIcons(){
