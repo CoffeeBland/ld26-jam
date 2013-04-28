@@ -3,6 +3,9 @@ package ld26_kiasaki_dagothig;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.entity.Block;
+import ld26_kiasaki_dagothig.entity.BlockColor;
+import ld26_kiasaki_dagothig.entity.BlockImpl;
 import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
@@ -240,6 +243,13 @@ public class World
 				}
 			}// We are add an item to the factory
 		}// Mouse press
+		if (gc.getInput().isKeyPressed(Input.KEY_A))
+		{
+			Block block = new BlockImpl();
+			block.setShape(BlockShape.Square);
+			block.setColor(BlockColor.Blue);
+			factory.receiveBlock(block);
+		}
 		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
 			if (machineBeingPlaced == null && !buildMenu.getActivated()){
 				enterPlacePipe();

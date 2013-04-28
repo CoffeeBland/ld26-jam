@@ -201,8 +201,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	@Override
 	public int destroy() 
 	{
-		setIn(null, false);
-		setOut(null, false);
+		setIn(null, true);
+		setOut(null, true);
 		
 		return (int)(cost * 0.5);
 	}

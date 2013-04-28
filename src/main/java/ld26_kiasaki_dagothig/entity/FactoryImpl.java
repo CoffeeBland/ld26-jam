@@ -212,6 +212,7 @@ public class FactoryImpl implements Factory
 	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException
 	{
 		Pipe pipe = new PipeImpl();
+		pipe.setCost(10);
 		pipe.setTileX(pTileX);
 		pipe.setTileY(pTileY);
 		pipe.setTileWidth(1);
@@ -271,6 +272,7 @@ public class FactoryImpl implements Factory
 	public void addRouter(int pTileX, int pTileY, int pEntryAngle) throws SlickException 
 	{
 		Router router = new RouterImpl();
+		router.setCost(25);
 		router.setImage(new BlockImage(BlockImage.getImage("Router.png")));
 		router.setForeGround(new BlockImage(BlockImage.getImage("RouterForeground.png")));
 		router.setTileX(pTileX);
@@ -328,6 +330,7 @@ public class FactoryImpl implements Factory
 	public void addProcessor(int pTileX, int pTileY, int pTileW, int pTileH, List<BlockShape> pAcceptedShapes, BlockShape pResultShape,	BlockColor pColor) throws SlickException 
 	{
 		Processor processor = new ProcessorImpl();
+		processor.setCost((20 - (pTileW * pTileH)) * 10);
 		processor.setImage(new BlockImage(BlockImage.getImage("Processor_" + pTileW + "x" + pTileH + ".png")));
 		processor.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeGround_" + pTileW + "x" + pTileH + ".png")));
 		processor.setTileX(pTileX);
@@ -338,6 +341,46 @@ public class FactoryImpl implements Factory
 		processor.setShapeOut(pResultShape);
 		processor.setColor(pColor);
 		
+		Machine mach;
+		for (int tileX = pTileX; tileX < pTileX + pTileW; tileX++)
+		{
+			mach = getMachine(tileX, pTileY - 1);
+			if (mach instanceof Pipe)
+			{
+				if (((Pipe)mach).getAngleOut() == 90)
+					processor.setIn(mach, true);
+				else if (((Pipe)mach).getAngle() == 90)
+					processor.setOut(mach, true);
+			}
+			mach = getMachine(tileX, pTileY + pTileH);
+			if (mach instanceof Pipe)
+			{
+				if (((Pipe)mach).getAngleOut() == 270)
+					processor.setIn(mach, true);
+				else if (((Pipe)mach).getAngle() == 270)
+					processor.setOut(mach, true);
+			}
+		}
+		for (int tileY = pTileY; tileY < pTileY + pTileH; tileY++)
+		{
+			mach = getMachine(pTileX - 1, tileY);
+			if (mach instanceof Pipe)
+			{
+				if (((Pipe)mach).getAngleOut() == 0)
+					processor.setIn(mach, true);
+				else if (((Pipe)mach).getAngle() == 0)
+					processor.setOut(mach, true);
+			}
+			mach = getMachine(pTileX + pTileW, tileY);
+			if (mach instanceof Pipe)
+			{
+				if (((Pipe)mach).getAngleOut() == 180)
+					processor.setIn(mach, true);
+				else if (((Pipe)mach).getAngle() == 180)
+					processor.setOut(mach, true);
+			}
+		}
+		System.out.println(processor.getIn());
 		getMachines().add(processor);
 	}
 	@Override
