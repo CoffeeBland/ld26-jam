@@ -21,6 +21,7 @@ public class GameDirector {
 	private int level;
 	private World world;
 	private boolean paused;
+	private int feedTimer = 1000;
 	public boolean getPaused()
 	{
 		return paused;
@@ -53,6 +54,9 @@ public class GameDirector {
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
 	}
+	public GameLevel getCurrentLevel(){
+		return levels.get(level-1);
+	}
 	
 	public void start(){
 		paused = false;
@@ -63,10 +67,19 @@ public class GameDirector {
 		checkIcons();
 	}
 	
-	public void update(int delta)
+	public void update(int delta) throws SlickException
 	{
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
+		if (!paused){
+			if (feedTimer > 0){
+				feedTimer -= delta;
+			}else if (getCurrentLevel().getTruckContent().getQty() > 0){
+				feedTimer = 1000;
+				world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
+				getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+			}
+		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
 		if (newLevelMessageFadeStart > 0){
@@ -79,13 +92,17 @@ public class GameDirector {
 		}
 		
 		// Render the needed stuff
-		Order tOrder = levels.get(level-1).getTruckContent();
-		//tOrder.getBlock().render(-gc.getWidth() + 154, -(303));
-		//uSmallFont.drawString(gc.getWidth() - 134, 306, "x " + tOrder.getQty() + " (" + tOrder.getValue() + "$)");
+		Order tOrder = getCurrentLevel().getTruckContent();
+		try {
+			tOrder.getBlock().render(-30, -(433));
+			uSmallFont.drawString(50, 436, "x " + tOrder.getQty());
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 		
 		// Render the needed stuff
 		int i = 0;
-		for (Order tB : levels.get(level-1).getNeeded()){
+		for (Order tB : getCurrentLevel().getNeeded()){
 			try {
 				tB.getBlock().render(-gc.getWidth() + 154, -(303+i));
 				uSmallFont.drawString(gc.getWidth() - 134, 306+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");

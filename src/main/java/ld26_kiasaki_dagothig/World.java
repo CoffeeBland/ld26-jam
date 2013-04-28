@@ -52,7 +52,7 @@ public class World
 	
 	private Machine machineBeingPlaced;
 	private Machine lastMachineBeingPlaced;
-	private Factory factory;
+	public Factory factory;
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
