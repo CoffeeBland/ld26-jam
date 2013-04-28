@@ -1,12 +1,15 @@
 package ld26_kiasaki_dagothig;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
 import ld26_kiasaki_dagothig.entity.Machine;
+import ld26_kiasaki_dagothig.entity.Processor;
+import ld26_kiasaki_dagothig.entity.Router;
+import ld26_kiasaki_dagothig.entity.TileBased;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
@@ -19,7 +22,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class World 
@@ -34,6 +36,9 @@ public class World
 	private int scrollY = 0;
 	
 	private Machine machineBeingPlaced;
+	private List<BlockShape> machineAcceptedShapes;
+	private BlockShape machineResultShape;
+	private int machineAngleIn, machineAngleOut;
 	private Factory factory;
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
@@ -58,6 +63,7 @@ public class World
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(194,7,7), new Image("res/icons/build.png")));
 		
 		factory = new FactoryImpl(24, 24, 224, 100);
+		factory.addPipe(3,  3,  0,  90);
 		
 		
 		buildMenu.init(gc, sbg);
@@ -112,9 +118,17 @@ public class World
 		if (machineBeingPlaced != null){
 			float mx = gc.getInput().getMouseX();
 			float my = gc.getInput().getMouseY();
-			machineBeingPlaced.render((int)(-mx+machineBeingPlaced.getW()/2), (int)(-my+machineBeingPlaced.getH()/2));
-			g.setColor(new Color(255,0,0, 0.75f));
-			g.fillRect((int)(mx-machineBeingPlaced.getW()/2), (int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getW(), machineBeingPlaced.getH());
+			int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
+				tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+			machineBeingPlaced.render(-tileX * 24-factory.getX(), 
+									  -tileY * 24-factory.getY());
+			if (factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight()))
+				g.setColor(new Color(0,255,0, 0.75f));
+			else
+				g.setColor(new Color(255,0,0, 0.75f));
+			g.fillRect(tileX * 24+factory.getX(), 
+					tileY * 24+factory.getY(), 
+					machineBeingPlaced.getW(), machineBeingPlaced.getH());
 		}
 		
 		buildMenu.render(gc, sbg, g);
@@ -131,7 +145,17 @@ public class World
 			buildMenu.update(gc, sbg, d);
 		}else{
 			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-				machineBeingPlaced = null;
+				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
+					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+				if (factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+					if (machineBeingPlaced instanceof Processor)
+						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machineAcceptedShapes, machineResultShape, machineBeingPlaced.getColor());
+					else if (machineBeingPlaced instanceof Router)
+						factory.addRouter(tileX,  tileY, machineAngleIn);
+					else
+						factory.addPipe(tileX, tileY, machineAngleIn, machineAngleOut);
+					machineBeingPlaced = null;
+				}
 			}
 		}
 		factory.update(d);
@@ -147,9 +171,31 @@ public class World
 		machineBeingPlaced.setX(0);
 		machineBeingPlaced.setY(0);
 	}
+	public void enterPlaceProcessor(Processor pProcessor)
+	{
+		enterPlaceMachine(pProcessor);
+		machineAcceptedShapes = pProcessor.getShapeIns();
+		machineResultShape = pProcessor.getShapeOut();
+	}
+	public void enterPlaceRouter(Router pRouter)
+	{
+		enterPlaceMachine(pRouter);
+		machineAngleIn = pRouter.getAngle();
+	}
+	public void enterPlacePipe(Machine pPipe, int pAngleOut)
+	{
+		enterPlaceMachine(pPipe);
+		machineAngleIn = pPipe.getAngle();
+		machineAngleOut = pAngleOut;
+	}
 	
-	public Point2D clampCursorToTileMap(int pX, int pY){
-			return null;	
+	public int clampCursorToTileMapX(int pX, int pMaxOffset)
+	{
+		return Math.max(0, Math.min(factory.getTileXAmount() - pMaxOffset, Math.round((pX - factory.getX()) / (float)TileBased.TILE_SIZE)));
+	}
+	public int clampCursorToTileMapY(int pY, int pMaxOffset)
+	{
+		return Math.max(0, Math.min(factory.getTileYAmount() -pMaxOffset, Math.round((pY - factory.getY()) / (float)TileBased.TILE_SIZE)));	
 	}
 	
 }

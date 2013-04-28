@@ -15,8 +15,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.entity.BlockColor;
-import ld26_kiasaki_dagothig.entity.Machine;
-import ld26_kiasaki_dagothig.entity.MachineImpl;
+import ld26_kiasaki_dagothig.entity.Processor;
+import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.Renderable;
@@ -26,7 +26,7 @@ public class BuildMenu implements Renderable {
 	private boolean activated;
 	private World world;
 	private List<IconButton> icons = new ArrayList<IconButton>();
-	private List<Machine> availableMachines = new ArrayList<Machine>();
+	private List<Processor> availableMachines = new ArrayList<Processor>();
 	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	private UnicodeFont uFont = FontFactory.get().getFont(26, java.awt.Color.WHITE);
 	private UnicodeFont uFontBlack = FontFactory.get().getFont(26, java.awt.Color.DARK_GRAY);
@@ -41,11 +41,11 @@ public class BuildMenu implements Renderable {
 	
 	public BuildMenu(World pWorld){
 		this.world = pWorld;
-		availableMachines.add(new MachineImpl());
+		availableMachines.add(new ProcessorImpl());
 		availableMachines.get(0).setCost(3);
 		availableMachines.get(0).setColor(BlockColor.Red);
-		availableMachines.get(0).setH(48);
-		availableMachines.get(0).setW(48);
+		availableMachines.get(0).setTileWidth(2);
+		availableMachines.get(0).setTileHeight(2);
 		try {
 			availableMachines.get(0).setImage(new BlockImage(BlockImage.getImage("Processor_2x2.png")));
 			availableMachines.get(0).setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_2x2.png")));
@@ -90,7 +90,7 @@ public class BuildMenu implements Renderable {
 			}
 			
 			int i = 0;
-			for (Machine tM : availableMachines){
+			for (Processor tM : availableMachines){
 				tM.render(-ox, -oy);
 				// Takes
 				uFontSmallBlack.drawString(ox + 96,  oy + i*48 + 4,  "Takes:");
@@ -134,11 +134,11 @@ public class BuildMenu implements Renderable {
 				int btnox = gc.getWidth()/2-400 + 664;
 				int btnoy = gc.getHeight()/2-276 + 24;
 				int i = 0;
-				for (Machine tM : availableMachines){
+				for (Processor tM : availableMachines){
 					if ((new Rectangle(btnox + i*48, btnoy + i*48, 94, 46)).contains(mx, my)){
 						this.setActivated(false);
 						world.activateIcons(true);
-						world.enterPlaceMachine(tM);
+						world.enterPlaceProcessor(tM);
 					}
 					i++;
 				}
