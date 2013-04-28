@@ -73,7 +73,7 @@ public class World
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine"));
 		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe"));
-		icons.add(new IconButton(492, 0, Color.lightGray, new Color(161,0,0), new Image("res/icons/trash.png"), "Destroy!"));
+		icons.add(new IconButton(492, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy!"));
 		
 		factory = new FactoryImpl(24, 24, 224, 100);
 		
