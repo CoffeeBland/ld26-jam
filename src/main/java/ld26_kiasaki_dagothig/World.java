@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,9 +126,9 @@ public class World
 			machineBeingPlaced.render(-tileX * 24-factory.getX(), 
 									  -tileY * 24-factory.getY());
 			if (factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight()))
-				g.setColor(new Color(0,255,0, 0.75f));
+				g.setColor(new Color(0,255,0, 0.5f));
 			else
-				g.setColor(new Color(255,0,0, 0.75f));
+				g.setColor(new Color(255,0,0, 0.5f));
 			g.fillRect(tileX * 24+factory.getX(), 
 					tileY * 24+factory.getY(), 
 					machineBeingPlaced.getW(), machineBeingPlaced.getH());
@@ -153,6 +154,7 @@ public class World
 					Pipe tPipe = new PipeImpl();
 					tPipe.setAngle(0);
 					tPipe.setAngleOut(180);
+					tPipe.calculateSprite();
 					tPipe.setTileHeight(1);
 					tPipe.setTileWidth(1);
 					enterPlacePipe(tPipe);
@@ -162,7 +164,8 @@ public class World
 			}else{
 				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
 					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
-				if (factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
+					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
 					if (machineBeingPlaced instanceof Processor)
 						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machineAcceptedShapes, machineResultShape, machineBeingPlaced.getColor());
 					else if (machineBeingPlaced instanceof Router)
@@ -170,9 +173,30 @@ public class World
 					else
 						factory.addPipe(tileX, tileY, machineAngleIn, machineAngleOut);
 					machineBeingPlaced = null;
+					activateIcons(true);
 				}
 			}// We are add an item to the factory
 		}// Mouse press
+		if (gc.getInput().isKeyPressed(Input.KEY_C)) 
+		{
+			if (machineBeingPlaced instanceof Pipe){
+				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+				tmpPipe.setAngle((tmpPipe.getAngle() + 90) % 360);
+				tmpPipe.setAngleOut((tmpPipe.getAngleOut() + 90) % 360);
+				tmpPipe.calculateSprite();
+			}
+		}
+		else if (gc.getInput().isKeyPressed(Input.KEY_V))
+		{
+			if (machineBeingPlaced instanceof Pipe){
+				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+				tmpPipe.setAngleOut((tmpPipe.getAngleOut() + 90) % 360);
+				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
+					tmpPipe.setAngleOut((tmpPipe.getAngleOut()+90)%360);
+				}
+				tmpPipe.calculateSprite();
+			}
+		}
 		factory.update(d);
 	}
 	

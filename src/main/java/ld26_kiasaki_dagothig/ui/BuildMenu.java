@@ -126,7 +126,7 @@ public class BuildMenu implements Renderable {
 		if (activated) {
 			float mx = gc.getInput().getMouseX();
 			float my = gc.getInput().getMouseY();
-			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 				if(icons.get(0).contains(mx, my)){
 					this.setActivated(false);
 					world.activateIcons(true);
