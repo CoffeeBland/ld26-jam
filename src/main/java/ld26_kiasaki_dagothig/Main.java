@@ -14,6 +14,7 @@ public class Main {
 	        //app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
 			app.setDisplayMode(1024,768, false);
 	        app.setForceExit(true);
+	        app.setShowFPS(false);
 	        app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();

@@ -58,7 +58,7 @@ public class BuildMenu implements Renderable {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		setActivated(false);
-		icons.add(new IconButton(gc.getWidth()/2+352, gc.getHeight()/2-324, Color.lightGray, new Color(194,74,56), new Image("res/icons/close.png")));
+		icons.add(new IconButton(gc.getWidth()/2+352, gc.getHeight()/2-324, Color.lightGray, new Color(194,74,56), new Image("res/icons/close.png"), "Close"));
 	}
 
 	@Override
@@ -76,6 +76,8 @@ public class BuildMenu implements Renderable {
 			// Icons
 			for (IconButton tIB : icons)
 				tIB.draw(gc, g);
+			for (IconButton tIB : icons)
+				tIB.drawTooltip(gc, g);
 			
 			// Title
 			uFontSmall.drawString(gc.getWidth()/2-380, gc.getHeight()/2-300-uFontSmall.getLineHeight()/2, "Build a machine");

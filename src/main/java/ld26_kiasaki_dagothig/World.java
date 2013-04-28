@@ -16,6 +16,7 @@ import ld26_kiasaki_dagothig.entity.TileBased;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
+import ld26_kiasaki_dagothig.ui.CurrencyBar;
 import ld26_kiasaki_dagothig.ui.IconButton;
 
 import org.newdawn.slick.Color;
@@ -39,9 +40,11 @@ public class World
 	private int scrollY = 0;
 	
 	private Machine machineBeingPlaced;
+	private Machine lastMachineBeingPlaced;
 	private Factory factory;
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
+	private final CurrencyBar currencybar = new CurrencyBar();
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
@@ -58,14 +61,14 @@ public class World
 		btnNeeded = new Button(gc.getWidth() - 164, 76, 144, 48, uFontSmall, null, "NEEDED");
 		btnDone = new Button(gc.getWidth() - 164, 376, 144, 48, uFontSmall, null, "DONE");
 		icons = new ArrayList<IconButton>();
-		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png")));
-		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png")));
-		icons.add(new IconButton(396, 0, Color.lightGray, new Color(194,7,7), new Image("res/icons/build.png")));
-		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png")));
+		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play"));
+		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
+		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine"));
+		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe"));
 		
 		factory = new FactoryImpl(24, 24, 224, 100);
-		factory.addPipe(3,  3,  0,  90);
 		
+		currencybar.init(gc, sbg);
 		buildMenu.init(gc, sbg);
 	}
 	
@@ -110,10 +113,14 @@ public class World
 		
 		for (IconButton tIB : icons)
 			tIB.draw(gc, g);
+		for (IconButton tIB : icons)
+			tIB.drawTooltip(gc, g);
 			
 		btnMenu.draw(gc, g);
 		btnNeeded.draw(gc, g);
 		btnDone.draw(gc, g);	
+		
+		currencybar.render(gc, sbg, g);
 		
 		if (machineBeingPlaced != null){
 			float mx = gc.getInput().getMouseX();
@@ -168,6 +175,7 @@ public class World
 						Pipe machine = (Pipe)machineBeingPlaced;
 						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
 					}
+					lastMachineBeingPlaced = machineBeingPlaced;
 					machineBeingPlaced = null;
 					activateIcons(true);
 				}
@@ -199,6 +207,7 @@ public class World
 				tmpPipe.calculateSprite();
 			}
 		}
+		currencybar.update(gc, sbg, d);
 		factory.update(d);
 	}
 	
@@ -214,8 +223,13 @@ public class World
 	}
 	public void	enterPlacePipe() throws SlickException{
 		Pipe tPipe = new PipeImpl();
-		tPipe.setAngle(0);
-		tPipe.setAngleOut(180);
+		if (lastMachineBeingPlaced instanceof Pipe){
+			tPipe.setAngle(lastMachineBeingPlaced.getAngle());
+			tPipe.setAngleOut(((Pipe) lastMachineBeingPlaced).getAngleOut());
+		}else{
+			tPipe.setAngle(0);
+			tPipe.setAngleOut(180);
+		}
 		tPipe.calculateSprite();
 		tPipe.setTileHeight(1);
 		tPipe.setTileWidth(1);
