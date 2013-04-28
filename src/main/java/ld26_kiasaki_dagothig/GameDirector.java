@@ -14,6 +14,7 @@ import ld26_kiasaki_dagothig.entity.Block;
 import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
+import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 
 public class GameDirector {
@@ -34,6 +35,8 @@ public class GameDirector {
 	
 	private long newLevelMessageFadeStart = 2500;
 	private long newLevelMessageFadeDuration = 2500;
+	private BlockImage truck;
+	private int truckPosition = -160;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
 	
@@ -72,12 +75,30 @@ public class GameDirector {
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
 		if (!paused){
-			if (feedTimer > 0){
-				feedTimer -= delta;
-			}else if (getCurrentLevel().getTruckContent().getQty() > 0){
-				feedTimer = 1000;
-				world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
-				getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+			if (truckPosition == world.factory.getX() - 172)
+			{
+				if (feedTimer > 0){
+					feedTimer -= delta;
+				}else if (getCurrentLevel().getTruckContent().getQty() > 0){
+					feedTimer = 1000;
+					world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
+					getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+				}
+			}
+			else
+			{
+				if (getCurrentLevel().getTruckContent().getQty() > 0)
+				{
+					truckPosition += delta * 0.1f;
+					if (truckPosition > world.factory.getX() - 172)
+						truckPosition = world.factory.getX() - 172;
+				}
+				else
+				{
+					truckPosition -= delta * 0.1f;
+					if (truckPosition < -160)
+						truckPosition = -160;
+				}
 			}
 		}
 	}
@@ -94,8 +115,13 @@ public class GameDirector {
 		// Render the needed stuff
 		Order tOrder = getCurrentLevel().getTruckContent();
 		try {
-			tOrder.getBlock().render(-30, -(433));
-			uSmallFont.drawString(50, 436, "x " + tOrder.getQty());
+			if (truck == null)
+				truck = new BlockImage(BlockImage.getImage("Truck.png"));
+			truck.x = truckPosition;
+			truck.y = gc.getHeight() - 204;
+			truck.render(0, 0);
+			tOrder.getBlock().render(-28 - (truckPosition + 48), -(truck.y + 45));
+			uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
