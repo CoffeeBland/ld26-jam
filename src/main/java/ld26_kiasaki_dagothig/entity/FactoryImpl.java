@@ -118,7 +118,7 @@ public class FactoryImpl implements Factory
 	@Override
 	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException
 	{
-		Machine pipe = new MachineImpl();
+		Pipe pipe = new PipeImpl();
 		int angle = pExitAngle - pEntryAngle;
 		while (angle < 0)
 			angle += 360;
@@ -129,6 +129,7 @@ public class FactoryImpl implements Factory
 		pipe.setTileWidth(1);
 		pipe.setTileHeight(1);
 		pipe.setAngle(pEntryAngle);
+		pipe.setAngleOut(pExitAngle);
 		switch (pEntryAngle)
 		{
 			case 0:
