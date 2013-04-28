@@ -136,6 +136,7 @@ public class BuildMenu implements Renderable {
 				if(icons.get(0).contains(mx, my)){
 					this.setActivated(false);
 					world.activateIcons(true);
+					world.activateIconsTiedToSelection(false);
 				}
 				int btnox = gc.getWidth()/2-400 + 664;
 				int btnoy = gc.getHeight()/2-276 + 24;
@@ -149,6 +150,7 @@ public class BuildMenu implements Renderable {
 					i++;
 				}
 			}// mouse was pressed
+			
 		}// is activated
 	}
 

@@ -33,6 +33,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class World 
 {
 	private GameDirector gd;
+	public GameContainer gc;
 	
 	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	private UnicodeFont uFontRealSmall = FontFactory.get().getFont(14, java.awt.Color.WHITE);
@@ -62,6 +63,7 @@ public class World
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		this.gc = gc;
 		
 		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
 		btnNeeded = new Button(gc.getWidth() - 164, 76, 144, 48, uFontSmall, null, "NEEDED");
@@ -81,7 +83,7 @@ public class World
 		activateIconsTiedToSelection(false);
 		
 		gd.setWorld(this);
-		gd.start();
+		gd.pause();
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
@@ -161,6 +163,7 @@ public class World
 		}
 		
 		buildMenu.render(gc, sbg, g);
+		gd.render(gc, sbg, g);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
@@ -186,8 +189,7 @@ public class World
 					enterPlacePipe();
 				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
 					// Destroy!
-					factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) );
-					currentSelection = new Rectangle(-1, -1, 0, 0);
+					destroySelection();
 				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
 					enterSelectMode((int)mx, (int)my);
 				}
@@ -241,6 +243,18 @@ public class World
 				}
 				tmpPipe.calculateSprite();
 			}
+		}else if (icons.get(4).getActivated() && gc.getInput().isKeyPressed(Input.KEY_DELETE)){
+			// Destroy selection
+			destroySelection();	
+		}else if (icons.get(2).getActivated() && gc.getInput().isKeyPressed(Input.KEY_B)){
+			// Open build menu
+			buildMenu.setActivated(true);
+			activateIcons(false);
+		}else if (!buildMenu.getActivated() && gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
+				currentSelection = new Rectangle(-1, -1, 0, 0);
+				activateIconsTiedToSelection(false);
+			}
 		}
 		currencybar.update(gc, sbg, d);
 		factory.update(d);
@@ -262,6 +276,11 @@ public class World
 	}
 	public void activateIconsTiedToSelection(boolean pActive){
 		icons.get(4).setActivated(pActive);
+	}
+	public void destroySelection(){
+		factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) );
+		currentSelection = new Rectangle(-1, -1, 0, 0);
+		icons.get(4).setActivated(false);
 	}
 	public Rectangle rectangleTileToPixel(Rectangle pBase){
 		return new Rectangle(pBase.getX()*TileBased.TILE_SIZE + factory.getX(), 
