@@ -1,8 +1,13 @@
 package ld26_kiasaki_dagothig;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.entity.Factory;
+import ld26_kiasaki_dagothig.entity.FactoryImpl;
+import ld26_kiasaki_dagothig.entity.Machine;
+import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
 import ld26_kiasaki_dagothig.ui.IconButton;
@@ -19,11 +24,17 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class World 
 {
-	private UnicodeFont uFontSmall;
+	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	private Button btnMenu;
 	private Button btnNeeded;
 	private Button btnDone;
 	private List<IconButton> icons;
+	
+	private int scrollX = 0;
+	private int scrollY = 0;
+	
+	private Machine machineBeingPlaced;
+	private Factory factory;
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
 	
@@ -37,10 +48,6 @@ public class World
 	
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		uFontSmall = new UnicodeFont("res/fonts/slkscr.ttf", 18, false, false);
-		uFontSmall.getEffects().add(new ColorEffect());
-		uFontSmall.addAsciiGlyphs();
-		uFontSmall.loadGlyphs();
 		
 		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
 		btnNeeded = new Button(gc.getWidth() - 164, 76, 144, 48, uFontSmall, null, "NEEDED");
@@ -49,6 +56,9 @@ public class World
 		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png")));
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png")));
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(194,7,7), new Image("res/icons/build.png")));
+		
+		factory = new FactoryImpl(24, 24, 224, 100);
+		
 		
 		buildMenu.init(gc, sbg);
 	}
@@ -90,6 +100,8 @@ public class World
 		g.setColor(Color.white);
 		g.drawString("Factory", gc.getWidth()/2-278, 110);
 		
+		factory.render(g, scrollX, scrollY);
+		
 		for (IconButton tIB : icons)
 			tIB.draw(gc, g);
 			
@@ -97,24 +109,47 @@ public class World
 		btnNeeded.draw(gc, g);
 		btnDone.draw(gc, g);	
 		
+		if (machineBeingPlaced != null){
+			float mx = gc.getInput().getMouseX();
+			float my = gc.getInput().getMouseY();
+			machineBeingPlaced.render((int)(-mx+machineBeingPlaced.getW()/2), (int)(-my+machineBeingPlaced.getH()/2));
+			g.setColor(new Color(255,0,0, 0.75f));
+			g.fillRect((int)(mx-machineBeingPlaced.getW()/2), (int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getW(), machineBeingPlaced.getH());
+		}
+		
 		buildMenu.render(gc, sbg, g);
 	}
 	
-	public void update(GameContainer gc, StateBasedGame sbg, int delta)
-			throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
-		if (!buildMenu.getActivated() && gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON) && icons.get(2).contains(mx, my)){
-			buildMenu.setActivated(true);
-			activateIcons(false);
+		if (machineBeingPlaced == null){
+			if (!buildMenu.getActivated() && gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON) && icons.get(2).contains(mx, my)){
+				buildMenu.setActivated(true);
+				activateIcons(false);
+			}
+			buildMenu.update(gc, sbg, d);
+		}else{
+			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				machineBeingPlaced = null;
+			}
 		}
-		
-		buildMenu.update(gc, sbg, delta);
+		factory.update(d);
 	}
 	
 	public void activateIcons(boolean pActive){
 		for (IconButton tIB : icons)
 			tIB.setActivated(pActive);
+	}
+	
+	public void enterPlaceMachine(Machine pMachine){
+		machineBeingPlaced = pMachine;
+		machineBeingPlaced.setX(0);
+		machineBeingPlaced.setY(0);
+	}
+	
+	public Point2D clampCursorToTileMap(int pX, int pY){
+			return null;	
 	}
 	
 }

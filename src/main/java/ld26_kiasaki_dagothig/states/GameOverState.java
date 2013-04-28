@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.states;
 
+import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 
 import org.newdawn.slick.Color;
@@ -22,8 +23,8 @@ public class GameOverState extends BasicGameState {
 	private StateBasedGame sbg;
 	
 	private long started;
-	private UnicodeFont uFont;
-	private UnicodeFont uFontSmall;
+	private UnicodeFont uFont = FontFactory.get().getFont(60, java.awt.Color.WHITE);
+	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
@@ -31,15 +32,6 @@ public class GameOverState extends BasicGameState {
 		this.gc = gc;
 		this.sbg = sbg;
 		this.started = System.currentTimeMillis();
-		
-		uFont = new UnicodeFont("res/fonts/slkscr.ttf", 60, false, false);
-		uFont.getEffects().add(new ColorEffect(java.awt.Color.white));
-		uFont.addAsciiGlyphs();
-		uFont.loadGlyphs();
-		uFontSmall = new UnicodeFont("res/fonts/slkscr.ttf", 18, false, false);
-		uFontSmall.getEffects().add(new ColorEffect());
-		uFontSmall.addAsciiGlyphs();
-		uFontSmall.loadGlyphs();
 	}
 
 	@Override
