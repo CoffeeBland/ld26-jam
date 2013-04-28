@@ -50,6 +50,7 @@ public class LogoState extends BasicGameState {
     
     @Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+    	startTime = gc.getTime();
 	}
 
 	public int getID() {
