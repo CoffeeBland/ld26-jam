@@ -138,7 +138,7 @@ public class BuildMenu implements Renderable {
 					if ((new Rectangle(btnox + i*48, btnoy + i*48, 94, 46)).contains(mx, my)){
 						this.setActivated(false);
 						world.activateIcons(true);
-						world.enterPlaceProcessor(tM);
+						world.enterPlaceMachine(tM);
 					}
 					i++;
 				}

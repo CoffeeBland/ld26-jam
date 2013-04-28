@@ -39,9 +39,6 @@ public class World
 	private int scrollY = 0;
 	
 	private Machine machineBeingPlaced;
-	private List<BlockShape> machineAcceptedShapes;
-	private BlockShape machineResultShape;
-	private int machineAngleIn, machineAngleOut;
 	private Factory factory;
 	
 	private final BuildMenu buildMenu = new BuildMenu(this);
@@ -151,14 +148,7 @@ public class World
 				else if (!buildMenu.getActivated() && icons.get(3).contains(mx, my))
 				{
 					// Add pipe
-					Pipe tPipe = new PipeImpl();
-					tPipe.setAngle(0);
-					tPipe.setAngleOut(180);
-					tPipe.calculateSprite();
-					tPipe.setTileHeight(1);
-					tPipe.setTileWidth(1);
-					enterPlacePipe(tPipe);
-					activateIcons(false);
+					enterPlacePipe();
 				}
 				buildMenu.update(gc, sbg, d);
 			}else{
@@ -167,17 +157,29 @@ public class World
 				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
 					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
 					if (machineBeingPlaced instanceof Processor)
-						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machineAcceptedShapes, machineResultShape, machineBeingPlaced.getColor());
+					{
+						Processor machine = (Processor)machineBeingPlaced;
+						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
+					}
 					else if (machineBeingPlaced instanceof Router)
-						factory.addRouter(tileX,  tileY, machineAngleIn);
-					else
-						factory.addPipe(tileX, tileY, machineAngleIn, machineAngleOut);
+						factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
+					else if (machineBeingPlaced instanceof Pipe)
+					{
+						Pipe machine = (Pipe)machineBeingPlaced;
+						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
+					}
 					machineBeingPlaced = null;
 					activateIcons(true);
 				}
 			}// We are add an item to the factory
 		}// Mouse press
-		if (gc.getInput().isKeyPressed(Input.KEY_C)) 
+		if (gc.getInput().isKeyPressed(Input.KEY_X)) 
+		{
+			if (machineBeingPlaced == null && !buildMenu.getActivated()){
+				enterPlacePipe();
+			}
+		}
+		else if (gc.getInput().isKeyPressed(Input.KEY_C)) 
 		{
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
@@ -210,22 +212,15 @@ public class World
 		machineBeingPlaced.setX(0);
 		machineBeingPlaced.setY(0);
 	}
-	public void enterPlaceProcessor(Processor pProcessor)
-	{
-		enterPlaceMachine(pProcessor);
-		machineAcceptedShapes = pProcessor.getShapeIns();
-		machineResultShape = pProcessor.getShapeOut();
-	}
-	public void enterPlaceRouter(Router pRouter)
-	{
-		enterPlaceMachine(pRouter);
-		machineAngleIn = pRouter.getAngle();
-	}
-	public void enterPlacePipe(Pipe pPipe)
-	{
-		enterPlaceMachine(pPipe);
-		machineAngleIn = pPipe.getAngle();
-		machineAngleOut = pPipe.getAngleOut();
+	public void	enterPlacePipe() throws SlickException{
+		Pipe tPipe = new PipeImpl();
+		tPipe.setAngle(0);
+		tPipe.setAngleOut(180);
+		tPipe.calculateSprite();
+		tPipe.setTileHeight(1);
+		tPipe.setTileWidth(1);
+		enterPlaceMachine(tPipe);
+		activateIcons(false);
 	}
 	
 	public int clampCursorToTileMapX(int pX, int pMaxOffset)
