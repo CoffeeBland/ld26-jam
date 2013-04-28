@@ -7,5 +7,5 @@ public interface Router extends Machine, Pipe
 	
 	public void updateOuts(Factory pFactory);
 	
-	public void changeDirection();
+	public void changeDirection(Factory pFactory);
 }

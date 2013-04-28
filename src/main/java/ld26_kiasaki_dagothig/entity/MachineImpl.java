@@ -185,6 +185,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void receiveBlock(Block pBlock)
 	{
 		getProgress().put(pBlock, 0f);
+		pBlock.setX(getEntryX());
+		pBlock.setY(getEntryY());
 	}
 	@Override
 	public void sendBlock(Block pBlock) throws SlickException
