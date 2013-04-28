@@ -150,6 +150,7 @@ public class World
 			filler.setHeight(filler.getHeight() + 1);
 			filler.setWidth(filler.getWidth() + 1);
 			g.fill(filler);
+			InfoWindow.renderWindow(g, uFontRealSmall, "Press DELETE to delete selected machine/item.", "Press ESCAPE to cancel selection.");
 		}
 		
 		for (IconButton tIB : icons)
@@ -214,7 +215,6 @@ public class World
 				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
 					enterSelectMode((int)mx, (int)my);
 				}
-				buildMenu.update(gc, sbg, d);
 			}else{
 				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
 					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
@@ -232,6 +232,7 @@ public class World
 						Pipe machine = (Pipe)machineBeingPlaced;
 						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
 					}
+					currencybar.removeCurrency(machineBeingPlaced.getCost());
 					lastMachineBeingPlaced = machineBeingPlaced;
 					machineBeingPlaced = null;
 					activateIcons(true);
@@ -239,14 +240,11 @@ public class World
 				}
 			}// We are add an item to the factory
 		}// Mouse press
-		if (gc.getInput().isKeyPressed(Input.KEY_X)) 
-		{
+		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
 			if (machineBeingPlaced == null && !buildMenu.getActivated()){
 				enterPlacePipe();
 			}
-		}
-		else if (gc.getInput().isKeyPressed(Input.KEY_C)) 
-		{
+		}else if (gc.getInput().isKeyPressed(Input.KEY_C)) {
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
 				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
@@ -255,9 +253,7 @@ public class World
 				}
 				tmpPipe.calculateSprite();
 			}
-		}
-		else if (gc.getInput().isKeyPressed(Input.KEY_V))
-		{
+		}else if (gc.getInput().isKeyPressed(Input.KEY_V)){
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
 				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
@@ -277,8 +273,13 @@ public class World
 			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
 				currentSelection = new Rectangle(-1, -1, 0, 0);
 				activateIconsTiedToSelection(false);
+			}else if (machineBeingPlaced != null){
+				machineBeingPlaced = null;
+				activateIcons(true);
+				activateIconsTiedToSelection(false);
 			}
 		}
+		buildMenu.update(gc, sbg, d);
 		currencybar.update(gc, sbg, d);
 		factory.update(d);
 	}
@@ -301,7 +302,7 @@ public class World
 		icons.get(4).setActivated(pActive);
 	}
 	public void destroySelection(){
-		factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) );
+		currencybar.addCurrency( factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) ) );
 		currentSelection = new Rectangle(-1, -1, 0, 0);
 		icons.get(4).setActivated(false);
 	}
@@ -327,11 +328,13 @@ public class World
 			tPipe.setAngle(0);
 			tPipe.setAngleOut(180);
 		}
+		tPipe.setCost(10);
 		tPipe.calculateSprite();
 		tPipe.setTileHeight(1);
 		tPipe.setTileWidth(1);
 		enterPlaceMachine(tPipe);
 		activateIcons(false);
+		currentSelection = new Rectangle(-1, -1, 0, 0);
 	}
 	public void enterSelectMode(int pMx, int pMy){
 		currentSelection.setX(clampCursorToTileMapXCeil(pMx-24, 1));
