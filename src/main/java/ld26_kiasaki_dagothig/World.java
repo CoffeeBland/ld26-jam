@@ -287,6 +287,7 @@ public class World
 		buildMenu.update(gc, sbg, d);
 		currencybar.update(gc, sbg, d);
 		factory.update(d);
+		gd.update(d);
 	}
 	
 	// Getters and setters
