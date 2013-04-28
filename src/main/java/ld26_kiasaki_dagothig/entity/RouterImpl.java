@@ -37,7 +37,7 @@ public class RouterImpl extends MachineImpl implements Router
 	}
 	
 	@Override
-	public void render(int pScrollX, int pScrollY) throws SlickException
+	public void renderForeground(int pScrollX, int pScrollY) throws SlickException
 	{
 		super.render(pScrollX, pScrollY);
 		if (fleche == null)

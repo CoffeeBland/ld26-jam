@@ -74,7 +74,7 @@ public class FactoryImpl implements Factory
 	@Override
 	public void receiveBlock(Block pBlock) throws SlickException
 	{
-		getEntryPoint().sendBlock(pBlock);
+		getEntryPoint().receiveBlock(pBlock);
 	}
 	private List<Block> transformedBlocks = new ArrayList<Block>();
 	@Override
@@ -105,6 +105,10 @@ public class FactoryImpl implements Factory
 		
 		for (Machine machine : getMachines())
 			machine.render(pScrollX - x, pScrollY - y);
+		for (Machine machine : getMachines())
+			machine.renderBlock(pScrollX - x, pScrollY - y);
+		for (Machine machine : getMachines())
+			machine.renderForeground(pScrollX - x, pScrollY - y);
 	}
 
 	public FactoryImpl(int pTileXAmount, int pTileYAmount, int pX, int pY) throws SlickException
@@ -124,13 +128,13 @@ public class FactoryImpl implements Factory
 		getEntryPoint().calculateSprite();
 		getMachines().add(getEntryPoint());
 		
-		exitPoint = new PipeImpl();
+		exitPoint = new ExitPoint(this);
 		getExitPoint().setTileX(getTileXAmount() - 1);
 		getExitPoint().setTileY(getTileYAmount() - 1);
 		getExitPoint().setTileWidth(1);
 		getExitPoint().setTileHeight(1);
-		getExitPoint().setAngle(0);
-		getExitPoint().setAngleOut(180);
+		getExitPoint().setAngle(180);
+		getExitPoint().setAngleOut(0);
 		getExitPoint().calculateSprite();
 		getMachines().add(getExitPoint());
 	}

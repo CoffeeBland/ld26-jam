@@ -1,6 +1,9 @@
 package ld26_kiasaki_dagothig.entity;
 
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 
@@ -16,7 +19,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		this.tileX = tileX;
 		setX(tileX * TileBased.TILE_SIZE);
-		middleX = Math.round(getX() + getW() / 2);
+		middleX = Math.round(getX() + getW() / 2) - TileBased.TILE_SIZE / 2;
 	}
 	
 	public int getTileY()
@@ -27,7 +30,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		this.tileY = tileY;
 		setY(tileY * TileBased.TILE_SIZE);
-		middleY = Math.round(getY() + getH() / 2);
+		middleY = Math.round(getY() + getH() / 2) - TileBased.TILE_SIZE / 2;
 	}
 	
 	public int getTileWidth()
@@ -38,7 +41,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		this.tileWidth = tileWidth;
 		setW(tileWidth * TileBased.TILE_SIZE);
-		middleX = Math.round(getX() + getW() / 2);
+		middleX = Math.round(getX() + getW() / 2) - TileBased.TILE_SIZE / 2;
 	}
 	
 	public int getTileHeight() 
@@ -49,7 +52,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		this.tileHeight = tileHeight;
 		setH(tileHeight * TileBased.TILE_SIZE);
-		middleY = Math.round(getY() + getH() / 2);
+		middleY = Math.round(getY() + getH() / 2) - TileBased.TILE_SIZE / 2;
 	}
 	
 	public Machine getIn() 
@@ -74,19 +77,19 @@ public class MachineImpl extends EntityImpl implements Machine
 				alignMaxY = getY() + getH() > in.getY();
 		if (alignMinX && alignMaxX)
 		{
-			entryX = Math.round(getX() + getW() / 2);
+			entryX = Math.round(getX() + getW() / 2 - TileBased.TILE_SIZE / 2);
 			if (in.getY() < getY())
-				entryY = Math.round(getY() + TileBased.TILE_SIZE / 2);
+				entryY = Math.round(getY());
 			else
-				entryY = Math.round(getY() + getH() - TileBased.TILE_SIZE / 2);
+				entryY = Math.round(getY() + getH());
 		}
 		else if (alignMinY && alignMaxY)
 		{
-			entryY = Math.round(getY() + getH() / 2);
+			entryY = Math.round(getY() + getH() / 2 - TileBased.TILE_SIZE / 2);
 			if (in.getX() < getX())
-				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
+				entryX = Math.round(getX());
 			else
-				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
+				entryX = Math.round(getX() + getW());
 		}
 	}
 	
@@ -112,19 +115,19 @@ public class MachineImpl extends EntityImpl implements Machine
 				alignMaxY = getY() + getH() > out.getY();
 		if (alignMinX && alignMaxX)
 		{
-			entryX = Math.round(getX() + getW() / 2);
+			outX = Math.round(getX() + getW() / 2) - TileBased.TILE_SIZE / 2;
 			if (out.getY() < getY())
-				entryY = Math.round(getY() + TileBased.TILE_SIZE / 2);
+				outY = Math.round(getY());
 			else
-				entryY = Math.round(getY() + getH() - TileBased.TILE_SIZE / 2);
+				outY = Math.round(getY() + getH());
 		}
 		else if (alignMinY && alignMaxY)
 		{
-			entryY = Math.round(getY() + getH() / 2);
+			outY = Math.round(getY() + getH() / 2) - TileBased.TILE_SIZE / 2;
 			if (out.getX() < getX())
-				entryX = Math.round(getX() + TileBased.TILE_SIZE / 2);
+				outX = Math.round(getX());
 			else
-				entryX = Math.round(getX() + getW() - TileBased.TILE_SIZE / 2);
+				outX = Math.round(getX() + getW());
 		}
 	}
 	
@@ -175,11 +178,11 @@ public class MachineImpl extends EntityImpl implements Machine
 		this.progressDuration = progressDuration;
 	}
 	
-	public TreeMap<Block, Float> getProgress()
+	public Map<Block, Float> getProgress()
 	{
 		return progress;
 	}
-	public void setProgress(TreeMap<Block, Float> progress) 
+	public void setProgress(Map<Block, Float> progress) 
 	{
 		this.progress = progress;
 	}
@@ -199,17 +202,17 @@ public class MachineImpl extends EntityImpl implements Machine
 	public int cost = 0;
 	
 	public int progressDuration = 1000;
-	public TreeMap<Block, Float> progress = new TreeMap<Block, Float>();
+	public Map<Block, Float> progress = new HashMap<Block, Float>();
 
 	@Override
 	public void receiveBlock(Block pBlock)
 	{
-		progress.put(pBlock, 0f);
+		getProgress().put(pBlock, 0f);
 	}
 	@Override
 	public void sendBlock(Block pBlock) throws SlickException
 	{
-		progress.remove(pBlock);
+		getProgress().remove(pBlock);
 		out.receiveBlock(pBlock);
 	}
 
@@ -233,34 +236,47 @@ public class MachineImpl extends EntityImpl implements Machine
 		super.update(d);
 		getForeGround().x = Math.round(getX());
 		getForeGround().y = Math.round(getY());
+		List<Block> blocksToSend = new ArrayList<Block>();
 		for (Block block : progress.keySet())
 		{
 			getProgress().put(block, getProgress().get(block) + d);
 
-			float progress = (getProgress().get(block) / getProgressDuration()) - 0.5f;
-			if (progress < 0)
+			float progress = (getProgress().get(block) / getProgressDuration());
+			if (progress < 0.5)
 			{
-				progress = (progress + 0.5f) * 2;
-				block.setX(entryX * (1 - progress) * + middleX * progress);
-				block.setY(entryY * (1 - progress) * + middleY * progress);
+				progress = Math.max(0, progress * 2f);
+				System.out.println(progress);
+				block.setX(entryX * (1 - progress) + middleX * progress);
+				block.setY(entryY * (1 - progress) + middleY * progress);
 			}
 			else
 			{
-				progress *= 2f;
-				block.setX(middleX * (1 - progress) * + outX * progress);
-				block.setY(middleY * (1 - progress) * + outY * progress);
+				progress = Math.min(1, (progress - 0.5f) * 2f);
+				System.out.println(progress);
+				block.setX(middleX * (1 - progress) + outX * progress);
+				block.setY(middleY * (1 - progress) + outY * progress);
 			}
-			
 			if (getProgress().get(block) > getProgressDuration())
-				sendBlock(block);
+				blocksToSend.add(block);
 		}
+		for (Block block : blocksToSend)
+			sendBlock(block);
 	}
 	@Override
-	public void render(int pScrollX, int pScrollY) throws SlickException
+	public void renderFull(int pScrollX, int pScrollY) throws SlickException
 	{
-		super.render(pScrollX, pScrollY);
+		render(pScrollX, pScrollY);
+		renderForeground(pScrollX, pScrollY);
+	}
+	@Override
+	public void renderBlock(int pScrollX, int pScrollY) throws SlickException
+	{
 		for (Block block : getProgress().keySet())
 			block.render(pScrollX, pScrollY);
+	}
+	@Override
+	public void renderForeground(int pScrollX, int pScrollY) throws SlickException
+	{
 		getForeGround().image.setCenterOfRotation(getW() / 2, getH() / 2);
 		getForeGround().image.setRotation(getAngle());
 		
