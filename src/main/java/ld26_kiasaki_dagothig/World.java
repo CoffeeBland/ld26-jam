@@ -167,6 +167,15 @@ public class World
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
 		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			// Play pause Btns
+			if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
+				// Play game director
+				gd.start();
+			}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
+				// Pause game director
+				gd.pause();
+			}
+			// Placing a machine ?
 			if (machineBeingPlaced == null){
 				if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
 					// Build menu
@@ -237,9 +246,19 @@ public class World
 		factory.update(d);
 	}
 	
+	// Getters and setters
+	public IconButton getIcon(int pIndex){
+		return icons.get(pIndex);
+	}
+	public CurrencyBar getCurrencyBar(){
+		return currencybar;
+	}
+	
+	// Icon activation
 	public void activateIcons(boolean pActive){
 		for (IconButton tIB : icons)
 			tIB.setActivated(pActive);
+		gd.checkIcons();
 	}
 	public void activateIconsTiedToSelection(boolean pActive){
 		icons.get(4).setActivated(pActive);
@@ -251,6 +270,7 @@ public class World
 							 pBase.getHeight()*TileBased.TILE_SIZE);
 	}
 	
+	// Enter specific mode
 	public void enterPlaceMachine(Machine pMachine){
 		machineBeingPlaced = pMachine;
 		machineBeingPlaced.setX(0);
@@ -288,6 +308,7 @@ public class World
 		}
 	}
 	
+	// Clamping to tile set
 	public int clampCursorToTileMapX(int pX, int pMaxOffset)
 	{
 		return Math.max(0, Math.min(factory.getTileXAmount() - pMaxOffset, Math.round((pX - factory.getX()) / (float)TileBased.TILE_SIZE)));
