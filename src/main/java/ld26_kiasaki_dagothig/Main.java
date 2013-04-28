@@ -1,6 +1,8 @@
 package ld26_kiasaki_dagothig;
 
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 public class Main {
@@ -14,8 +16,9 @@ public class Main {
 	        //app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
 			app.setDisplayMode(1024,768, false);
 	        app.setForceExit(true);
-	        app.setShowFPS(false);
+	        app.setShowFPS(false);        
 	        app.start();
+	        
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

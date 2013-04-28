@@ -254,7 +254,8 @@ public class World
 			if (machineBeingPlaced == null && !buildMenu.getActivated()){
 				enterPlacePipe();
 			}
-		}else if (gc.getInput().isKeyPressed(Input.KEY_C)) {
+		}
+		if (gc.getInput().isKeyPressed(Input.KEY_C)) {
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
 				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
@@ -263,7 +264,8 @@ public class World
 				}
 				tmpPipe.calculateSprite();
 			}
-		}else if (gc.getInput().isKeyPressed(Input.KEY_V)){
+		}
+		if (gc.getInput().isKeyPressed(Input.KEY_V)){
 			if (machineBeingPlaced instanceof Pipe){
 				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
 				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
@@ -272,14 +274,17 @@ public class World
 				}
 				tmpPipe.calculateSprite();
 			}
-		}else if (icons.get(4).getActivated() && gc.getInput().isKeyPressed(Input.KEY_DELETE)){
+		}
+		if (gc.getInput().isKeyPressed(Input.KEY_DELETE) && icons.get(4).getActivated()){
 			// Destroy selection
 			destroySelection();	
-		}else if (icons.get(2).getActivated() && gc.getInput().isKeyPressed(Input.KEY_B)){
+		}
+		if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
 			// Open build menu
 			buildMenu.setActivated(true);
 			activateIcons(false);
-		}else if (!buildMenu.getActivated() && gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+		}
+		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated()){
 			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
 				currentSelection = new Rectangle(-1, -1, 0, 0);
 				activateIconsTiedToSelection(false);
@@ -313,9 +318,11 @@ public class World
 		icons.get(4).setActivated(pActive);
 	}
 	public void destroySelection(){
-		currencybar.addCurrency( factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) ) );
-		currentSelection = new Rectangle(-1, -1, 0, 0);
-		icons.get(4).setActivated(false);
+		if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
+			currencybar.addCurrency( factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) ) );
+			currentSelection = new Rectangle(-1, -1, 0, 0);
+			icons.get(4).setActivated(false);
+		}
 	}
 	public Rectangle rectangleTileToPixel(Rectangle pBase){
 		return new Rectangle(pBase.getX()*TileBased.TILE_SIZE + factory.getX(), 

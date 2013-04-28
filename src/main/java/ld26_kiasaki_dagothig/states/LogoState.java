@@ -47,6 +47,10 @@ public class LogoState extends BasicGameState {
             sbg.enterState(MenuState.ID, new FadeOutTransition(Color.white, 700), new FadeInTransition(Color.white));
         }
     }
+    
+    @Override
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+	}
 
 	public int getID() {
 		return ID;
