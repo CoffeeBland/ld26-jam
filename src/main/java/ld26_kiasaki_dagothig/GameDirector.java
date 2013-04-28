@@ -47,7 +47,7 @@ public class GameDirector {
 	
 	public void setWorld(World pW){
 		world = pW;
-		world.getCurrencyBar().addCurrency(100);
+		world.getCurrencyBar().addCurrency(500);
 		setLevel(1);
 	}
 	public void setLevel(int pLevel){
