@@ -7,6 +7,8 @@ import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
 import ld26_kiasaki_dagothig.entity.Machine;
+import ld26_kiasaki_dagothig.entity.Pipe;
+import ld26_kiasaki_dagothig.entity.PipeImpl;
 import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.Router;
 import ld26_kiasaki_dagothig.entity.TileBased;
@@ -45,7 +47,7 @@ public class World
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
-	private final Color darkBrick = new Color(194,74,56);
+	private final Color darkBrick = new Color(194,52,32);
 	
 	public World(){
 		
@@ -61,10 +63,10 @@ public class World
 		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png")));
 		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png")));
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(194,7,7), new Image("res/icons/build.png")));
+		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png")));
 		
 		factory = new FactoryImpl(24, 24, 224, 100);
 		factory.addPipe(3,  3,  0,  90);
-		
 		
 		buildMenu.init(gc, sbg);
 	}
@@ -137,14 +139,27 @@ public class World
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
-		if (machineBeingPlaced == null){
-			if (!buildMenu.getActivated() && gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON) && icons.get(2).contains(mx, my)){
-				buildMenu.setActivated(true);
-				activateIcons(false);
-			}
-			buildMenu.update(gc, sbg, d);
-		}else{
-			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			if (machineBeingPlaced == null){
+				if (!buildMenu.getActivated() && icons.get(2).contains(mx, my))
+				{
+					// Build menu
+					buildMenu.setActivated(true);
+					activateIcons(false);
+				}
+				else if (!buildMenu.getActivated() && icons.get(3).contains(mx, my))
+				{
+					// Add pipe
+					Pipe tPipe = new PipeImpl();
+					tPipe.setAngle(0);
+					tPipe.setAngleOut(180);
+					tPipe.setTileHeight(1);
+					tPipe.setTileWidth(1);
+					enterPlacePipe(tPipe);
+					activateIcons(false);
+				}
+				buildMenu.update(gc, sbg, d);
+			}else{
 				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
 					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
 				if (factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
@@ -156,8 +171,8 @@ public class World
 						factory.addPipe(tileX, tileY, machineAngleIn, machineAngleOut);
 					machineBeingPlaced = null;
 				}
-			}
-		}
+			}// We are add an item to the factory
+		}// Mouse press
 		factory.update(d);
 	}
 	
@@ -182,11 +197,11 @@ public class World
 		enterPlaceMachine(pRouter);
 		machineAngleIn = pRouter.getAngle();
 	}
-	public void enterPlacePipe(Machine pPipe, int pAngleOut)
+	public void enterPlacePipe(Pipe pPipe)
 	{
 		enterPlaceMachine(pPipe);
 		machineAngleIn = pPipe.getAngle();
-		machineAngleOut = pAngleOut;
+		machineAngleOut = pPipe.getAngleOut();
 	}
 	
 	public int clampCursorToTileMapX(int pX, int pMaxOffset)
