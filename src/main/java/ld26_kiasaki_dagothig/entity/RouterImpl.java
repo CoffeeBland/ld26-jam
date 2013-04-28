@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.entity;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.newdawn.slick.SlickException;
@@ -9,7 +10,18 @@ import ld26_kiasaki_dagothig.helpers.BlockImage;
 public class RouterImpl extends PipeImpl implements Router
 {
 	public TreeMap<Float, Machine> outs = new TreeMap<Float, Machine>();
-
+	public ArrayList<Machine> ins = new ArrayList<Machine>();
+	
+	public void setIn(Machine in, boolean autoAssignOut) 
+	{
+		if (in == null)
+			return;
+		
+		ins.add(in);
+		if (autoAssignOut)
+			in.setOut(this, false);
+	}
+	
 	@Override
 	public Machine getPossibleOut(float pAngle) 
 	{
@@ -21,6 +33,20 @@ public class RouterImpl extends PipeImpl implements Router
 		outs.put(pAngle, pMachine);
 	}
 	
+	@Override
+	public int destroy() 
+	{
+		for (Machine in : ins)
+		{
+			if (in.getOut() == this)
+				in.setOut(null, false);
+			ins.remove(in);
+		}
+		setOut(null, true);
+		
+		return (int)(cost * 0.5);
+	}
+	
 	public BlockImage fleche;
 	
 	@Override
@@ -30,6 +56,12 @@ public class RouterImpl extends PipeImpl implements Router
 		
 		setAngleOut(getAngleOut() + 90);
 		setOut(getPossibleOut(getAngleOut()), true);
+		
+		for (Machine in : ins)
+			if (in != null && in.getOut() == this)
+				in.setOut(null, false);
+		ins.clear();
+		
 		Machine mach;
 		for (int angleIn = 0; angleIn < 360; angleIn += 90)
 		{
@@ -40,22 +72,22 @@ public class RouterImpl extends PipeImpl implements Router
 					case 0:
 						mach = pFactory.getMachine(getTileX() + 1, getTileY());
 						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 180)))
-							mach.setOut(this, false);
+							mach.setOut(this, true);
 						break;
 					case 90:
 						mach = pFactory.getMachine(getTileX(), getTileY() + 1);
 						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 270)))
-							mach.setOut(this, false);
+							mach.setOut(this, true);
 						break;
 					case 180:
 						mach = pFactory.getMachine(getTileX() - 1, getTileY());
 						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 0)))
-							mach.setOut(this, false);
+							mach.setOut(this, true);
 						break;
 					case 270:
 						mach = pFactory.getMachine(getTileX(), getTileY() - 1);
 						if (mach != null && (mach instanceof Processor || (mach instanceof Pipe && ((Pipe)mach).getAngleOut() == 90)))
-							mach.setOut(this, false);
+							mach.setOut(this, true);
 						break;
 				}
 			}

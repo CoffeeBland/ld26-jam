@@ -215,6 +215,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		return (int)(cost * 0.5);
 	}
 		
+	public int nextSend = 0;
 	@Override
 	public void update(int d) throws SlickException 
 	{
@@ -226,7 +227,7 @@ public class MachineImpl extends EntityImpl implements Machine
 			{
 				getProgress().put(block, getProgress().get(block) + d);
 	
-				float progress = (getProgress().get(block) / getProgressDuration());
+				float progress = Math.min(1, (getProgress().get(block) / getProgressDuration()));
 				if (progress < 0.5)
 				{
 					progress *= 2f;
@@ -243,8 +244,16 @@ public class MachineImpl extends EntityImpl implements Machine
 					blocksToSend.add(block);
 			}
 			for (Block block : blocksToSend)
-				sendBlock(block);
+			{
+				if (nextSend <= 0)
+				{
+					sendBlock(block);
+					nextSend = 200;
+				}
+			}
 		}
+		if (nextSend > 0)
+			nextSend -= d;
 			
 	}
 	@Override
