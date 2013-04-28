@@ -268,4 +268,16 @@ public class MachineImpl extends EntityImpl implements Machine
 		}
 		getForeGround().render(pScrollX, pScrollY);
 	}
+	
+	public MachineImpl(int pCost, BlockColor pColor, String pBack, String pFore, int pX, int pY, int pTileWidth, int pTileHeight) throws SlickException
+	{
+		setCost(pCost);
+		setColor(pColor);
+		setImage(new BlockImage(BlockImage.getImage(pBack)));
+		setForeGround(new BlockImage(BlockImage.getImage(pFore)));
+		setX(pX);
+		setY(pY);
+		setTileWidth(pTileWidth);
+		setTileHeight(pTileHeight);
+	}
 }
