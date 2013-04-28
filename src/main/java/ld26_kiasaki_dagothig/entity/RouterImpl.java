@@ -22,18 +22,17 @@ public class RouterImpl extends MachineImpl implements Router
 	}
 
 	public BlockImage fleche;
-	public float rotation;
 	
 	@Override
 	public void changeDirection() 
 	{
 		for (int index = 0; index < 4; index++)
 		{
-			rotation += 90;
-			if (getPossibleOut(rotation) != null)
+			angleOut += 90;
+			if (getPossibleOut(angleOut) != null)
 				return;
 		}
-		setOut(getPossibleOut(rotation), true);
+		setOut(getPossibleOut(angleOut), true);
 	}
 	
 	@Override
@@ -43,9 +42,27 @@ public class RouterImpl extends MachineImpl implements Router
 		if (fleche == null)
 			fleche = new BlockImage(BlockImage.getImage("Fleche.png"));
 		fleche.image.setCenterOfRotation(fleche.w / 2, fleche.h / 2);
-		fleche.image.setRotation(rotation);
+		fleche.image.setRotation(angleOut);
 		fleche.x = Math.round(getX());
 		fleche.y = Math.round(getY());
 		fleche.render(pScrollX, pScrollY);
+	}
+	
+	public int angleOut;
+	@Override
+	public int getAngleOut() 
+	{
+		return angleOut;
+	}
+	@Override
+	public void setAngleOut(int pAngle)
+	{
+		angleOut = pAngle;
+	}
+	@Override
+	public void calculateSprite() throws SlickException
+	{
+		setImage(new BlockImage(BlockImage.getImage("Router.png")));
+		setForeGround(new BlockImage(BlockImage.getImage("RouterForeGround.png")));
 	}
 }

@@ -70,26 +70,11 @@ public class MachineImpl extends EntityImpl implements Machine
 		
 		if (autoAssignOut)
 			in.setOut(this, false);
-		
-		boolean alignMinX = getX() < in.getX() + in.getW(),
-				alignMaxX = getX() + getW() > in.getX(),
-				alignMinY = getY() < in.getY() + in.getH(),
-				alignMaxY = getY() + getH() > in.getY();
-		if (alignMinX && alignMaxX)
+
+		if (!(this instanceof Pipe))
 		{
-			entryX = Math.round(getX() + getW() / 2 - TileBased.TILE_SIZE / 2);
-			if (in.getY() < getY())
-				entryY = Math.round(getY());
-			else
-				entryY = Math.round(getY() + getH());
-		}
-		else if (alignMinY && alignMaxY)
-		{
-			entryY = Math.round(getY() + getH() / 2 - TileBased.TILE_SIZE / 2);
-			if (in.getX() < getX())
-				entryX = Math.round(getX());
-			else
-				entryX = Math.round(getX() + getW());
+			entryX = in.getOutX();
+			entryY = in.getOutY();
 		}
 	}
 	
@@ -108,28 +93,20 @@ public class MachineImpl extends EntityImpl implements Machine
 		
 		if (autoAssignIn)
 			out.setIn(this, false);
-				
-		boolean alignMinX = getX() < out.getX() + out.getW(),
-				alignMaxX = getX() + getW() > out.getX(),
-				alignMinY = getY() < out.getY() + out.getH(),
-				alignMaxY = getY() + getH() > out.getY();
-		if (alignMinX && alignMaxX)
-		{
-			outX = Math.round(getX() + getW() / 2) - TileBased.TILE_SIZE / 2;
-			if (out.getY() < getY())
-				outY = Math.round(getY());
-			else
-				outY = Math.round(getY() + getH());
-		}
-		else if (alignMinY && alignMaxY)
-		{
-			outY = Math.round(getY() + getH() / 2) - TileBased.TILE_SIZE / 2;
-			if (out.getX() < getX())
-				outX = Math.round(getX());
-			else
-				outX = Math.round(getX() + getW());
+
+		if (!(this instanceof Pipe))
+		{	
+			outX = out.getEntryX();
+			outY = out.getEntryY();
 		}
 	}
+	
+	public int getEntryX(){return entryX;}
+	public int getEntryY(){return entryY;}
+	public int getMiddleX(){return middleX;}
+	public int getMiddleY(){return middleY;}
+	public int getOutX(){return outX;}
+	public int getOutY(){return outY;}
 	
 	public boolean isWorking() 
 	{
@@ -201,7 +178,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	
 	public int cost = 0;
 	
-	public int progressDuration = 1000;
+	public int progressDuration = 500;
 	public Map<Block, Float> progress = new HashMap<Block, Float>();
 
 	@Override
@@ -229,7 +206,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		
 		return (int)(cost * 0.5);
 	}
-	
+		
 	@Override
 	public void update(int d) throws SlickException 
 	{
@@ -237,30 +214,32 @@ public class MachineImpl extends EntityImpl implements Machine
 		getForeGround().x = Math.round(getX());
 		getForeGround().y = Math.round(getY());
 		List<Block> blocksToSend = new ArrayList<Block>();
-		for (Block block : progress.keySet())
+		if (getProgressDuration() != Integer.MAX_VALUE)
 		{
-			getProgress().put(block, getProgress().get(block) + d);
-
-			float progress = (getProgress().get(block) / getProgressDuration());
-			if (progress < 0.5)
+			for (Block block : progress.keySet())
 			{
-				progress = Math.max(0, progress * 2f);
-				System.out.println(progress);
-				block.setX(entryX * (1 - progress) + middleX * progress);
-				block.setY(entryY * (1 - progress) + middleY * progress);
+				getProgress().put(block, getProgress().get(block) + d);
+	
+				float progress = (getProgress().get(block) / getProgressDuration());
+				if (progress < 0.5)
+				{
+					progress *= 2f;
+					block.setX(entryX * (1 - progress) + middleX * progress);
+					block.setY(entryY * (1 - progress) + middleY * progress);
+				}
+				else
+				{
+					progress = (progress - 0.5f) * 2f;
+					block.setX(middleX * (1 - progress) + outX * progress);
+					block.setY(middleY * (1 - progress) + outY * progress);
+				}
+				if (getProgress().get(block) > getProgressDuration())
+					blocksToSend.add(block);
 			}
-			else
-			{
-				progress = Math.min(1, (progress - 0.5f) * 2f);
-				System.out.println(progress);
-				block.setX(middleX * (1 - progress) + outX * progress);
-				block.setY(middleY * (1 - progress) + outY * progress);
-			}
-			if (getProgress().get(block) > getProgressDuration())
-				blocksToSend.add(block);
+			for (Block block : blocksToSend)
+				sendBlock(block);
 		}
-		for (Block block : blocksToSend)
-			sendBlock(block);
+			
 	}
 	@Override
 	public void renderFull(int pScrollX, int pScrollY) throws SlickException
