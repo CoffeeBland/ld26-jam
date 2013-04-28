@@ -119,17 +119,16 @@ public class FactoryImpl implements Factory
 	public void addPipe(int pTileX, int pTileY, int pEntryAngle, int pExitAngle) throws SlickException
 	{
 		Pipe pipe = new PipeImpl();
+		pipe.setAngle(pEntryAngle);
+		pipe.setAngleOut(pExitAngle);
 		int angle = pExitAngle - pEntryAngle;
 		while (angle < 0)
 			angle += 360;
-		pipe.setImage(new BlockImage(BlockImage.getImage("Pipe_" + (angle) + ".png")));
-		pipe.setForeGround(new BlockImage(BlockImage.getImage("PipeForeground_" + (angle) + ".png")));
+		pipe.calculateSprite();
 		pipe.setTileX(pTileX);
 		pipe.setTileY(pTileY);
 		pipe.setTileWidth(1);
 		pipe.setTileHeight(1);
-		pipe.setAngle(pEntryAngle);
-		pipe.setAngleOut(pExitAngle);
 		switch (pEntryAngle)
 		{
 			case 0:

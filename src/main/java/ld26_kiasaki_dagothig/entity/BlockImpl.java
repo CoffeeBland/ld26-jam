@@ -15,7 +15,7 @@ public class BlockImpl extends EntityImpl implements Block
 	public void setShape(BlockShape shape) throws SlickException
 	{
 		this.shape = shape;
-		this.image = new BlockImage(BlockImage.getImage(shape.name() + ".png"));
+		this.image = new BlockImage(BlockImage.getImage("Shape_" + shape.name() + ".png"));
 	}
 	
 	public BlockShape shape;
