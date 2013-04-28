@@ -61,6 +61,7 @@ public class World
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
 	private final Color darkBrick = new Color(194,52,32);
+	private final Color skyColor = new Color(213, 235, 246);
 	private BlockImage grass, groundImg, sky, panel;
 	
 	public World(GameDirector pGameDirector){
@@ -96,9 +97,12 @@ public class World
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 
+		g.setColor(skyColor);
+		g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
 		if (sky == null)
 			sky = new BlockImage(BlockImage.getImage("Sky.png"));
-		sky.render(0, 0);
+		for (int index = 0; index < gc.getWidth(); index += sky.w)
+			sky.render(-index, 0);
 
 		if (groundImg == null)
 			groundImg = new BlockImage(BlockImage.getImage("Ground.png"));
@@ -114,7 +118,7 @@ public class World
 		{
 			panel = new BlockImage(BlockImage.getImage("Pancarte.png"));
 			panel.x = gc.getWidth() - 180;
-			panel.y = 260;
+			panel.y = gc.getHeight() - 510;
 		}
 		panel.render(0, 0);
 		

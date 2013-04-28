@@ -1,8 +1,6 @@
 package ld26_kiasaki_dagothig;
 
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 public class Main {
