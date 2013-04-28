@@ -9,6 +9,8 @@ public interface Factory
 {
 	public int getTileXAmount();
 	public int getTileYAmount();
+	public int getX();
+	public int getY();
 	
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH);
 	public Machine getEntryPoint();

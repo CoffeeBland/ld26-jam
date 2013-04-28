@@ -23,7 +23,15 @@ public class FactoryImpl implements Factory
 	{
 		return tileYAmount;
 	}
-
+	public int getX()
+	{
+		return x;
+	}
+	public int getY()
+	{
+		return y;
+	}
+	
 	@Override
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH) 
 	{
