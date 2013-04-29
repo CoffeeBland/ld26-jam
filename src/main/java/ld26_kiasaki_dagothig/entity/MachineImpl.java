@@ -43,6 +43,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		this.tileWidth = tileWidth;
 		setW(tileWidth * TileBased.TILE_SIZE);
 		middleX = Math.round(getX() + getW() / 2) - TileBased.TILE_SIZE / 2;
+		
 	}
 	
 	public int getTileHeight() 
@@ -117,7 +118,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		if (autoAssignIn)
 			out.removeIn(this, false);
 		
-		if (getIns().size() > 0)
+		if (getOuts().size() > 0)
 		{
 			Machine mach = getOuts().get(rnd.nextInt(getOuts().size()));
 			outX = (int)(mach.getX() + mach.getW() / 2 - 12);
@@ -202,7 +203,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	
 	public int cost = 0;
 	
-	public int progressDuration = 500;
+	public int progressDuration = 250;
 	public Map<Block, Float> progress = new HashMap<Block, Float>();
 	
 	private Random rnd = new Random();
