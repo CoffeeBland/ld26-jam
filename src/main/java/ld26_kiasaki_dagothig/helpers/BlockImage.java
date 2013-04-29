@@ -15,7 +15,7 @@ public class BlockImage
 		Image img = images.get(pRef);
 		if (img == null)
 		{
-			img = new Image("res/sprites/" + pRef);
+			img = new Image("/res/sprites/" + pRef);
 			images.put(pRef, img);
 		}
 		return img;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="MacRoman" standalone="no"?>
 <jardesc>
     <jar path="/Users/fredericgingras/Code/ld26-Factorism.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/ld26-Kiasaki-Dagotig/compilescript.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/ld26-Kiasaki-Dagotig/compilescript.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -10,20 +10,17 @@
             <packagesToUnSeal/>
         </sealing>
     </manifest>
-    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+    <selectedElements exportClassFiles="false" exportJavaFiles="true" exportOutputFolder="true">
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/resources"/>
-        <file path="/ld26-Kiasaki-Dagotig/README.md"/>
-        <folder path="/ld26-Kiasaki-Dagotig/res"/>
-        <file path="/ld26-Kiasaki-Dagotig/.DS_Store"/>
+        <folder path="/ld26-Kiasaki-Dagotig/res/sprites"/>
+        <file path="/ld26-Kiasaki-Dagotig/res/game_logo.png"/>
         <folder path="/ld26-Kiasaki-Dagotig/src"/>
-        <folder path="/ld26-Kiasaki-Dagotig/target"/>
-        <file path="/ld26-Kiasaki-Dagotig/.gitignore"/>
-        <file path="/ld26-Kiasaki-Dagotig/.classpath"/>
-        <file path="/ld26-Kiasaki-Dagotig/pom.xml"/>
-        <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/java"/>
-        <file path="/ld26-Kiasaki-Dagotig/.project"/>
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/test\/java"/>
-        <folder path="/ld26-Kiasaki-Dagotig/lib"/>
+        <folder path="/ld26-Kiasaki-Dagotig/res/icons"/>
+        <file path="/ld26-Kiasaki-Dagotig/res/.DS_Store"/>
+        <file path="/ld26-Kiasaki-Dagotig/res/logo.png"/>
+        <folder path="/ld26-Kiasaki-Dagotig/res/fonts"/>
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/test\/resources"/>
+        <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/java"/>
     </selectedElements>
 </jardesc>
