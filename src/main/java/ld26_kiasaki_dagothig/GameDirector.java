@@ -103,7 +103,10 @@ public class GameDirector {
 					{
 						truckPosition -= delta * 0.2f;
 						if (truckPosition < -160)
+						{
 							truckPosition = -160;
+							getCurrentLevel().setTruckContent(null);
+						}
 					}
 				}
 		}
@@ -129,17 +132,18 @@ public class GameDirector {
 		
 		// Render the needed stuff
 		Order tOrder = getCurrentLevel().getTruckContent();
-		try {
-			if (truck == null)
-				truck = new BlockImage(BlockImage.getImage("Truck.png"));
-			truck.x = Math.round(truckPosition);
-			truck.y = gc.getHeight() - 204;
-			truck.render(0, 0);
-			tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
-			uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		if (tOrder != null)
+			try {
+				if (truck == null)
+					truck = new BlockImage(BlockImage.getImage("Truck.png"));
+				truck.x = Math.round(truckPosition);
+				truck.y = gc.getHeight() - 204;
+				truck.render(0, 0);
+				tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
+				uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
 		
 		// Render the needed stuff
 		int i = 0;
