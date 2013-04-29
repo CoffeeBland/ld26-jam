@@ -80,31 +80,32 @@ public class GameDirector {
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
 		if (!paused){
-			if (truckPosition == world.factory.getX() - 172 && getCurrentLevel().getTruckContent().getQty() > 0)
-			{
-				if (feedTimer > 0){
-					feedTimer -= delta;
-				}else if (getCurrentLevel().getTruckContent().getQty() > 0){
-					feedTimer = 1000;
-					world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
-					getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
-				}
-			}
-			else
-			{
-				if (getCurrentLevel().getTruckContent().getQty() > 0)
+			if (getCurrentLevel() != null && getCurrentLevel().getTruckContent() != null)
+				if (truckPosition == world.factory.getX() - 172 && getCurrentLevel().getTruckContent().getQty() > 0)
 				{
-					truckPosition += delta * 0.1f;
-					if (truckPosition > world.factory.getX() - 172)
-						truckPosition = world.factory.getX() - 172;
+					if (feedTimer > 0){
+						feedTimer -= delta;
+					}else if (getCurrentLevel().getTruckContent().getQty() > 0){
+						feedTimer = 1000;
+						world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
+						getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+					}
 				}
 				else
 				{
-					truckPosition -= delta * 0.2f;
-					if (truckPosition < -160)
-						truckPosition = -160;
+					if (getCurrentLevel().getTruckContent().getQty() > 0)
+					{
+						truckPosition += delta * 0.1f;
+						if (truckPosition > world.factory.getX() - 172)
+							truckPosition = world.factory.getX() - 172;
+					}
+					else
+					{
+						truckPosition -= delta * 0.2f;
+						if (truckPosition < -160)
+							truckPosition = -160;
+					}
 				}
-			}
 		}
 		if (world.factory.getTransformedBlocks().size() > 0){
 			blocksBuilded.addAll(world.factory.getTransformedBlocks());
