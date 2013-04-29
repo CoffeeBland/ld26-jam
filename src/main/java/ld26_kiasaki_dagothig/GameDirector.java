@@ -161,8 +161,8 @@ public class GameDirector {
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
 			try {
-				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-419)+i));
-				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-416)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-459)+i));
+				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-456)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
@@ -173,8 +173,8 @@ public class GameDirector {
 		i = 0;
 		for (Order tB : blocksBuilded){
 			try {
-				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
-				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " + tB.getQty());
+				tB.getBlock().render(-gc.getWidth() + 134, -((gc.getHeight()-287)+i));
+				uSmallFont.drawString(gc.getWidth() - 114, (gc.getHeight()-284)+i, "x " + tB.getQty());
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
