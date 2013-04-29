@@ -3,10 +3,6 @@ package ld26_kiasaki_dagothig;
 import java.util.ArrayList;
 import java.util.List;
 
-import ld26_kiasaki_dagothig.entity.Block;
-import ld26_kiasaki_dagothig.entity.BlockColor;
-import ld26_kiasaki_dagothig.entity.BlockImpl;
-import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
 import ld26_kiasaki_dagothig.entity.Machine;
@@ -23,6 +19,7 @@ import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
 import ld26_kiasaki_dagothig.ui.CurrencyBar;
 import ld26_kiasaki_dagothig.ui.IconButton;
+import ld26_kiasaki_dagothig.ui.InGameMenu;
 import ld26_kiasaki_dagothig.ui.InfoWindow;
 
 import org.newdawn.slick.Color;
@@ -38,7 +35,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class World
 {
-	private GameDirector gd;
+	public GameDirector gd;
 	public GameContainer gc;
 	
 	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
@@ -57,11 +54,11 @@ public class World
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
 	public final BuildMenu buildMenu = new BuildMenu(this);
+	public final InGameMenu igMenu = new InGameMenu(this);
 	public final CurrencyBar currencybar = new CurrencyBar(this);
 	
 	private final Color lightGray = new Color(100,100,100);
 	private final Color darkGray = new Color(60,60,60);
-	private final Color darkBrick = new Color(194,52,32);
 	private final Color skyColor = new Color(213, 235, 246);
 	private BlockImage grass, groundImg, sky, panel;
 	
@@ -88,6 +85,7 @@ public class World
 		
 		currencybar.init(gc, sbg);
 		buildMenu.init(gc, sbg);
+		igMenu.init(gc, sbg);
 		
 		activateIconsTiedToSelection(false);
 		
@@ -217,125 +215,138 @@ public class World
 		}
 		
 		buildMenu.render(gc, sbg, g);
+		igMenu.render(gc, sbg, g);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
-		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-			if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
-			{
-				int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-				if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
+		
+		if (!igMenu.getActivated()){
+		
+			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+				if (btnMenu.contains(mx, my))
 				{
-					gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
-					gd.getCurrentLevel().getPossibleOrders().remove(order);
-					getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+					igMenu.setActivated(true);
+					return;
 				}
-			}
-			// Play pause Btns
-			if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
-				// Play game director
-				gd.start();
-			}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
-				// Pause game director
-				gd.pause();
-			}
-			// Placing a machine ?
-			if (machineBeingPlaced == null){
-				if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
-					// Build menu
-					buildMenu.setActivated(true);
-					activateIcons(false);
-				}else if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
-					// Add pipe
+				if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
+					int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+					if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
+					{
+						gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
+						gd.getCurrentLevel().getPossibleOrders().remove(order);
+						getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+					}
+				}
+				// Play pause Btns
+				if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
+					// Play game director
+					gd.start();
+				}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
+					// Pause game director
+					gd.pause();
+				}
+				// Placing a machine ?
+				if (machineBeingPlaced == null){
+					if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
+						// Build menu
+						buildMenu.setActivated(true);
+						activateIcons(false);
+					}else if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
+						// Add pipe
+						enterPlacePipe();
+					}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
+						// Destroy!
+						destroySelection();
+					}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
+						// Add router!
+						enterPlaceRouter();
+					}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
+						enterSelectMode((int)mx, (int)my);
+					}
+				}else{
+					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
+						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+					if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
+						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+						if (machineBeingPlaced instanceof Processor)
+						{
+							Processor machine = (Processor)machineBeingPlaced;
+							factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
+						}
+						else if (machineBeingPlaced instanceof Router)
+							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
+						else if (machineBeingPlaced instanceof Pipe)
+						{
+							Pipe machine = (Pipe)machineBeingPlaced;
+							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
+						}
+						currencybar.removeCurrency(machineBeingPlaced.getCost());
+						lastMachineBeingPlaced = machineBeingPlaced;
+						machineBeingPlaced = null;
+						activateIcons(true);
+						activateIconsTiedToSelection(false);
+					}
+				}// We are add an item to the factory
+			}// Mouse press
+			if (gc.getInput().isKeyPressed(Input.KEY_X)) {
+				if (machineBeingPlaced == null && !buildMenu.getActivated()){
 					enterPlacePipe();
-				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
-					// Destroy!
-					destroySelection();
-				}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
-					// Add router!
-					enterPlaceRouter();
-				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
-					enterSelectMode((int)mx, (int)my);
 				}
-			}else{
-				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
-					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
-				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
-					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
-					if (machineBeingPlaced instanceof Processor)
-					{
-						Processor machine = (Processor)machineBeingPlaced;
-						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_R)) {
+				if (machineBeingPlaced == null && !buildMenu.getActivated()){
+					enterPlaceRouter();
+				}
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_C)) {
+				if (machineBeingPlaced instanceof Pipe){
+					Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+					tmpPipe.setAngle(tmpPipe.getAngle() + 90);
+					tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+					tmpPipe.calculateSprite();
+				}
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_V)){
+				if (machineBeingPlaced instanceof Pipe){
+					Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+					tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+					if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
+						tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
 					}
-					else if (machineBeingPlaced instanceof Router)
-						factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
-					else if (machineBeingPlaced instanceof Pipe)
-					{
-						Pipe machine = (Pipe)machineBeingPlaced;
-						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
-					}
-					currencybar.removeCurrency(machineBeingPlaced.getCost());
-					lastMachineBeingPlaced = machineBeingPlaced;
+					tmpPipe.calculateSprite();
+				}
+			}
+			if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
+				// Destroy selection
+				destroySelection();	
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
+				// Open build menu
+				buildMenu.setActivated(true);
+				activateIcons(false);
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated()){
+				if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
+					currentSelection = new Rectangle(-1, -1, 0, 0);
+					activateIconsTiedToSelection(false);
+				}else if (machineBeingPlaced != null){
 					machineBeingPlaced = null;
 					activateIcons(true);
 					activateIconsTiedToSelection(false);
 				}
-			}// We are add an item to the factory
-		}// Mouse press
-		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
-			if (machineBeingPlaced == null && !buildMenu.getActivated()){
-				enterPlacePipe();
 			}
+			buildMenu.update(gc, sbg, d);
+			currencybar.update(gc, sbg, d);
+			if (!gd.getPaused())
+				factory.update(d);
+			gd.update(d);
+		
+		}else{
+			// WE ARE IN THE MENU (no updates)
+			igMenu.update(gc, sbg, d);
 		}
-		if (gc.getInput().isKeyPressed(Input.KEY_R)) {
-			if (machineBeingPlaced == null && !buildMenu.getActivated()){
-				enterPlaceRouter();
-			}
-		}
-		if (gc.getInput().isKeyPressed(Input.KEY_C)) {
-			if (machineBeingPlaced instanceof Pipe){
-				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
-				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-				tmpPipe.calculateSprite();
-			}
-		}
-		if (gc.getInput().isKeyPressed(Input.KEY_V)){
-			if (machineBeingPlaced instanceof Pipe){
-				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
-					tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
-				}
-				tmpPipe.calculateSprite();
-			}
-		}
-		if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
-			// Destroy selection
-			destroySelection();	
-		}
-		if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
-			// Open build menu
-			buildMenu.setActivated(true);
-			activateIcons(false);
-		}
-		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated()){
-			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
-				currentSelection = new Rectangle(-1, -1, 0, 0);
-				activateIconsTiedToSelection(false);
-			}else if (machineBeingPlaced != null){
-				machineBeingPlaced = null;
-				activateIcons(true);
-				activateIconsTiedToSelection(false);
-			}
-		}
-		buildMenu.update(gc, sbg, d);
-		currencybar.update(gc, sbg, d);
-		if (!gd.getPaused())
-			factory.update(d);
-		gd.update(d);
 	}
 	
 	// Getters and setters

@@ -9,7 +9,7 @@ import ld26_kiasaki_dagothig.states.*;
 
 public class GameStateController extends StateBasedGame {
 
-	private boolean inited = false;
+	private GameContainer gc;
 	
 	public GameStateController(String name) {
 		super(name);
@@ -17,15 +17,21 @@ public class GameStateController extends StateBasedGame {
 
 	@Override
     public void initStatesList(GameContainer gc) throws SlickException {        
-        if (!inited){
-        	addState(new LoadingState());
-        	addState(new LogoState());
-            addState(new MenuState());
-            addState(new GameState());
-            addState(new GameOverState());	
-            enterState(LoadingState.ID);
-        }
-        inited = true;
+    	addState(new LoadingState());
+    	addState(new LogoState());
+        addState(new MenuState());
+        addState(new GameState());
+        addState(new GameOverState());	
+        enterState(LoadingState.ID);
+        this.gc = gc;
     }
+	
+	public void reinit(){
+		try {
+			init(gc);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
