@@ -14,6 +14,8 @@ import ld26_kiasaki_dagothig.entity.Block;
 import ld26_kiasaki_dagothig.entity.BlockColor;
 import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
+import ld26_kiasaki_dagothig.entity.Processor;
+import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 
@@ -39,6 +41,7 @@ public class GameDirector {
 	private float truckPosition = -160;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
+	public List<Block> blocksBuilded = new ArrayList<Block>();
 	
 	public GameDirector(){
 		this(1);
@@ -51,11 +54,13 @@ public class GameDirector {
 	public void setWorld(World pW){
 		world = pW;
 		world.getCurrencyBar().addCurrency(500);
-		setLevel(1);
+		setLevel(level);
 	}
 	public void setLevel(int pLevel){
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
+		world.buildMenu.setAvailbleMachines(getCurrentLevel().getProcessorShop());
+		blocksBuilded = new ArrayList<Block>();
 	}
 	public GameLevel getCurrentLevel(){
 		return levels.get(level-1);
@@ -99,7 +104,15 @@ public class GameDirector {
 					if (truckPosition < -160)
 						truckPosition = -160;
 				}
+		}
+		if (world.factory.getTransformedBlocks().size() > 0){
+			blocksBuilded.addAll(world.factory.getTransformedBlocks());
+			for (Block tB : world.factory.getTransformedBlocks()){
+				Order tmpBlo = getCurrentLevel().getNeededByBlock(tB);
+				if (tmpBlo != null)
+					tmpBlo.qty--;
 			}
+			world.factory.getTransformedBlocks().clear();
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -161,12 +174,15 @@ public class GameDirector {
 		// Level 1
 		List<Order> tNeeded = new ArrayList<Order>();
 		List<Order> tPossibleOrders = new ArrayList<Order>();
+		List<Processor> tProcessorShop = new ArrayList<Processor>();
+		
 		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 10);
-		
 		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 10));
-		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Green, 5, 10));
+		tProcessorShop.add(new ProcessorImpl(50, BlockColor.Red, 4, 4));
+		tProcessorShop.get(0).getShapeIns().add(BlockShape.Circle);
+		tProcessorShop.get(0).setShapeOut(BlockShape.Square);
 		
-		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent));
+		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 		
 	}
 	
