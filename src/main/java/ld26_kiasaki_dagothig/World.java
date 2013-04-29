@@ -54,7 +54,7 @@ public class World
 	private Machine selectedMachine;
 	public Factory factory;
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
-	
+		
 	public final BuildMenu buildMenu = new BuildMenu(this);
 	public final InGameMenu igMenu = new InGameMenu(this);
 	public final CurrencyBar currencybar = new CurrencyBar(this);
@@ -300,15 +300,21 @@ public class World
 				}
 				else
 				{
+					// Get tile X and Y
 					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
 						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+					// If hover factory
 					if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
 						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+						// Place machine
+						currencybar.removeCurrency(machineBeingPlaced.getCost());
+						lastMachineBeingPlaced = machineBeingPlaced;
 						if (machineBeingPlaced instanceof Processor)
 						{
 							Processor machine = (Processor)machineBeingPlaced;
 							buildMenu.removeAvailableMachine(machine);
 							factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
+							machineBeingPlaced = null;
 						}
 						else if (machineBeingPlaced instanceof Router)
 							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
@@ -317,9 +323,6 @@ public class World
 							Pipe machine = (Pipe)machineBeingPlaced;
 							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
 						}
-						currencybar.removeCurrency(machineBeingPlaced.getCost());
-						lastMachineBeingPlaced = machineBeingPlaced;
-						machineBeingPlaced = null;
 						activateIcons(true);
 						activateIconsTiedToSelection(false);
 					}
