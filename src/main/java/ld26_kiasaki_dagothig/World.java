@@ -187,6 +187,7 @@ public class World
 		}
 		else
 		{
+			// Machine tooltip
 			int x = gc.getInput().getMouseX();
 			int y = gc.getInput().getMouseY();
 			if (x > factory.getX() && x < factory.getX() + factory.getTileXAmount() * TileBased.TILE_SIZE &&
@@ -201,9 +202,9 @@ public class World
 						take += shape + ", ";
 					String give = "Gives " + ((Processor)tmpMach).getShapeOut();
 					g.setColor(InfoWindow.black60);
-					g.fillRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)) + 16, 32);
+					g.fillRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)) + 2, 32);
 					g.setColor(InfoWindow.black75);
-					g.drawRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)), 32);
+					g.drawRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)) + 2, 32);
 					uFontRealSmall.drawString(x, y + 16, take.substring(0, take.length() - 2));
 					uFontRealSmall.drawString(x, y + 32, give);
 				}
