@@ -226,7 +226,7 @@ public class World
 			if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
 			{
 				int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-				if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
+				if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120)
 				{
 					gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
 					gd.getCurrentLevel().getPossibleOrders().remove(order);

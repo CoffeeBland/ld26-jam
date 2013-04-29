@@ -128,9 +128,19 @@ public class GameDirector {
 						blocksBuilded.add(new Order(tmpBlo.getShape(), tmpBlo.getColor(), 1, 0));
 					}
 					tmpBlo.qty--;
+					world.getCurrencyBar().addCurrency(tmpBlo.value);
 				}
 			}
 			world.factory.getTransformedBlocks().clear();
+			boolean finished = true;
+			for (Order tmpBlo : getCurrentLevel().getNeeded())
+				if (tmpBlo.getQty() > 0)
+					finished = false;
+			if (finished)
+				if (levels.size() > level)
+					setLevel(level += 1);
+				else
+					world.getCurrencyBar().setCurrency(-1);
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -141,6 +151,7 @@ public class GameDirector {
 			g.setColor(black);
 			g.fillRoundRect(300, 300, gc.getWidth()-600, gc.getHeight()-600, 20);
 			uFont.drawString(gc.getWidth()/2 - uFont.getWidth("Level " + level)/2, gc.getHeight()/2 - 32, "Level " + level, white);
+			uSmallFont.drawString(gc.getWidth()/2 - uSmallFont.getWidth(getCurrentLevel().getName()) / 2, gc.getHeight()/2 + 32, getCurrentLevel().getName(), white);
 		}
 		
 		// Render the needed stuff
@@ -195,13 +206,45 @@ public class GameDirector {
 		List<Processor> tProcessorShop = new ArrayList<Processor>();
 		
 		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 10);
-		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 10));
-		tProcessorShop.add(new ProcessorImpl(50, BlockColor.Red, 4, 4));
-		tProcessorShop.get(0).getShapeIns().add(BlockShape.Circle);
-		tProcessorShop.get(0).setShapeOut(BlockShape.Square);
+		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 30));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Square, BlockColor.Red, 4, 4));
 		
 		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 		
+		// Level 2
+		tNeeded = new ArrayList<Order>();
+		tPossibleOrders = new ArrayList<Order>();
+		tProcessorShop = new ArrayList<Processor>();
+		tTruckContent = null;
+
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Orange, 8, 30));
+		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 8, 15));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
+		
+		levels.add(new GameLevel(2, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+
+		// Level 2
+		tNeeded = new ArrayList<Order>();
+		tPossibleOrders = new ArrayList<Order>();
+		tProcessorShop = new ArrayList<Processor>();
+		tTruckContent = null;
+
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 4, 20));
+		tNeeded.add(new Order(BlockShape.Star, BlockColor.Green, 5, 15));
+		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 4, 15));
+		tPossibleOrders.add(new Order(BlockShape.Square, BlockColor.Yellow, 5, 10));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square}, BlockShape.Star, BlockColor.Blue, 3, 3));
+		
+		levels.add(new GameLevel(3, "Playing with colors", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+	}
+	private Processor generateProcessor(BlockShape[] pIns, BlockShape pOut, BlockColor pColor, int pW, int pH)
+	{
+		Processor tProcessor = new ProcessorImpl(0, pColor, pW, pH);
+		for (BlockShape s : pIns)
+			tProcessor.getShapeIns().add(s);
+		tProcessor.setShapeOut(pOut);
+		tProcessor.setCost(tProcessor.getCostFromSize(pW, pH));
+		return tProcessor;
 	}
 	
 }
