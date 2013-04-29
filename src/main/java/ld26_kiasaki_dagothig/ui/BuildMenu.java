@@ -139,7 +139,7 @@ public class BuildMenu implements Renderable {
 				int btnoy = gc.getHeight()/2-276 + 24;
 				int i = 0;
 				for (Processor tM : availableMachines){
-					if ((new Rectangle(btnox + i*48, btnoy + i*48, 94, 46)).contains(mx, my)){
+					if ((new Rectangle(btnox, btnoy + i*48, 94, 46)).contains(mx, my)){
 						close();
 						world.enterPlaceMachine(tM);
 					}
