@@ -243,7 +243,7 @@ public class FactoryImpl implements Factory
 				break;
 		}
 		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - pipe.getAngle()) == 180))
-			pipe.setIn(mach, true);
+			pipe.addIn(mach, true);
 		
 		switch (pExitAngle)
 		{
@@ -264,7 +264,7 @@ public class FactoryImpl implements Factory
 				break;
 		}
 		if (mach != null && (mach instanceof Processor || Math.abs(mach.getAngle() - pipe.getAngleOut()) == 180))
-			pipe.setOut(mach, true);
+			pipe.addOut(mach, true);
 		
 		getMachines().add(pipe);
 	}
@@ -300,7 +300,7 @@ public class FactoryImpl implements Factory
 				break;
 		}
 		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - router.getAngle()) == 180))
-			router.setIn(mach, true);
+			router.addIn(mach, true);
 		
 		router.updateOuts(this);
 		
@@ -330,17 +330,17 @@ public class FactoryImpl implements Factory
 			if (mach instanceof Pipe)
 			{
 				if (((Pipe)mach).getAngleOut() == 90)
-					processor.setIn(mach, true);
+					processor.addIn(mach, true);
 				else if (((Pipe)mach).getAngle() == 90)
-					processor.setOut(mach, true);
+					processor.addOut(mach, true);
 			}
 			mach = getMachine(tileX, pTileY + pTileH);
 			if (mach instanceof Pipe)
 			{
 				if (((Pipe)mach).getAngleOut() == 270)
-					processor.setIn(mach, true);
+					processor.addIn(mach, true);
 				else if (((Pipe)mach).getAngle() == 270)
-					processor.setOut(mach, true);
+					processor.addOut(mach, true);
 			}
 		}
 		for (int tileY = pTileY; tileY < pTileY + pTileH; tileY++)
@@ -349,17 +349,17 @@ public class FactoryImpl implements Factory
 			if (mach instanceof Pipe)
 			{
 				if (((Pipe)mach).getAngleOut() == 0)
-					processor.setIn(mach, true);
+					processor.addIn(mach, true);
 				else if (((Pipe)mach).getAngle() == 0)
-					processor.setOut(mach, true);
+					processor.addOut(mach, true);
 			}
 			mach = getMachine(pTileX + pTileW, tileY);
 			if (mach instanceof Pipe)
 			{
 				if (((Pipe)mach).getAngleOut() == 180)
-					processor.setIn(mach, true);
+					processor.addIn(mach, true);
 				else if (((Pipe)mach).getAngle() == 180)
-					processor.setOut(mach, true);
+					processor.addOut(mach, true);
 			}
 		}
 		getMachines().add(processor);

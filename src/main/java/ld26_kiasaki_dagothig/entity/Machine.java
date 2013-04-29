@@ -1,5 +1,6 @@
 package ld26_kiasaki_dagothig.entity;
 
+import java.util.List;
 import java.util.Map;
 
 import org.newdawn.slick.SlickException;
@@ -8,11 +9,13 @@ import ld26_kiasaki_dagothig.helpers.BlockImage;
 
 public interface Machine extends Entity, TileBased
 {
-	public Machine getIn();
-	public void setIn(Machine in, boolean autoAssignOut);
+	public List<Machine> getIns();
+	public void addIn(Machine in, boolean autoAssignOut);
+	public void removeIn(Machine in, boolean autoAssignOut);
 	
-	public Machine getOut();
-	public void setOut(Machine out, boolean autoAssignIn);
+	public List<Machine> getOuts();
+	public void addOut(Machine out, boolean autoAssignIn);
+	public void removeOut(Machine out, boolean autoAssignIn);
 	
 	public int getEntryX();
 	public int getEntryY();

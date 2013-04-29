@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 
@@ -55,49 +56,72 @@ public class MachineImpl extends EntityImpl implements Machine
 		middleY = Math.round(getY() + getH() / 2) - TileBased.TILE_SIZE / 2;
 	}
 	
-	public Machine getIn() 
+	public List<Machine> getIns(){return ins;}
+	public List<Machine> getOuts(){return outs;}
+
+	public void addIn(Machine in, boolean autoAssignOut)
 	{
-		return in;
-	}
-	public void setIn(Machine in, boolean autoAssignOut) 
-	{
-		if (getIn() != null && autoAssignOut) 
-			getIn().setOut(null, false);
-		this.in = in;
-		
 		if (in == null)
 			return;
 		
+		getIns().add(in);
 		if (autoAssignOut)
-			in.setOut(this, false);
-
+			if (!in.getOuts().contains(this))
+				in.addOut(this, false);
+		
 		if (!(this instanceof Pipe))
 		{
-			entryX = in.getOutX();
-			entryY = in.getOutY();
+			entryX = (int)(in.getX() + in.getW() / 2 - 12);
+			entryY = (int)(in.getY() + in.getH() / 2 - 12);
+		}
+	}
+	public void removeIn(Machine in, boolean autoAssignOut)
+	{
+		if (in == null)
+			return;
+		
+		getIns().remove(in);
+		if (autoAssignOut)
+			in.removeOut(this, false);
+		
+		if (getIns().size() > 0)
+		{
+			Machine mach = getIns().get(rnd.nextInt(getIns().size()));
+			entryX = (int)(mach.getX() + mach.getW() / 2 - 12);
+			entryY = (int)(mach.getY() + mach.getH() / 2 - 12);
 		}
 	}
 	
-	public Machine getOut() 
+	public void addOut(Machine out, boolean autoAssignIn)
 	{
-		return out;
-	}
-	public void setOut(Machine out, boolean autoAssignIn) 
-	{
-		if (getOut() != null && autoAssignIn)
-			getOut().setIn(null, false);
-		this.out = out;
-		
 		if (out == null)
 			return;
 		
+		getOuts().add(out);
 		if (autoAssignIn)
-			out.setIn(this, false);
-
+			if (!out.getIns().contains(this))
+				out.addIn(this, false);
+		
 		if (!(this instanceof Pipe))
-		{	
-			outX = out.getEntryX();
-			outY = out.getEntryY();
+		{
+			outX = (int)(out.getX() + out.getW() / 2 - 12);
+			outY = (int)(out.getY() + out.getH() / 2 - 12);
+		}
+	}
+	public void removeOut(Machine out, boolean autoAssignIn)
+	{
+		if (out == null)
+			return;
+		
+		getOuts().remove(out);
+		if (autoAssignIn)
+			out.removeIn(this, false);
+		
+		if (getIns().size() > 0)
+		{
+			Machine mach = getOuts().get(rnd.nextInt(getOuts().size()));
+			outX = (int)(mach.getX() + mach.getW() / 2 - 12);
+			outY = (int)(mach.getY() + mach.getH() / 2 - 12);
 		}
 	}
 	
@@ -146,7 +170,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	
 	public int getProgressDuration() 
 	{
-		if (getOut() == null)
+		if (getOuts().size() <= 0)
 			return Integer.MAX_VALUE;
 		return progressDuration;
 	}
@@ -170,8 +194,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	public int tileHeight = 0;
 	public int entryX = 0, entryY = 0, middleX = 0, middleY = 0, outX = 0, outY = 0;
 	
-	public Machine in = null;
-	public Machine out = null;
+	public List<Machine> ins = new ArrayList<Machine>();
+	public List<Machine> outs = new ArrayList<Machine>();
 	public boolean working = true, deletable = true;
 	
 	public BlockImage foreGround = null;
@@ -180,7 +204,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	
 	public int progressDuration = 500;
 	public Map<Block, Float> progress = new HashMap<Block, Float>();
-
+	
+	private Random rnd = new Random();
 	@Override
 	public void receiveBlock(Block pBlock)
 	{
@@ -192,7 +217,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void sendBlock(Block pBlock) throws SlickException
 	{
 		getProgress().remove(pBlock);
-		out.receiveBlock(pBlock);
+		getOuts().get(rnd.nextInt(getOuts().size())).receiveBlock(pBlock);
 	}
 	
 	@Override
@@ -209,8 +234,10 @@ public class MachineImpl extends EntityImpl implements Machine
 	@Override
 	public int destroy() 
 	{
-		setIn(null, true);
-		setOut(null, true);
+		for (int index = getIns().size() - 1; index >= 0; index--)
+			removeIn(getIns().get(index), true);
+		for (int index = getOuts().size() - 1; index >= 0; index--)
+			removeOut(getOuts().get(index), true);
 		
 		return (int)(cost * 0.5);
 	}
