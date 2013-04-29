@@ -62,7 +62,8 @@ public class GameDirector {
 	public void setLevel(int pLevel){
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
-		world.buildMenu.setAvailbleMachines(getCurrentLevel().getProcessorShop());
+		for (Processor mach : getCurrentLevel().getProcessorShop())
+			world.buildMenu.addAvailbleMachine(mach);
 		blocksBuilded = new ArrayList<Order>();
 	}
 	public GameLevel getCurrentLevel(){
@@ -219,7 +220,7 @@ public class GameDirector {
 
 		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Orange, 8, 30));
 		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 8, 15));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
 		
 		levels.add(new GameLevel(2, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 
@@ -234,6 +235,7 @@ public class GameDirector {
 		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 4, 15));
 		tPossibleOrders.add(new Order(BlockShape.Square, BlockColor.Yellow, 5, 10));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square}, BlockShape.Star, BlockColor.Blue, 3, 3));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Triangle}, BlockShape.Triangle, BlockColor.Yellow, 4, 2));
 		
 		levels.add(new GameLevel(3, "Playing with colors", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 	}

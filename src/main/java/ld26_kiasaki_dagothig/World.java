@@ -53,6 +53,7 @@ public class World
 	
 	private Machine machineBeingPlaced;
 	private Machine lastMachineBeingPlaced;
+	private Machine selectedMachine;
 	public Factory factory;
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 	
@@ -151,6 +152,7 @@ public class World
 			filler.setHeight(filler.getHeight() + 1);
 			filler.setWidth(filler.getWidth() + 1);
 			g.fill(filler);
+			
 			InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press DELETE to delete selected machine/item.", "Press ESCAPE to cancel selection.");
 		}
 		
@@ -183,6 +185,30 @@ public class World
 			g.fillRect(tileX * 24+factory.getX(), 
 					tileY * 24+factory.getY(), 
 					machineBeingPlaced.getW(), machineBeingPlaced.getH());
+		}
+		else
+		{
+			int x = gc.getInput().getMouseX();
+			int y = gc.getInput().getMouseY();
+			if (x > factory.getX() && x < factory.getX() + factory.getTileXAmount() * TileBased.TILE_SIZE &&
+				y > factory.getY() && y < factory.getY() + factory.getTileYAmount() * TileBased.TILE_SIZE)
+			{
+				Machine tmpMach = factory.getMachine(clampCursorToTileMapXCeil(x-24, 1), 
+												     clampCursorToTileMapYCeil(y-24, 1));
+				if (tmpMach != null && tmpMach instanceof Processor)
+				{
+					String take = "Takes ";
+					for (BlockShape shape : ((Processor)tmpMach).getShapeIns())
+						take += shape + ", ";
+					String give = "Gives " + ((Processor)tmpMach).getShapeOut();
+					g.setColor(InfoWindow.black60);
+					g.fillRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)) + 16, 32);
+					g.setColor(InfoWindow.black75);
+					g.drawRect(x, y + 16, Math.max(uFontRealSmall.getWidth(take), uFontRealSmall.getWidth(give)), 32);
+					uFontRealSmall.drawString(x, y + 16, take.substring(0, take.length() - 2));
+					uFontRealSmall.drawString(x, y + 32, give);
+				}
+			}
 		}
 		
 		gd.render(gc, sbg, g);
@@ -267,6 +293,7 @@ public class World
 					if (machineBeingPlaced instanceof Processor)
 					{
 						Processor machine = (Processor)machineBeingPlaced;
+						buildMenu.removeAvailableMachine(machine);
 						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
 					}
 					else if (machineBeingPlaced instanceof Router)
@@ -357,9 +384,12 @@ public class World
 	}
 	public void destroySelection(){
 		if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
-			currencybar.addCurrency( factory.destroy( factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY()) ) );
+			Machine tMach = factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY());
+			currencybar.addCurrency( factory.destroy( tMach ) );
 			currentSelection = new Rectangle(-1, -1, 0, 0);
 			icons.get(4).setActivated(false);
+			if (tMach instanceof Processor)
+				buildMenu.addAvailbleMachine((Processor)tMach);
 		}
 	}
 	public Rectangle rectangleTileToPixel(Rectangle pBase){

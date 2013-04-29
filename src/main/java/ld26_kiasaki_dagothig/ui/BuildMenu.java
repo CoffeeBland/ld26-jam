@@ -40,7 +40,13 @@ public class BuildMenu implements Renderable {
 		this.activated = pActivated;
 	}
 	public void addAvailbleMachine(Processor pMachine){
+		pMachine.setX(0);
+		pMachine.setY(0);
 		availableMachines.add(pMachine);
+	}
+	public void removeAvailableMachine(Processor pMachine)
+	{
+		availableMachines.remove(pMachine);
 	}
 	public void setAvailbleMachines(List<Processor> pMachines){
 		availableMachines = pMachines;
@@ -88,7 +94,8 @@ public class BuildMenu implements Renderable {
 			
 			int i = 0;
 			for (Processor tM : availableMachines){
-				tM.renderFull(-ox, -oy);
+				uFontSmallBlack.drawString(ox,  oy + i*48 + 4,  "Machine");
+				uFontSmallBlack.drawString(ox,  oy + i*48 + 28,  tM.getTileWidth() +"x" + tM.getTileHeight());
 				// Takes
 				uFontSmallBlack.drawString(ox + 120,  oy + i*48 + 4,  "Takes:");
 				String tTakes = "";
