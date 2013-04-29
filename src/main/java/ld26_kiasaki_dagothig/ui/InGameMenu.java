@@ -76,7 +76,7 @@ public class InGameMenu implements Renderable {
 			int i = 0;
 			for (String tBtnText : btns){
 				if (new Rectangle(topX, topY + 48 + i, width, 48).contains(mx, my)) {
-					if (i/48 == 2 || i/48 == 3){
+					if (i/48 != 1 && i/48 != 2){
 						g.setColor(Color.lightGray);
 					}else{
 						g.setColor(Color.red.darker());

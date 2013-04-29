@@ -28,6 +28,7 @@ public class GameDirector {
 	private World world;
 	private boolean paused;
 	private int feedTimer = 1000;
+	private boolean tutorialOpened = true;
 	public boolean getPaused()
 	{
 		return paused;
