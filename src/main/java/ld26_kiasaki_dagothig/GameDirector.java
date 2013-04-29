@@ -38,7 +38,7 @@ public class GameDirector {
 	private long newLevelMessageFadeStart = 2500;
 	private long newLevelMessageFadeDuration = 2500;
 	private BlockImage truck;
-	private int truckPosition = -160;
+	private float truckPosition = -160;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
 	public List<Block> blocksBuilded = new ArrayList<Block>();
@@ -80,7 +80,7 @@ public class GameDirector {
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
 		if (!paused){
-			if (truckPosition == world.factory.getX() - 172)
+			if (truckPosition == world.factory.getX() - 172 && getCurrentLevel().getTruckContent().getQty() > 0)
 			{
 				if (feedTimer > 0){
 					feedTimer -= delta;
@@ -100,7 +100,7 @@ public class GameDirector {
 				}
 				else
 				{
-					truckPosition -= delta * 0.1f;
+					truckPosition -= delta * 0.2f;
 					if (truckPosition < -160)
 						truckPosition = -160;
 				}
@@ -131,10 +131,10 @@ public class GameDirector {
 		try {
 			if (truck == null)
 				truck = new BlockImage(BlockImage.getImage("Truck.png"));
-			truck.x = truckPosition;
+			truck.x = Math.round(truckPosition);
 			truck.y = gc.getHeight() - 204;
 			truck.render(0, 0);
-			tOrder.getBlock().render(-28 - (truckPosition + 48), -(truck.y + 45));
+			tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
 			uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
 		} catch (SlickException e) {
 			e.printStackTrace();
