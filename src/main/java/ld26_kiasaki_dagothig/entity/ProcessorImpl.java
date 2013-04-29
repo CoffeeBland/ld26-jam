@@ -149,7 +149,7 @@ public class ProcessorImpl extends MachineImpl implements Processor
 	@Override
 	public void sendBlock(Block pBlock) throws SlickException
 	{
-		if(processBlock(pBlock))
+		if(processBlock(pBlock) && isWorking())
 			super.sendBlock(pBlock);
 		else
 		{

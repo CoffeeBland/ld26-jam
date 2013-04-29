@@ -16,12 +16,12 @@ public class InfoWindow {
 	
 	public static void renderWindow(GameContainer gc, Graphics g, UnicodeFont pFont, String pText, String pTextLine2){
 		g.setColor(black60);
-		g.fillRect(212, gc.getHeight()-56, 600, 52);
+		g.fillRect(gc.getWidth() / 2 - 298, gc.getHeight()-56, 600, 52);
 		g.setColor(black75);
-		g.drawRect(212, gc.getHeight()-56, 600, 52);
-		pFont.drawString(222, gc.getHeight()-46, pText);
+		g.drawRect(gc.getWidth() / 2 - 298, gc.getHeight()-56, 600, 52);
+		pFont.drawString(gc.getWidth() / 2 - 288, gc.getHeight()-46, pText);
 		if (pTextLine2 != null){
-			pFont.drawString(222, gc.getHeight()-46+pFont.getLineHeight(), pTextLine2);
+			pFont.drawString(gc.getWidth() / 2 - 288, gc.getHeight()-46+pFont.getLineHeight(), pTextLine2);
 		}
 	}
 	
