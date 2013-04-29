@@ -221,23 +221,29 @@ public class World
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
-		
+
 		if (!igMenu.getActivated()){
 		
 			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 				if (btnMenu.contains(mx, my))
-				{
+                {
 					igMenu.setActivated(true);
 					return;
 				}
-				if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
-					int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-					if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
-					{
-						gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
-						gd.getCurrentLevel().getPossibleOrders().remove(order);
-						getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
-					}
+                if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+                {
+                    int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+                    if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
+                        if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
+                            int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+                            if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
+                            {
+                                gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
+                                gd.getCurrentLevel().getPossibleOrders().remove(order);
+                                getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+                            }
+                        }
+                    }
 				}
 				// Play pause Btns
 				if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){

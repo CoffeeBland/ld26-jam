@@ -62,10 +62,10 @@ public class MenuState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
+		gameLogo.draw(gc.getWidth()/2-330, 80);
 		// Rect Start game
 		g.setColor(Color.white);
 		g.fillRect(gc.getWidth()/2-125, gc.getHeight()/2-30, 250, 60);
-		gameLogo.draw(gc.getWidth()/2-300, 0);
 		// Text Start Game
 		uFont.drawString(gc.getWidth()/2-105, gc.getHeight()/2-15, "Start Game");
 		// Text credits
