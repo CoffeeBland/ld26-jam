@@ -7,6 +7,7 @@ import ld26_kiasaki_dagothig.helpers.MouseListenerImpl;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.SlickException;
@@ -26,18 +27,21 @@ public class MenuState extends BasicGameState {
 	UnicodeFont uFont = FontFactory.get().getFont(32, java.awt.Color.BLACK);
 	UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
+	private Image gameLogo;
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
 		this.sbg = sbg;
 		
+		gameLogo = new Image("res/game_logo.png");
+		
 		final StateBasedGame tSbg = sbg;  
 		
 		Input tI = gc.getInput();
 		tI.addMouseListener(new MouseListenerImpl(){
 			public void mouseReleased(int button, int x, int y) {
-				System.out.println(x + ":" + y);
 				if(tSbg.getCurrentStateID() == ID){
 					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
 						getStateBasedGame().enterState(GameState.ID);
@@ -61,6 +65,7 @@ public class MenuState extends BasicGameState {
 		// Rect Start game
 		g.setColor(Color.white);
 		g.fillRect(gc.getWidth()/2-125, gc.getHeight()/2-30, 250, 60);
+		gameLogo.draw(gc.getWidth()/2-300, 0);
 		// Text Start Game
 		uFont.drawString(gc.getWidth()/2-105, gc.getHeight()/2-15, "Start Game");
 		// Text credits
