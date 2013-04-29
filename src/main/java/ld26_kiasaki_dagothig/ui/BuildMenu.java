@@ -28,9 +28,8 @@ public class BuildMenu implements Renderable {
 	private World world;
 	private List<IconButton> icons = new ArrayList<IconButton>();
 	private List<Processor> availableMachines = new ArrayList<Processor>();
-	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	private UnicodeFont uFont = FontFactory.get().getFont(26, java.awt.Color.WHITE);
-	private UnicodeFont uFontBlack = FontFactory.get().getFont(26, java.awt.Color.DARK_GRAY);
+	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	private UnicodeFont uFontSmallBlack = FontFactory.get().getFont(16, java.awt.Color.BLACK);
 	
 	public boolean getActivated(){
