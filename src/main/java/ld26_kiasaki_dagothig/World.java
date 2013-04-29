@@ -10,6 +10,7 @@ import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
 import ld26_kiasaki_dagothig.entity.Machine;
+import ld26_kiasaki_dagothig.entity.Order;
 import ld26_kiasaki_dagothig.entity.Pipe;
 import ld26_kiasaki_dagothig.entity.PipeImpl;
 import ld26_kiasaki_dagothig.entity.Processor;
@@ -185,6 +186,36 @@ public class World
 		}
 		
 		gd.render(gc, sbg, g);
+		
+		if(gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+		{
+			uFontSmall.drawString(28, 92, "Place order");
+			g.setColor(InfoWindow.black60);
+			g.fillRect(12, 112, 160, 20 + gd.getCurrentLevel().getPossibleOrders().size() * 32);
+			g.setColor(InfoWindow.black75);
+			g.drawRect(12, 112, 160, 20 + gd.getCurrentLevel().getPossibleOrders().size() * 32);
+			for (int index = 0; index < gd.getCurrentLevel().getPossibleOrders().size(); index++)
+			{
+				Order order = gd.getCurrentLevel().getPossibleOrders().get(index);
+				try
+				{
+					order.getBlock().render(-28, -124 - index * 32);
+					uFontSmall.drawString(50, 128 + index * 32, "x " + order.getQty() + " : " + order.value + "$");
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+			int orderX = (gc.getInput().getMouseX() - 28);
+			int orderY = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+			if (orderX > 0 && orderX < 120 && orderY >= 0 && orderY < gd.getCurrentLevel().getPossibleOrders().size())
+			{
+				g.setColor(Color.gray);
+				g.drawRect(28, orderY * 32 + 120, 120, 32);
+			}
+		}
+		
 		buildMenu.render(gc, sbg, g);
 	}
 	
@@ -192,6 +223,16 @@ public class World
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
 		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+			{
+				int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+				if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
+				{
+					gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
+					gd.getCurrentLevel().getPossibleOrders().remove(order);
+					getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+				}
+			}
 			// Play pause Btns
 			if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
 				// Play game director
@@ -243,13 +284,6 @@ public class World
 				}
 			}// We are add an item to the factory
 		}// Mouse press
-		if (gc.getInput().isKeyPressed(Input.KEY_A))
-		{
-			Block block = new BlockImpl();
-			block.setShape(BlockShape.Square);
-			block.setColor(BlockColor.Blue);
-			factory.receiveBlock(block);
-		}
 		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
 			if (machineBeingPlaced == null && !buildMenu.getActivated()){
 				enterPlacePipe();

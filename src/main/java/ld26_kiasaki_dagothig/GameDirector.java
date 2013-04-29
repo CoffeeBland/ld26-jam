@@ -18,6 +18,7 @@ import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
+import ld26_kiasaki_dagothig.ui.InfoWindow;
 
 public class GameDirector {
 
@@ -144,7 +145,6 @@ public class GameDirector {
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
-		
 		// Render the needed stuff
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
