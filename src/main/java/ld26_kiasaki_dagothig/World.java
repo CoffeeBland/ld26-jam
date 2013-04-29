@@ -3,6 +3,7 @@ package ld26_kiasaki_dagothig;
 import java.util.ArrayList;
 import java.util.List;
 
+import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Factory;
 import ld26_kiasaki_dagothig.entity.FactoryImpl;
 import ld26_kiasaki_dagothig.entity.Machine;
@@ -248,9 +249,10 @@ public class World
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
 
-		if (!igMenu.getActivated()){
-		
-			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+		if (!igMenu.getActivated())
+		{
+			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))
+			{
 				if (btnMenu.contains(mx, my))
                 {
 					igMenu.setActivated(true);
@@ -261,13 +263,9 @@ public class World
                     int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
                     if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
                         if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
-                            int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-                            if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size())
-                            {
                                 gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
                                 gd.getCurrentLevel().getPossibleOrders().remove(order);
                                 getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
-                            }
                         }
                     }
 				}
@@ -279,20 +277,9 @@ public class World
 					// Pause game director
 					gd.pause();
 				}
-			}else{
-				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
-					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
-				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
-					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
-					if (machineBeingPlaced instanceof Processor)
-					{
-						Processor machine = (Processor)machineBeingPlaced;
-						buildMenu.removeAvailableMachine(machine);
-						factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
-					}
-				}
 				// Placing a machine ?
-				if (machineBeingPlaced == null){
+				if (machineBeingPlaced == null)
+				{
 					if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
 						// Build menu
 						buildMenu.setActivated(true);
@@ -309,7 +296,9 @@ public class World
 					}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
 						enterSelectMode((int)mx, (int)my);
 					}
-				}else{
+				}
+				else
+				{
 					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
 						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
 					if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
@@ -317,6 +306,7 @@ public class World
 						if (machineBeingPlaced instanceof Processor)
 						{
 							Processor machine = (Processor)machineBeingPlaced;
+							buildMenu.removeAvailableMachine(machine);
 							factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
 						}
 						else if (machineBeingPlaced instanceof Router)
@@ -332,8 +322,9 @@ public class World
 						activateIcons(true);
 						activateIconsTiedToSelection(false);
 					}
-				}// We are add an item to the factory
-			}// Mouse press
+				}
+			}
+			// Keys pressed
 			if (gc.getInput().isKeyPressed(Input.KEY_X)) {
 				if (machineBeingPlaced == null && !buildMenu.getActivated()){
 					enterPlacePipe();
