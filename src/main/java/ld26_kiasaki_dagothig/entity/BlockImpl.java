@@ -38,5 +38,9 @@ public class BlockImpl extends EntityImpl implements Block
 		}
 		return false;
 	}
+	@Override
+	public int compareTo(Block o) {
+		return -1;
+	}
 	
 }

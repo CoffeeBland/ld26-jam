@@ -21,8 +21,8 @@ public class Order {
 	
 	public Block getBlock(){
 		Block tmpBlock = new BlockImpl();
-		tmpBlock.setColor(color);
 		try {
+			tmpBlock.setColor(color);
 			tmpBlock.setShape(shape);
 		} catch (SlickException e) {
 			e.printStackTrace();

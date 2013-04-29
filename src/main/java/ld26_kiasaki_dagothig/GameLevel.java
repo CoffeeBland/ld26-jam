@@ -37,6 +37,14 @@ public class GameLevel {
 		}
 		return null;
 	}
+	public Order getOriginalNeededByBlock(Block tBlock){
+		for (Order tO : getOriginalNeeded()){
+			if (tO.getBlock().equals(tBlock)){
+				return tO;
+			}
+		}
+		return null;
+	}
 	
 	public int getLevel() {
 		return level;

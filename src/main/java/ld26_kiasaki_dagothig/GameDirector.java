@@ -2,6 +2,8 @@ package ld26_kiasaki_dagothig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -41,7 +43,7 @@ public class GameDirector {
 	private float truckPosition = -160;
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
-	public List<Block> blocksBuilded = new ArrayList<Block>();
+	public List<Order> blocksBuilded = new ArrayList<Order>();
 	
 	public GameDirector(){
 		this(1);
@@ -60,7 +62,7 @@ public class GameDirector {
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
 		world.buildMenu.setAvailbleMachines(getCurrentLevel().getProcessorShop());
-		blocksBuilded = new ArrayList<Block>();
+		blocksBuilded = new ArrayList<Order>();
 	}
 	public GameLevel getCurrentLevel(){
 		return levels.get(level-1);
@@ -107,11 +109,21 @@ public class GameDirector {
 			}
 		}
 		if (world.factory.getTransformedBlocks().size() > 0){
-			blocksBuilded.addAll(world.factory.getTransformedBlocks());
 			for (Block tB : world.factory.getTransformedBlocks()){
 				Order tmpBlo = getCurrentLevel().getNeededByBlock(tB);
-				if (tmpBlo != null)
+				if (tmpBlo != null){
+					boolean tFound = false;
+					for (Order tOrder : blocksBuilded) {
+						if (tOrder.getShape() == tmpBlo.getShape() && tOrder.getColor() == tmpBlo.getColor()){
+							tOrder.qty++;
+							tFound = true;
+						}
+					}
+					if (tFound == false){
+						blocksBuilded.add(new Order(tmpBlo.getShape(), tmpBlo.getColor(), 1, 0));
+					}
 					tmpBlo.qty--;
+				}
 			}
 			world.factory.getTransformedBlocks().clear();
 		}
@@ -144,8 +156,8 @@ public class GameDirector {
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
 			try {
-				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
-				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-419)+i));
+				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-416)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
@@ -154,10 +166,10 @@ public class GameDirector {
 		
 		// Render the done stuff
 		i = 0;
-		for (Block tB : blocksBuilded){
+		for (Order tB : blocksBuilded){
 			try {
-				tB.render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
-				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " );// TODO
+				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-289)+i));
+				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-286)+i, "x " + tB.getQty());
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
