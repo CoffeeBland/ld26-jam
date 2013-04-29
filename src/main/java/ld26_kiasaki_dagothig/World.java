@@ -159,7 +159,7 @@ public class World
 			filler.setHeight(filler.getHeight() + 1);
 			filler.setWidth(filler.getWidth() + 1);
 			g.fill(filler);
-			InfoWindow.renderWindow(g, uFontRealSmall, "Press DELETE to delete selected machine/item.", "Press ESCAPE to cancel selection.");
+			InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press DELETE to delete selected machine/item.", "Press ESCAPE to cancel selection.");
 		}
 		
 		for (IconButton tIB : icons)
@@ -175,7 +175,7 @@ public class World
 		
 		if (machineBeingPlaced != null){
 			if (machineBeingPlaced instanceof Pipe){
-				InfoWindow.renderWindow(g, uFontRealSmall, "Press C to rotate, Press V to switch form,", "Press X to add another pipe.");
+				InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press C to rotate, Press V to switch form,", "Press X to add another pipe.");
 			}
 			
 			float mx = gc.getInput().getMouseX();

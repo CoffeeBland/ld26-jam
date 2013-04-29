@@ -104,6 +104,7 @@ public class GameDirector {
 					if (truckPosition < -160)
 						truckPosition = -160;
 				}
+			}
 		}
 		if (world.factory.getTransformedBlocks().size() > 0){
 			blocksBuilded.addAll(world.factory.getTransformedBlocks());
