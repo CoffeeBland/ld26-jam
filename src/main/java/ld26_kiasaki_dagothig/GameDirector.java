@@ -20,6 +20,7 @@ import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
+import ld26_kiasaki_dagothig.ui.InfoWindow;
 
 public class GameDirector {
 
@@ -82,31 +83,35 @@ public class GameDirector {
 		if (newLevelMessageFadeStart > 0)
 			newLevelMessageFadeStart -= delta;
 		if (!paused){
-			if (truckPosition == world.factory.getX() - 172 && getCurrentLevel().getTruckContent().getQty() > 0)
-			{
-				if (feedTimer > 0){
-					feedTimer -= delta;
-				}else if (getCurrentLevel().getTruckContent().getQty() > 0){
-					feedTimer = 1000;
-					world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
-					getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
-				}
-			}
-			else
-			{
-				if (getCurrentLevel().getTruckContent().getQty() > 0)
+			if (getCurrentLevel() != null && getCurrentLevel().getTruckContent() != null)
+				if (truckPosition == world.factory.getX() - 172 && getCurrentLevel().getTruckContent().getQty() > 0)
 				{
-					truckPosition += delta * 0.1f;
-					if (truckPosition > world.factory.getX() - 172)
-						truckPosition = world.factory.getX() - 172;
+					if (feedTimer > 0){
+						feedTimer -= delta;
+					}else if (getCurrentLevel().getTruckContent().getQty() > 0){
+						feedTimer = 1000;
+						world.factory.receiveBlock(getCurrentLevel().getTruckContent().getBlock());
+						getCurrentLevel().getTruckContent().setQty(getCurrentLevel().getTruckContent().getQty() - 1);
+					}
 				}
 				else
 				{
-					truckPosition -= delta * 0.2f;
-					if (truckPosition < -160)
-						truckPosition = -160;
+					if (getCurrentLevel().getTruckContent().getQty() > 0)
+					{
+						truckPosition += delta * 0.1f;
+						if (truckPosition > world.factory.getX() - 172)
+							truckPosition = world.factory.getX() - 172;
+					}
+					else
+					{
+						truckPosition -= delta * 0.2f;
+						if (truckPosition < -160)
+						{
+							truckPosition = -160;
+							getCurrentLevel().setTruckContent(null);
+						}
+					}
 				}
-			}
 		}
 		if (world.factory.getTransformedBlocks().size() > 0){
 			for (Block tB : world.factory.getTransformedBlocks()){
@@ -140,18 +145,18 @@ public class GameDirector {
 		
 		// Render the needed stuff
 		Order tOrder = getCurrentLevel().getTruckContent();
-		try {
-			if (truck == null)
-				truck = new BlockImage(BlockImage.getImage("Truck.png"));
-			truck.x = Math.round(truckPosition);
-			truck.y = gc.getHeight() - 204;
-			truck.render(0, 0);
-			tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
-			uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-		
+		if (tOrder != null)
+			try {
+				if (truck == null)
+					truck = new BlockImage(BlockImage.getImage("Truck.png"));
+				truck.x = Math.round(truckPosition);
+				truck.y = gc.getHeight() - 204;
+				truck.render(0, 0);
+				tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
+				uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
 		// Render the needed stuff
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
