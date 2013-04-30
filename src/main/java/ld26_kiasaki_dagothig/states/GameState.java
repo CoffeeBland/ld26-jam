@@ -21,6 +21,10 @@ public class GameState extends BasicGameState {
 	private StateBasedGame sbg;
 	
 	private World world;
+	public World getWorld()
+	{
+		return world;
+	}
 	private GameDirector gd;
 	
 	public void init(GameContainer gc, StateBasedGame sbg)

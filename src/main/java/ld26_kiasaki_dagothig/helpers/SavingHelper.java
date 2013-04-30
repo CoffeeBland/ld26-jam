@@ -34,7 +34,7 @@ public class SavingHelper
 				pProcessor.getColor() + ":";
 		for (BlockShape shape : (pProcessor.getShapeIns()))
 			ligne += shape + ",";
-		if (pProcessor.getShapeIns().size() > 1)
+		if (pProcessor.getShapeIns().size() > 0)
 			ligne = ligne.substring(0, ligne.length() - 1);
 		ligne += ":" + pProcessor.getShapeOut();
 		return ligne;

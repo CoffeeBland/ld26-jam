@@ -1,5 +1,8 @@
 package ld26_kiasaki_dagothig.states;
 
+import java.io.File;
+
+import ld26_kiasaki_dagothig.GameStateController;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 import ld26_kiasaki_dagothig.helpers.MouseListenerImpl;
@@ -28,6 +31,7 @@ public class MenuState extends BasicGameState {
 	UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	private Image gameLogo;
+	private File[] saves = new File("saves").listFiles();
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
@@ -41,10 +45,19 @@ public class MenuState extends BasicGameState {
 		
 		Input tI = gc.getInput();
 		tI.addMouseListener(new MouseListenerImpl(){
-			public void mouseReleased(int button, int x, int y) {
+			public void mousePressed(int button, int x, int y) {
 				if(tSbg.getCurrentStateID() == ID){
 					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
 						getStateBasedGame().enterState(GameState.ID);
+					}
+					int decal = getGameContainer().getWidth() / 2 - saves.length * 16 - 4;
+					for (File file : saves)
+					{
+						if (new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
+						{
+							((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
+						}
+						decal += 32;
 					}
 				}
 			}
@@ -68,6 +81,16 @@ public class MenuState extends BasicGameState {
 		g.fillRect(gc.getWidth()/2-125, gc.getHeight()/2-30, 250, 60);
 		// Text Start Game
 		uFont.drawString(gc.getWidth()/2-105, gc.getHeight()/2-15, "Start Game");
+		// Text load game
+		uFontSmall.drawString(gc.getWidth()/2-30, gc.getHeight()/2+40, "Load");
+		int decal = gc.getWidth() / 2 - saves.length * 16 - 4;
+		for (File file : saves)
+		{
+			g.fillRect(decal, gc.getHeight()/2 + 60, 28, 28);
+			uFont.drawString(decal + 2, gc.getHeight()/2 + 60, file.getName().replace("level", "").replace(".ini", ""));
+			decal += 32;
+		}
+		// available saves
 		// Text credits
 		uFontSmall.drawString(gc.getWidth()/2-300, gc.getHeight()-45, "Ludum Dare 26 - April 2013 - By Kiasaki and Dagothig");
 	}

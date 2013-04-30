@@ -26,6 +26,12 @@ public class GameStateController extends StateBasedGame {
         this.gc = gc;
     }
 	
+	public void enterGameState(int pLevelToLoad)
+	{
+		enterState(GameState.ID);
+		((GameState)getState(GameState.ID)).getWorld().load(pLevelToLoad);
+	}
+	
 	public void reinit(){
 		try {
 			init(gc);
