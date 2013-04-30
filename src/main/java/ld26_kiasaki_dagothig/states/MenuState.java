@@ -76,6 +76,7 @@ public class MenuState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		gameLogo.draw(gc.getWidth()/2-330, 80);
+		g.drawRect(gc.getWidth()/2-350, 80, 720, 480);
 		// Rect Start game
 		g.setColor(Color.white);
 		g.fillRect(gc.getWidth()/2-125, gc.getHeight()/2-30, 250, 60);
