@@ -98,6 +98,30 @@ public class World
 		gd.setWorld(this);
 		gd.pause();
 	}
+	public void initPositions(GameContainer gc, StateBasedGame sbg) throws SlickException
+	{
+		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
+		btnNeeded = new Button(gc.getWidth() - 164, gc.getHeight() - 500, 144, 48, uFontSmall, null, "NEEDED");
+		btnDone = new Button(gc.getWidth() - 164, gc.getHeight() - 320, 144, 48, uFontSmall, null, "DONE");
+		icons = new ArrayList<IconButton>();
+		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play [p]"));
+		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory [p]"));
+		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine [b]"));
+		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe [x]"));
+		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy! [d]"));
+		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router [r]"));
+		
+		currencybar.init(gc, sbg);
+		buildMenu.init(gc, sbg);
+		igMenu.init(gc, sbg);
+		
+		factory.setX(gc.getWidth()/2-288);
+		factory.setY(gc.getHeight() - 24 * 24 - 92);
+		panel.x = gc.getWidth() - 180;
+		panel.y = gc.getHeight() - 510;
+		
+		activateIconsTiedToSelection(false);
+	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {

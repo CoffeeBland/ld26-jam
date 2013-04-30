@@ -12,7 +12,9 @@ public interface Factory
 	public int getTileXAmount();
 	public int getTileYAmount();
 	public int getX();
+	public void setX(int pX);
 	public int getY();
+	public void setY(int pY);
 	
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH);
 	public Pipe getEntryPoint();

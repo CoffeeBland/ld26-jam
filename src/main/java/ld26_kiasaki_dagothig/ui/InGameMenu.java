@@ -129,6 +129,7 @@ public class InGameMenu implements Renderable {
 								break;
 							case 2:
 								Main.toggleFullscreen();
+								world.initPositions(gc, sbg);
 								break;
 							case 3:
 								sbg.enterState(MenuState.ID);

@@ -27,9 +27,17 @@ public class FactoryImpl implements Factory
 	{
 		return x;
 	}
+	public void setX(int pX)
+	{
+		x = pX;
+	}
 	public int getY()
 	{
 		return y;
+	}
+	public void setY(int pY)
+	{
+		y = pY;
 	}
 	
 	public int shake = 0;

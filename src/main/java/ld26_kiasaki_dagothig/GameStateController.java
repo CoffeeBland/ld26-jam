@@ -5,6 +5,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+
 import ld26_kiasaki_dagothig.states.*;
 
 public class GameStateController extends StateBasedGame {
@@ -28,7 +31,7 @@ public class GameStateController extends StateBasedGame {
 	
 	public void enterGameState(int pLevelToLoad)
 	{
-		enterState(GameState.ID);
+		enterState(GameState.ID, new FadeOutTransition(Color.black, 500), new FadeInTransition(Color.black));
 		((GameState)getState(GameState.ID)).getWorld().load(pLevelToLoad);
 	}
 	

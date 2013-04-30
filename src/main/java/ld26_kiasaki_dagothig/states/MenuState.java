@@ -48,7 +48,7 @@ public class MenuState extends BasicGameState {
 			public void mousePressed(int button, int x, int y) {
 				if(tSbg.getCurrentStateID() == ID){
 					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
-						getStateBasedGame().enterState(GameState.ID);
+						getStateBasedGame().enterState(GameState.ID, new FadeOutTransition(Color.black, 500), new FadeInTransition(Color.black));
 					}
 					int decal = getGameContainer().getWidth() / 2 - saves.length * 16 - 4;
 					for (File file : saves)
