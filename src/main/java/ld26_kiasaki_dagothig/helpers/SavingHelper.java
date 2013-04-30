@@ -175,7 +175,7 @@ public class SavingHelper
 						mach.setShapeOut(BlockShape.valueOf(rd[4]));
 						mach.setCost(mach.getCostFromSize(mach.getTileWidth(), mach.getTileHeight()));
 						mach.setImage(new BlockImage(BlockImage.getImage("Processor_" + mach.getTileWidth() + "x" +  mach.getTileHeight() + ".png")));
-						mach.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_" + mach.getTileWidth() + "x" +  mach.getTileHeight() + ".png")));
+						mach.setForeground(new BlockImage(BlockImage.getImage("ProcessorForeground_" + mach.getTileWidth() + "x" +  mach.getTileHeight() + ".png")));
 						
 						state.buildMenu.add(mach);
 					}

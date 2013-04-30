@@ -284,7 +284,7 @@ public class FactoryImpl implements Factory
 		Router router = new RouterImpl();
 		router.setCost(25);
 		router.setImage(new BlockImage(BlockImage.getImage("Router.png")));
-		router.setForeGround(new BlockImage(BlockImage.getImage("RouterForeground.png")));
+		router.setForeground(new BlockImage(BlockImage.getImage("RouterForeground.png")));
 		router.setTileX(pTileX);
 		router.setTileY(pTileY);
 		router.setTileWidth(1);
@@ -324,7 +324,7 @@ public class FactoryImpl implements Factory
 		Processor processor = new ProcessorImpl();
 		processor.setCost(processor.getCostFromSize(pTileW, pTileH));
 		processor.setImage(new BlockImage(BlockImage.getImage("Processor_" + pTileW + "x" + pTileH + ".png")));
-		processor.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeGround_" + pTileW + "x" + pTileH + ".png")));
+		processor.setForeground(new BlockImage(BlockImage.getImage("ProcessorForeground_" + pTileW + "x" + pTileH + ".png")));
 		processor.setTileX(pTileX);
 		processor.setTileY(pTileY);
 		processor.setTileWidth(pTileW);

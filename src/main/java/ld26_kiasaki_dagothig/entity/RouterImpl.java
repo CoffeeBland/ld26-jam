@@ -116,6 +116,6 @@ public class RouterImpl extends PipeImpl implements Router
 	public void calculateSprite() throws SlickException
 	{
 		setImage(new BlockImage(BlockImage.getImage("Router.png")));
-		setForeGround(new BlockImage(BlockImage.getImage("RouterForeGround.png")));
+		setForeground(new BlockImage(BlockImage.getImage("RouterForeground.png")));
 	}
 }

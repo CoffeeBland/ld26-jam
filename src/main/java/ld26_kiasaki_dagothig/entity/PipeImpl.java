@@ -30,7 +30,7 @@ public class PipeImpl extends MachineImpl implements Pipe
 		while (angle < 0)
 			angle += 360;
 		setImage(new BlockImage(BlockImage.getImage("Pipe_" + (angle) + ".png")));
-		setForeGround(new BlockImage(BlockImage.getImage("PipeForeground_" + (angle) + ".png")));
+		setForeground(new BlockImage(BlockImage.getImage("PipeForeground_" + (angle) + ".png")));
 	}
 	
 	@Override
