@@ -6,6 +6,7 @@ import ld26_kiasaki_dagothig.GameStateController;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 import ld26_kiasaki_dagothig.helpers.MouseListenerImpl;
+import ld26_kiasaki_dagothig.helpers.SavingHelper;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -31,14 +32,11 @@ public class MenuState extends BasicGameState {
 	UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	private Image gameLogo;
-	private File[] saves;
+	private File[] saves = SavingHelper.getSaveFiles();
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		File tFile = new File("saves");
-		tFile.mkdir();
-		saves = tFile.listFiles();
 		this.gc = gc;
 		this.sbg = sbg;
 		
@@ -56,12 +54,11 @@ public class MenuState extends BasicGameState {
 						getStateBasedGame().enterState(GameState.ID, new FadeOutTransition(Color.black, 500), new FadeInTransition(Color.black));
 					int decal = getGameContainer().getWidth() / 2 - saves.length * 16 - 4;
 					for (File file : saves)
-						if (file.getName().endsWith(".ini"))
-						{
-							if (new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
-								((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
-							decal += 32;
-						}
+					{
+						if (new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
+							((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
+						decal += 32;
+					}
 				}
 			}
 		});
@@ -90,11 +87,9 @@ public class MenuState extends BasicGameState {
 		int decal = gc.getWidth() / 2 - saves.length * 16 - 4;
 		for (File file : saves)
 		{
-			if (file.getName().endsWith(".ini")){
-				g.fillRect(decal, gc.getHeight()/2 + 60, 28, 28);
-				uFont.drawString(decal + 2, gc.getHeight()/2 + 60, file.getName().replace("level", "").replace(".ini", ""));
-				decal += 32;
-			}
+			g.fillRect(decal, gc.getHeight()/2 + 60, 28, 28);
+			uFont.drawString(decal + 2, gc.getHeight()/2 + 60, file.getName().replace("level", "").replace(".ini", ""));
+			decal += 32;
 		}
 		// available saves
 		// Text credits

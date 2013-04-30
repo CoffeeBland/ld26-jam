@@ -26,6 +26,21 @@ public class SavingHelper
 	
 	private SavingHelper(){}
 	
+	public static File[] getSaveFiles()
+	{
+		File tFile = new File("saves");
+		tFile.mkdir();
+		File[] tSaves = tFile.listFiles();
+		List<File> validSaves = new ArrayList<File>();
+		for (File file : tSaves)
+			if (file.getName().endsWith(".ini"))
+				validSaves.add(file);
+		File[] output = new File[validSaves.size()];
+		for (int index = 0; index < validSaves.size();index++)
+			output[index] = validSaves.get(index);
+		return output;
+	}
+	
 	private static String getStringFromProcessor(Processor pProcessor)
 	{
 		String ligne = "Processor=" + 
