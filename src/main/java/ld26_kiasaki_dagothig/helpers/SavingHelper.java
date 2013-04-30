@@ -41,7 +41,7 @@ public class SavingHelper
 	}
 	private static String getStringFromRouter(Router pRouter)
 	{
-		return "Router=" + pRouter.getTileX() + "," + pRouter.getTileY() + ":";
+		return "Router=" + pRouter.getTileX() + "," + pRouter.getTileY();
 	}
 	private static String getStringFromPipe(Pipe pPipe)
 	{
