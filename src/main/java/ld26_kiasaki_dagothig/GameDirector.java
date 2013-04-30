@@ -18,6 +18,7 @@ import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
+import ld26_kiasaki_dagothig.states.GameWinState;
 
 public class GameDirector {
 
@@ -148,7 +149,7 @@ public class GameDirector {
 				if (levels.size() > level)
 					goToNextLevel();
 				else
-					world.getCurrencyBar().setCurrency(-1);
+					world.sbg.enterState(GameWinState.ID);
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
@@ -215,8 +216,8 @@ public class GameDirector {
 		List<Order> tPossibleOrders = new ArrayList<Order>();
 		List<Processor> tProcessorShop = new ArrayList<Processor>();
 		
-		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 15);
-		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Red, 5, 15));
+		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 10, 20);
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Red, 10, 20));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Circle, BlockColor.Red, 4, 4));
 		
 		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
@@ -226,8 +227,8 @@ public class GameDirector {
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
 		
-		tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 10, 10);
-		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Purple, 10, 10));
+		tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 20, 10);
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Purple, 20, 10));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Circle, BlockColor.Blue, 2, 4));
 		
 		levels.add(new GameLevel(2, "Colors, think of it!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
@@ -248,8 +249,8 @@ public class GameDirector {
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
 		
-		tTruckContent = new Order(BlockShape.Circle, BlockColor.Purple, 15, 25);
-		tNeeded.add(new Order(BlockShape.Star, BlockColor.Yellow, 15, 25));
+		tTruckContent = new Order(BlockShape.Circle, BlockColor.Purple, 15, 30);
+		tNeeded.add(new Order(BlockShape.Star, BlockColor.Yellow, 15, 30));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 3, 4));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Triangle}, BlockShape.Star, BlockColor.Yellow, 4, 2));
 		
@@ -261,8 +262,8 @@ public class GameDirector {
 		tProcessorShop = new ArrayList<Processor>();
 		
 		tTruckContent = null;
-		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 1, 120));
-		tPossibleOrders.add(new Order(BlockShape.Triangle, BlockColor.Blue, 1, 100));
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 1, 150));
+		tPossibleOrders.add(new Order(BlockShape.Triangle, BlockColor.Blue, 1, 150));
 		
 		levels.add(new GameLevel(5, "Order blocks!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 	}

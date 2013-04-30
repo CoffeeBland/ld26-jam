@@ -38,6 +38,7 @@ public class World
 {
 	public GameDirector gd;
 	public GameContainer gc;
+	public StateBasedGame sbg;
 	
 	private UnicodeFont uFontSmall;
 	private UnicodeFont uFontRealSmall;
@@ -70,6 +71,7 @@ public class World
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
+		this.sbg = sbg;
 		
 		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 		uFontRealSmall = FontFactory.get().getFont(14, java.awt.Color.WHITE);

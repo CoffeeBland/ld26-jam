@@ -10,7 +10,7 @@ public class Main {
 	private static GameStateController gsc;
 	
 	public static void main(String[] args) {
-		System.out.println("Starting v0.5 of ld26Jam by Paul (kiasaki and dagothig)");
+		System.out.println("Starting v0.8 of ld26Jam by Paul (kiasaki and dagothig)");
 		fullscreen = false;
 		try {
 			gsc = new GameStateController("LD26 Factorism - Kiasaki - Dagothig");

@@ -23,7 +23,8 @@ public class GameStateController extends StateBasedGame {
     	addState(new LogoState());
         addState(new MenuState());
         addState(new GameState());
-        addState(new GameOverState());	
+        addState(new GameOverState());
+        addState(new GameWinState());	
         enterState(LoadingState.ID);
         this.gc = gc;
     }
