@@ -13,7 +13,7 @@ public class Main {
 		System.out.println("Starting v0.5 of ld26Jam by Paul (kiasaki and dagothig)");
 		fullscreen = false;
 		try {
-			gsc = new GameStateController("Ludum Dare 26 - Kiasaki - Dagothig");
+			gsc = new GameStateController("LD26 Factorism - Kiasaki - Dagothig");
 			app = new AppGameContainer(gsc);
 			if (!fullscreen){
 				app.setDisplayMode(1024,768, false);
@@ -21,7 +21,8 @@ public class Main {
 				app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);				
 			}
 			app.setForceExit(true);
-	        app.setShowFPS(false);        
+	        app.setShowFPS(false);    
+			app.setIcons(new String[]{"res/icons/icon16.png", "res/icons/icon32.png"});
 	        app.start();
 	    } catch (SlickException e) {
 			e.printStackTrace();
