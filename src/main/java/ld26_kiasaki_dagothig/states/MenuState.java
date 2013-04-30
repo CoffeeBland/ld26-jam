@@ -31,11 +31,14 @@ public class MenuState extends BasicGameState {
 	UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
 	private Image gameLogo;
-	private File[] saves = new File("saves").listFiles();
+	private File[] saves;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		File tFile = new File("saves");
+		tFile.mkdir();
+		saves = tFile.listFiles();
 		this.gc = gc;
 		this.sbg = sbg;
 		
@@ -120,7 +123,9 @@ public class MenuState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		
+		File tFile = new File("saves");
+		tFile.mkdir();
+		saves = tFile.listFiles();
 	}
 
 	@Override
