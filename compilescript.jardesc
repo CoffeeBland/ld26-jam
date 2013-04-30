@@ -11,16 +11,10 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="false" exportJavaFiles="true" exportOutputFolder="true">
-        <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/resources"/>
-        <folder path="/ld26-Kiasaki-Dagotig/res/sprites"/>
-        <file path="/ld26-Kiasaki-Dagotig/res/game_logo.png"/>
-        <folder path="/ld26-Kiasaki-Dagotig/src"/>
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/test\/java"/>
-        <folder path="/ld26-Kiasaki-Dagotig/res/icons"/>
-        <file path="/ld26-Kiasaki-Dagotig/res/.DS_Store"/>
-        <file path="/ld26-Kiasaki-Dagotig/res/logo.png"/>
-        <folder path="/ld26-Kiasaki-Dagotig/res/fonts"/>
+        <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/resources"/>
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/test\/resources"/>
         <javaElement handleIdentifier="=ld26-Kiasaki-Dagotig/src\/main\/java"/>
+        <folder path="/ld26-Kiasaki-Dagotig/src"/>
     </selectedElements>
 </jardesc>
