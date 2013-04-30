@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ld26_kiasaki_dagothig.entity.Block;
-import ld26_kiasaki_dagothig.entity.BlockColor;
-import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
 import ld26_kiasaki_dagothig.entity.Processor;
 

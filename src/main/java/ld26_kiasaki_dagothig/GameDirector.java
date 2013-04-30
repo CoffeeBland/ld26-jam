@@ -2,8 +2,6 @@ package ld26_kiasaki_dagothig;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -20,7 +18,6 @@ import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
-import ld26_kiasaki_dagothig.ui.InfoWindow;
 
 public class GameDirector {
 

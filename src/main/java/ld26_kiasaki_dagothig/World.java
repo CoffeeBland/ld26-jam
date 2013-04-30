@@ -32,7 +32,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class World
@@ -52,7 +51,6 @@ public class World
 	
 	private Machine machineBeingPlaced;
 	private Machine lastMachineBeingPlaced;
-	private Machine selectedMachine;
 	public Factory factory;
 	private Rectangle currentSelection = new Rectangle(-1, -1, 0, 0);
 		

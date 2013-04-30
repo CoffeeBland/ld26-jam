@@ -20,6 +20,7 @@ public class FontFactory {
 	private FontFactory(){
 	}
 	
+	@SuppressWarnings("unchecked")
 	public UnicodeFont getFont(int pSize, Color pColor){
 		Map<Color, UnicodeFont> tFontArr = fonts.get(pSize);
 		if (tFontArr == null){
