@@ -235,8 +235,20 @@ public class GameDirector {
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
 		
 		levels.add(new GameLevel(2, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		
+		// Level 3
+		tNeeded = new ArrayList<Order>();
+		tPossibleOrders = new ArrayList<Order>();
+		tProcessorShop = new ArrayList<Processor>();
+		tTruckContent = null;
 
-		// Level 2
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Orange, 8, 30));
+		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 8, 15));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
+		
+		levels.add(new GameLevel(3, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+
+		// Level 4
 		tNeeded = new ArrayList<Order>();
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();

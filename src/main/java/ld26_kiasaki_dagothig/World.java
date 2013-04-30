@@ -40,8 +40,8 @@ public class World
 	public GameDirector gd;
 	public GameContainer gc;
 	
-	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
-	private UnicodeFont uFontRealSmall = FontFactory.get().getFont(14, java.awt.Color.WHITE);
+	private UnicodeFont uFontSmall;
+	private UnicodeFont uFontRealSmall;
 	private Button btnMenu;
 	private Button btnNeeded;
 	private Button btnDone;
@@ -72,6 +72,9 @@ public class World
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
+		
+		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
+		uFontRealSmall = FontFactory.get().getFont(14, java.awt.Color.WHITE);
 		
 		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
 		btnNeeded = new Button(gc.getWidth() - 164, gc.getHeight() - 500, 144, 48, uFontSmall, null, "NEEDED");

@@ -16,12 +16,13 @@ public class IconButton extends Rectangle {
 	public Image sprite;
 	public String tooltipText;
 	
-	private UnicodeFont uFont = FontFactory.get().getFont(16, java.awt.Color.WHITE);	
+	private UnicodeFont uFont;	
 	private final Color gray = new Color(150, 150, 150);
 	private boolean activated = true;
 	
 	public IconButton(float x, float y, Color bghover, Color fg, Image pSprite, String pTooltipText) {
 		super(x, y, 48, 48);
+		uFont = FontFactory.get().getFont(16, java.awt.Color.WHITE);
 		this.bghover = bghover;
 		this.fg = fg;
 		this.sprite = pSprite;

@@ -24,7 +24,7 @@ public class InGameMenu implements Renderable {
 
 	private World world;
 	private boolean activated;
-	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
+	private UnicodeFont uFontSmall;
 	
 	private List<String> btns;
 	private int topX;
@@ -41,6 +41,8 @@ public class InGameMenu implements Renderable {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
+		
 		btns = new ArrayList<String>();
 		btns.add("Resume game");
 		btns.add("Restart level");

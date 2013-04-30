@@ -13,7 +13,7 @@ public class Button extends Rectangle {
 
 	public Color bghover = Color.white;
 	public String text = "";
-	private UnicodeFont font = null;
+	private UnicodeFont font;
 	
 	public Button(float x, float y, float width, float height, UnicodeFont font, Color bghover, String text) {
 		super(x, y, width, height);
