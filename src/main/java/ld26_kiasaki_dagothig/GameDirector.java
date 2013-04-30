@@ -266,6 +266,19 @@ public class GameDirector {
 		tPossibleOrders.add(new Order(BlockShape.Triangle, BlockColor.Blue, 1, 150));
 		
 		levels.add(new GameLevel(5, "Order blocks!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		
+		// Level 6
+		/*
+		tNeeded = new ArrayList<Order>();
+		tPossibleOrders = new ArrayList<Order>();
+		tProcessorShop = new ArrayList<Processor>();
+		
+		tTruckContent = null;
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 1, 150));
+		tPossibleOrders.add(new Order(BlockShape.Triangle, BlockColor.Blue, 1, 150));
+		
+		levels.add(new GameLevel(6, "Order blocks!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		*/
 	}
 	private Processor generateProcessor(BlockShape[] pIns, BlockShape pOut, BlockColor pColor, int pW, int pH)
 	{

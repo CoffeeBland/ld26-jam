@@ -36,8 +36,9 @@ public class SavingHelper
 			if (file.getName().endsWith(".ini"))
 				validSaves.add(file);
 		File[] output = new File[validSaves.size()];
-		for (int index = 0; index < validSaves.size();index++)
+		for (int index = 0; index < validSaves.size();index++){
 			output[index] = validSaves.get(index);
+		}
 		return output;
 	}
 	
