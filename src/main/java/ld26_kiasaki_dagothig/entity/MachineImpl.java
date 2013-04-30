@@ -121,13 +121,13 @@ public class MachineImpl extends EntityImpl implements Machine
 		this.deletable = deletable;
 	}
 	
-	public BlockImage getForeGround()
+	public BlockImage getForeground()
 	{
-		return foreGround;
+		return foreground;
 	}
-	public void setForeGround(BlockImage foreGround)
+	public void setForeground(BlockImage foreground)
 	{
-		this.foreGround = foreGround;
+		this.foreground = foreground;
 	}
 	
 	public int getCost()
@@ -169,7 +169,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	public List<Machine> outs = new ArrayList<Machine>();
 	public boolean working = true, deletable = true;
 	
-	public BlockImage foreGround = null;
+	public BlockImage foreground = null;
 	
 	public int cost = 0;
 	
@@ -259,12 +259,12 @@ public class MachineImpl extends EntityImpl implements Machine
 	@Override
 	public void renderForeground(int pScrollX, int pScrollY) throws SlickException
 	{
-		getForeGround().x = Math.round(getX());
-		getForeGround().y = Math.round(getY());
-		getForeGround().image.setCenterOfRotation(getW() / 2, getH() / 2);
-		getForeGround().image.setRotation(getAngle());
+		getForeground().x = Math.round(getX());
+		getForeground().y = Math.round(getY());
+		getForeground().image.setCenterOfRotation(getW() / 2, getH() / 2);
+		getForeground().image.setRotation(getAngle());
 		
-		getForeGround().render(pScrollX, pScrollY);
+		getForeground().render(pScrollX, pScrollY);
 	}
 	
 	public MachineImpl(){}
@@ -273,7 +273,7 @@ public class MachineImpl extends EntityImpl implements Machine
 		setCost(pCost);
 		setColor(pColor);
 		setImage(new BlockImage(BlockImage.getImage(pBack)));
-		setForeGround(new BlockImage(BlockImage.getImage(pFore)));
+		setForeground(new BlockImage(BlockImage.getImage(pFore)));
 		setX(pX);
 		setY(pY);
 		setTileWidth(pTileWidth);

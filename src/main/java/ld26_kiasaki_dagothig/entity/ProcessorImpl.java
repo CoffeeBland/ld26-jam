@@ -17,7 +17,7 @@ public class ProcessorImpl extends MachineImpl implements Processor
 		this.setTileHeight(pTHeight);
 		try {
 			this.setImage(new BlockImage(BlockImage.getImage("Processor_"+pTWitdth+"x"+pTHeight+".png")));
-			this.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_"+pTWitdth+"x"+pTHeight+".png")));
+			this.setForeground(new BlockImage(BlockImage.getImage("ProcessorForeground_"+pTWitdth+"x"+pTHeight+".png")));
 		} catch (SlickException e) {
 			System.out.println("Failed to load images in ProcessorImplConstructor");
 			e.printStackTrace();

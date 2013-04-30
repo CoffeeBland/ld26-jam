@@ -26,8 +26,8 @@ public interface Machine extends Entity, TileBased
 	public boolean isDeletable();
 	public void setDeletable(boolean deletable);
 	
-	public BlockImage getForeGround();
-	public void setForeGround(BlockImage foreGround);
+	public BlockImage getForeground();
+	public void setForeground(BlockImage foreGround);
 	
 	public int getCost();
 	public void setCost(int cost);

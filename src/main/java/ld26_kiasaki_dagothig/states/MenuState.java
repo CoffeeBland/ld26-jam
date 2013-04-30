@@ -48,22 +48,20 @@ public class MenuState extends BasicGameState {
 		
 		Input tI = gc.getInput();
 		tI.addMouseListener(new MouseListenerImpl(){
-			public void mousePressed(int button, int x, int y) {
-				if(tSbg.getCurrentStateID() == ID){
-					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y)){
+			public void mousePressed(int button, int x, int y) 
+			{
+				if(tSbg.getCurrentStateID() == ID)
+				{
+					if (new Rectangle(getGameContainer().getWidth()/2-125, getGameContainer().getHeight()/2-30, 250, 60).contains(x, y))
 						getStateBasedGame().enterState(GameState.ID, new FadeOutTransition(Color.black, 500), new FadeInTransition(Color.black));
-					}
 					int decal = getGameContainer().getWidth() / 2 - saves.length * 16 - 4;
 					for (File file : saves)
-					{
-						if (file.getName().endsWith(".ini") && new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
+						if (file.getName().endsWith(".ini"))
 						{
-							((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
-						}
-						if(file.getName().endsWith(".ini")){
+							if (new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
+								((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
 							decal += 32;
 						}
-					}
 				}
 			}
 		});
