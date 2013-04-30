@@ -17,8 +17,8 @@ import ld26_kiasaki_dagothig.states.GameOverState;
 
 public class CurrencyBar implements Renderable {
 
-	private UnicodeFont uFont = FontFactory.get().getFont(16, java.awt.Color.WHITE);
-	private UnicodeFont uFontBig = FontFactory.get().getFont(32, java.awt.Color.WHITE);
+	private UnicodeFont uFont;
+	private UnicodeFont uFontBig;
 	private Color golden = new Color(247,226,2);
 	private int currency = 0;
 	private World world;
@@ -43,6 +43,8 @@ public class CurrencyBar implements Renderable {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		uFont = FontFactory.get().getFont(16, java.awt.Color.WHITE);
+		uFontBig = FontFactory.get().getFont(32, java.awt.Color.WHITE);
 	}
 
 	@Override

@@ -28,9 +28,9 @@ public class BuildMenu implements Renderable {
 	private World world;
 	private List<IconButton> icons = new ArrayList<IconButton>();
 	private List<Processor> availableMachines = new ArrayList<Processor>();
-	private UnicodeFont uFont = FontFactory.get().getFont(26, java.awt.Color.WHITE);
-	private UnicodeFont uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
-	private UnicodeFont uFontSmallBlack = FontFactory.get().getFont(16, java.awt.Color.BLACK);
+	private UnicodeFont uFont;
+	private UnicodeFont uFontSmall;
+	private UnicodeFont uFontSmallBlack;
 	
 	public boolean getActivated(){
 		return activated;
@@ -57,6 +57,9 @@ public class BuildMenu implements Renderable {
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		uFont = FontFactory.get().getFont(26, java.awt.Color.WHITE);
+		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
+		uFontSmallBlack = FontFactory.get().getFont(16, java.awt.Color.BLACK);
 		setActivated(false);
 		icons.add(new IconButton(gc.getWidth()/2+352, gc.getHeight()/2-324, Color.lightGray, new Color(194,74,56), new Image("res/icons/close.png"), "Close"));
 	}
