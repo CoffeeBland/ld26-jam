@@ -53,18 +53,20 @@ public class MenuState extends BasicGameState {
 					int decal = getGameContainer().getWidth() / 2 - saves.length * 16 - 4;
 					for (File file : saves)
 					{
-						if (new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
+						if (file.getName().endsWith(".ini") && new Rectangle(decal, getGameContainer().getHeight()/2 + 60, 28, 28).contains(x, y))
 						{
 							((GameStateController)getStateBasedGame()).enterGameState(Integer.parseInt(file.getName().replace("level", "").replace(".ini", "")));
 						}
-						decal += 32;
+						if(file.getName().endsWith(".ini")){
+							decal += 32;
+						}
 					}
 				}
 			}
 		});
 		
 	}
-	
+
 	@Override
 	public void keyReleased(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
@@ -87,9 +89,11 @@ public class MenuState extends BasicGameState {
 		int decal = gc.getWidth() / 2 - saves.length * 16 - 4;
 		for (File file : saves)
 		{
-			g.fillRect(decal, gc.getHeight()/2 + 60, 28, 28);
-			uFont.drawString(decal + 2, gc.getHeight()/2 + 60, file.getName().replace("level", "").replace(".ini", ""));
-			decal += 32;
+			if (file.getName().endsWith(".ini")){
+				g.fillRect(decal, gc.getHeight()/2 + 60, 28, 28);
+				uFont.drawString(decal + 2, gc.getHeight()/2 + 60, file.getName().replace("level", "").replace(".ini", ""));
+				decal += 32;
+			}
 		}
 		// available saves
 		// Text credits

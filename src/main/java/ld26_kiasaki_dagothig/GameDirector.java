@@ -253,7 +253,7 @@ public class GameDirector {
 		
 		tTruckContent = new Order(BlockShape.Circle, BlockColor.Purple, 15, 20);
 		tNeeded.add(new Order(BlockShape.Star, BlockColor.Yellow, 15, 20));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 1, 4));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 3, 4));
 		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Triangle}, BlockShape.Star, BlockColor.Yellow, 4, 2));
 		
 		levels.add(new GameLevel(4, "This game is a puzzle", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
