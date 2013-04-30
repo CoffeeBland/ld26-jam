@@ -211,8 +211,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void receiveBlock(Block pBlock)
 	{
 		getProgress().put(pBlock, 0f);
-		pBlock.setX(getEntryX());
-		pBlock.setY(getEntryY());
+		/*pBlock.setX(getEntryX());
+		pBlock.setY(getEntryY());*/
 	}
 	@Override
 	public void sendBlock(Block pBlock) throws SlickException
@@ -249,24 +249,16 @@ public class MachineImpl extends EntityImpl implements Machine
 	{
 		super.update(d);
 		List<Block> blocksToSend = new ArrayList<Block>();
-		if (getProgressDuration() != Integer.MAX_VALUE)
 		{
 			for (Block block : progress.keySet())
 			{
-				getProgress().put(block, getProgress().get(block) + d);
-	
-				float progress = Math.min(1, (getProgress().get(block) / getProgressDuration()));
-				if (progress < 0.5)
+				if (getProgressDuration() != Integer.MAX_VALUE)
+					getProgress().put(block, getProgress().get(block) + d);
+				
+				for (int index = 0; index < d; index++)
 				{
-					progress *= 2f;
-					block.setX(entryX * (1 - progress) + middleX * progress);
-					block.setY(entryY * (1 - progress) + middleY * progress);
-				}
-				else
-				{
-					progress = (progress - 0.5f) * 2f;
-					block.setX(middleX * (1 - progress) + outX * progress);
-					block.setY(middleY * (1 - progress) + outY * progress);
+					block.setX((block.getX() * 0.99f + middleX * 0.01f));
+					block.setY((block.getY() * 0.99f + middleY * 0.01f));
 				}
 				if (getProgress().get(block) > getProgressDuration())
 					blocksToSend.add(block);
