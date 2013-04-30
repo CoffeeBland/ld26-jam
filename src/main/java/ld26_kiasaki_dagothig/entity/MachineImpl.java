@@ -69,12 +69,6 @@ public class MachineImpl extends EntityImpl implements Machine
 		if (autoAssignOut)
 			if (!in.getOuts().contains(this))
 				in.addOut(this, false);
-		
-		if (!(this instanceof Pipe))
-		{
-			entryX = (int)(in.getX() + in.getW() / 2 - 12);
-			entryY = (int)(in.getY() + in.getH() / 2 - 12);
-		}
 	}
 	public void removeIn(Machine in, boolean autoAssignOut)
 	{
@@ -84,13 +78,6 @@ public class MachineImpl extends EntityImpl implements Machine
 		getIns().remove(in);
 		if (autoAssignOut)
 			in.removeOut(this, false);
-		
-		if (getIns().size() > 0)
-		{
-			Machine mach = getIns().get(rnd.nextInt(getIns().size()));
-			entryX = (int)(mach.getX() + mach.getW() / 2 - 12);
-			entryY = (int)(mach.getY() + mach.getH() / 2 - 12);
-		}
 	}
 	
 	public void addOut(Machine out, boolean autoAssignIn)
@@ -102,12 +89,6 @@ public class MachineImpl extends EntityImpl implements Machine
 		if (autoAssignIn)
 			if (!out.getIns().contains(this))
 				out.addIn(this, false);
-		
-		if (!(this instanceof Pipe))
-		{
-			outX = (int)(out.getX() + out.getW() / 2 - 12);
-			outY = (int)(out.getY() + out.getH() / 2 - 12);
-		}
 	}
 	public void removeOut(Machine out, boolean autoAssignIn)
 	{
@@ -117,21 +98,10 @@ public class MachineImpl extends EntityImpl implements Machine
 		getOuts().remove(out);
 		if (autoAssignIn)
 			out.removeIn(this, false);
-		
-		if (getOuts().size() > 0)
-		{
-			Machine mach = getOuts().get(rnd.nextInt(getOuts().size()));
-			outX = (int)(mach.getX() + mach.getW() / 2 - 12);
-			outY = (int)(mach.getY() + mach.getH() / 2 - 12);
-		}
 	}
 	
-	public int getEntryX(){return entryX;}
-	public int getEntryY(){return entryY;}
 	public int getMiddleX(){return middleX;}
 	public int getMiddleY(){return middleY;}
-	public int getOutX(){return outX;}
-	public int getOutY(){return outY;}
 	
 	public boolean isWorking() 
 	{
@@ -193,7 +163,7 @@ public class MachineImpl extends EntityImpl implements Machine
 	public int tileY = 0;
 	public int tileWidth = 0;
 	public int tileHeight = 0;
-	public int entryX = 0, entryY = 0, middleX = 0, middleY = 0, outX = 0, outY = 0;
+	public int middleX = 0, middleY = 0;
 	
 	public List<Machine> ins = new ArrayList<Machine>();
 	public List<Machine> outs = new ArrayList<Machine>();
@@ -211,8 +181,6 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void receiveBlock(Block pBlock)
 	{
 		getProgress().put(pBlock, 0f);
-		/*pBlock.setX(getEntryX());
-		pBlock.setY(getEntryY());*/
 	}
 	@Override
 	public void sendBlock(Block pBlock) throws SlickException

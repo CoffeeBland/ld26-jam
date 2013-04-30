@@ -84,6 +84,8 @@ public class FactoryImpl implements Factory
 	@Override
 	public void receiveBlock(Block pBlock) throws SlickException
 	{
+		pBlock.setX(getEntryPoint().getX() - 12);
+		pBlock.setY(getEntryPoint().getMiddleY());
 		getEntryPoint().receiveBlock(pBlock);
 	}
 	private List<Block> transformedBlocks = new ArrayList<Block>();

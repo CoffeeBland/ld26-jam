@@ -1,6 +1,5 @@
 package ld26_kiasaki_dagothig.entity;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.newdawn.slick.SlickException;
@@ -65,8 +64,6 @@ public class RouterImpl extends PipeImpl implements Router
 				}
 			}
 		}
-		entryX = middleX;
-		entryY = middleY;
 	}
 	
 	@Override
