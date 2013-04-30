@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="MacRoman" standalone="no"?>
 <jardesc>
-    <jar path="/Users/fredericgingras/Code/ld26-Factorism.jar"/>
+    <jar path="/Users/fredericgingras/Downloads/FacBuilding/ld26-Factorism.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/ld26-Kiasaki-Dagotig/compilescript.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
