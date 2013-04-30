@@ -219,8 +219,8 @@ public class GameDirector {
 		List<Processor> tProcessorShop = new ArrayList<Processor>();
 		
 		Order tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 5, 10);
-		tNeeded.add(new Order(BlockShape.Square, BlockColor.Red, 5, 30));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Square, BlockColor.Red, 4, 4));
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Red, 5, 10));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Circle, BlockColor.Red, 4, 4));
 		
 		levels.add(new GameLevel(1, "Starting out!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 		
@@ -228,40 +228,46 @@ public class GameDirector {
 		tNeeded = new ArrayList<Order>();
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
-		tTruckContent = null;
-
-		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Orange, 8, 30));
-		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 8, 15));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
 		
-		levels.add(new GameLevel(2, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		tTruckContent = new Order(BlockShape.Circle, BlockColor.Orange, 10, 5);
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Purple, 10, 5));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle}, BlockShape.Circle, BlockColor.Blue, 2, 4));
+		
+		levels.add(new GameLevel(2, "Colors, think of it!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 		
 		// Level 3
 		tNeeded = new ArrayList<Order>();
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
-		tTruckContent = null;
-
-		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Orange, 8, 30));
-		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 8, 15));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 2, 4));
 		
-		levels.add(new GameLevel(3, "Placing orders", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
-
+		tTruckContent = new Order(BlockShape.Triangle, BlockColor.Red, 10, 20);
+		tNeeded.add(new Order(BlockShape.Circle, BlockColor.Blue, 10, 20));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Triangle}, BlockShape.Circle, BlockColor.Blue, 3, 3));
+		
+		levels.add(new GameLevel(3, "Shapes can change!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		
 		// Level 4
 		tNeeded = new ArrayList<Order>();
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
-		tTruckContent = null;
-
-		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 4, 20));
-		tNeeded.add(new Order(BlockShape.Star, BlockColor.Green, 5, 15));
-		tPossibleOrders.add(new Order(BlockShape.Circle, BlockColor.Orange, 4, 15));
-		tPossibleOrders.add(new Order(BlockShape.Square, BlockColor.Yellow, 5, 10));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Square}, BlockShape.Star, BlockColor.Blue, 3, 3));
-		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Triangle}, BlockShape.Triangle, BlockColor.Yellow, 4, 2));
 		
-		levels.add(new GameLevel(3, "Playing with colors", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+		tTruckContent = new Order(BlockShape.Circle, BlockColor.Purple, 15, 20);
+		tNeeded.add(new Order(BlockShape.Star, BlockColor.Yellow, 15, 20));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Star}, BlockShape.Triangle, BlockColor.Yellow, 1, 4));
+		tProcessorShop.add(generateProcessor(new BlockShape[]{BlockShape.Circle, BlockShape.Triangle}, BlockShape.Star, BlockColor.Yellow, 4, 2));
+		
+		levels.add(new GameLevel(4, "This game is a puzzle", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
+
+		// Level 5
+		tNeeded = new ArrayList<Order>();
+		tPossibleOrders = new ArrayList<Order>();
+		tProcessorShop = new ArrayList<Processor>();
+		
+		tTruckContent = null;
+		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 1, 120));
+		tPossibleOrders.add(new Order(BlockShape.Triangle, BlockColor.Blue, 1, 100));
+		
+		levels.add(new GameLevel(5, "Order blocks!", tNeeded, tPossibleOrders, tTruckContent, tProcessorShop));
 	}
 	private Processor generateProcessor(BlockShape[] pIns, BlockShape pOut, BlockColor pColor, int pW, int pH)
 	{
