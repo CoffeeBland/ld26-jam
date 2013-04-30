@@ -80,8 +80,8 @@ public class World
 		btnNeeded = new Button(gc.getWidth() - 164, gc.getHeight() - 500, 144, 48, uFontSmall, null, "NEEDED");
 		btnDone = new Button(gc.getWidth() - 164, gc.getHeight() - 320, 144, 48, uFontSmall, null, "DONE");
 		icons = new ArrayList<IconButton>();
-		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play"));
-		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory"));
+		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play [p]"));
+		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory [p]"));
 		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine [b]"));
 		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe [x]"));
 		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy! [d]"));
@@ -370,15 +370,30 @@ public class World
 				buildMenu.setActivated(true);
 				activateIcons(false);
 			}
-			if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated()){
-				if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
+			if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated())
+			{
+				if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
+				{
 					currentSelection = new Rectangle(-1, -1, 0, 0);
 					activateIconsTiedToSelection(false);
-				}else if (machineBeingPlaced != null){
+				}
+				else if (machineBeingPlaced != null)
+				{
 					machineBeingPlaced = null;
 					activateIcons(true);
 					activateIconsTiedToSelection(false);
 				}
+				else
+				{
+					System.out.println("jean");
+					igMenu.setActivated(true);
+				}
+			}
+			if (gc.getInput().isKeyPressed(Input.KEY_P)){
+				if (gd.getPaused())
+					gd.start();
+				else
+					gd.pause();
 			}
 			buildMenu.update(gc, sbg, d);
 			currencybar.update(gc, sbg, d);
