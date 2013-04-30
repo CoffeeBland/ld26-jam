@@ -121,12 +121,11 @@ public class InGameMenu implements Renderable {
 								this.activated = false;
 								break;
 							case 1:
-								world.gd.setLevel(world.gd.getCurrentLevel().getLevel());
+								world.load(world.gd.getCurrentLevel().getLevel());
 								this.activated = false;
 								break;
 							case 2:
 								Main.toggleFullscreen();
-								sbg.enterState(GameState.ID);
 								break;
 							case 3:
 								sbg.enterState(MenuState.ID);

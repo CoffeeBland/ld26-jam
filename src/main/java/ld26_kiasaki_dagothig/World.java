@@ -16,6 +16,7 @@ import ld26_kiasaki_dagothig.entity.RouterImpl;
 import ld26_kiasaki_dagothig.entity.TileBased;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
+import ld26_kiasaki_dagothig.helpers.SavingHelper;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
 import ld26_kiasaki_dagothig.ui.CurrencyBar;
@@ -315,6 +316,8 @@ public class World
 							buildMenu.removeAvailableMachine(machine);
 							factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
 							machineBeingPlaced = null;
+							activateIcons(true);
+							activateIconsTiedToSelection(false);
 						}
 						else if (machineBeingPlaced instanceof Router)
 							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
@@ -323,8 +326,6 @@ public class World
 							Pipe machine = (Pipe)machineBeingPlaced;
 							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
 						}
-						activateIcons(true);
-						activateIconsTiedToSelection(false);
 					}
 				}
 			}
@@ -492,4 +493,21 @@ public class World
 		return (int) Math.max(0, Math.min(factory.getTileYAmount() -pMaxOffset, Math.ceil((pY - factory.getY()) / (float)TileBased.TILE_SIZE)));	
 	}
 	
+	
+	// Saving and loading
+	public void save(int pLevel)
+	{
+		SavingHelper.saveToFile(factory, getCurrencyBar().getCurrency(), buildMenu.getAvailableMachines(), pLevel);
+	}
+	public void load(int pLevel)
+	{
+		SavingHelper save = SavingHelper.readWorldFromFile(pLevel);
+		
+		factory = save.factory;
+		gd.resetTruckPosition();
+		gd.generateLevels();
+		gd.setLevel(save.level);
+		buildMenu.setAvailbleMachines(save.buildMenu);
+		getCurrencyBar().setCurrency(save.money);
+	}
 }

@@ -50,6 +50,10 @@ public class BuildMenu implements Renderable {
 	public void setAvailbleMachines(List<Processor> pMachines){
 		availableMachines = pMachines;
 	}
+	public List<Processor> getAvailableMachines()
+	{
+		return availableMachines;
+	}
 	
 	public BuildMenu(World pWorld){
 		this.world = pWorld;

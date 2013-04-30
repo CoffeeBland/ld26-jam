@@ -43,6 +43,10 @@ public class GameDirector {
 	private long newLevelMessageFadeDuration = 2500;
 	private BlockImage truck;
 	private float truckPosition = -160;
+	public void resetTruckPosition()
+	{
+		truckPosition = -160;
+	}
 	
 	private List<GameLevel> levels = new ArrayList<GameLevel>();
 	public List<Order> blocksBuilded = new ArrayList<Order>();
@@ -66,6 +70,11 @@ public class GameDirector {
 		for (Processor mach : getCurrentLevel().getProcessorShop())
 			world.buildMenu.addAvailbleMachine(mach);
 		blocksBuilded = new ArrayList<Order>();
+	}
+	
+	public void goToNextLevel(){
+		setLevel(getCurrentLevel().getLevel() + 1);
+		world.save(level);
 	}
 	public GameLevel getCurrentLevel(){
 		return levels.get(level-1);
@@ -140,7 +149,7 @@ public class GameDirector {
 					finished = false;
 			if (finished)
 				if (levels.size() > level)
-					setLevel(level += 1);
+					goToNextLevel();
 				else
 					world.getCurrencyBar().setCurrency(-1);
 		}
@@ -201,7 +210,9 @@ public class GameDirector {
 		world.getIcon(1).setActivated(!paused);
 	}
 	
-	private void generateLevels(){
+	public void generateLevels(){
+		levels.clear();
+		
 		// Level 1
 		List<Order> tNeeded = new ArrayList<Order>();
 		List<Order> tPossibleOrders = new ArrayList<Order>();

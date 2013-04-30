@@ -1,6 +1,7 @@
 package ld26_kiasaki_dagothig.helpers;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -20,7 +21,7 @@ import ld26_kiasaki_dagothig.entity.Router;
 public class SavingHelper 
 {
 	public Factory factory;
-	public int money;
+	public int money, level;
 	public List<Processor> buildMenu = new ArrayList<Processor>();
 	
 	private SavingHelper(){}
@@ -78,13 +79,16 @@ public class SavingHelper
 			pFactory.addPipe(Integer.parseInt(subinfos[0]), Integer.parseInt(subinfos[1]), Integer.parseInt(infos[1]), Integer.parseInt(infos[2]));
 		}
 	}
-	public static void SaveToFile(Factory pFactory, int pMoney, List<Processor> pBuildMenu, int pLevel)
+	
+	public static void saveToFile(Factory pFactory, int pMoney, List<Processor> pBuildMenu, int pLevel)
 	{
 		FileWriter outFile = null;
 		PrintWriter out = null;
 		try
 		{
-			outFile = new FileWriter("saves/level" + pLevel + ".lvl");
+			File file = new File("saves/level" + pLevel + ".ini");
+			file.getParentFile().mkdirs();
+			outFile = new FileWriter(file);
 			out = new PrintWriter(outFile);
 			
 			out.println("[WorldInfo]");
@@ -124,7 +128,9 @@ public class SavingHelper
 		BufferedReader in = null;
 		try
 		{
-			inFile = new FileReader("save/level" + pLevel);
+			File file = new File("saves/level" + pLevel + ".ini");
+			file.getParentFile().mkdirs();
+			inFile = new FileReader(file);
 			in = new BufferedReader(inFile);
 		
 			String line = in.readLine(), currentType = "";
@@ -139,6 +145,8 @@ public class SavingHelper
 						String[] rd = line.split("=");
 						if (rd[0].equals("Money"))
 							state.money = Integer.parseInt(rd[1]);
+						else if (rd[0].equals("Level"))
+							state.level = Integer.parseInt(rd[1]);
 						else if (rd[0].equals("FactoryInfo"))
 						{
 							String[] rdsub = rd[1].split(",");
@@ -166,6 +174,8 @@ public class SavingHelper
 							mach.getShapeIns().add(BlockShape.valueOf(shape));
 						mach.setShapeOut(BlockShape.valueOf(rd[4]));
 						mach.setCost(mach.getCostFromSize(mach.getTileWidth(), mach.getTileHeight()));
+						mach.setImage(new BlockImage(BlockImage.getImage("Processor_" + mach.getTileWidth() + "x" +  mach.getTileHeight() + ".png")));
+						mach.setForeGround(new BlockImage(BlockImage.getImage("ProcessorForeground_" + mach.getTileWidth() + "x" +  mach.getTileHeight() + ".png")));
 						
 						state.buildMenu.add(mach);
 					}
