@@ -117,8 +117,6 @@ public class World
 		
 		factory.setX(gc.getWidth()/2-288);
 		factory.setY(gc.getHeight() - 24 * 24 - 92);
-		panel.x = gc.getWidth() - 180;
-		panel.y = gc.getHeight() - 510;
 		
 		activateIconsTiedToSelection(false);
 	}
@@ -144,33 +142,20 @@ public class World
 
 		// Panel
 		if (panel == null)
-		{
 			panel = new BlockImage(BlockImage.getImage("Pancarte.png"));
-			panel.x = gc.getWidth() - 180;
-			panel.y = gc.getHeight() - 510;
-		}
-		panel.render(0, 0);
+		panel.render(-gc.getWidth() + 180, -gc.getHeight() + 510);
 		
 		if (grass == null)
 			grass = new BlockImage(BlockImage.getImage("Grass.png"));
 		grass.y = gc.getHeight() - 92;
 		for (int index = -4; index < gc.getWidth(); index += 24)
-		{
 			if (index < factory.getX() - 24 || index > factory.getX() + factory.getTileXAmount() * TileBased.TILE_SIZE)
 			{
 				grass.x = index;
 				grass.render(0, 0);
 			}
-		}
 		
-		// Top bar BG
-		g.setColor(lightGray);
-		g.fillRect(0, 0, gc.getWidth(), 48);
-		g.setColor(darkGray);
-		g.fillRect(0, 48, gc.getWidth(), 6);
-
 		factory.render(g, scrollX, scrollY);
-		
 		// Selection
 		if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
 			int tmpBWFade = (int) Math.abs( (gc.getTime() % 512) - 255 );
@@ -183,6 +168,12 @@ public class World
 			InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press DELETE to delete selected machine/item.", "Press ESCAPE to cancel selection.");
 		}
 		
+		// Top bar BG
+		g.setColor(lightGray);
+		g.fillRect(0, 0, gc.getWidth(), 48);
+		g.setColor(darkGray);
+		g.fillRect(0, 48, gc.getWidth(), 6);
+
 		for (IconButton tIB : icons)
 			tIB.draw(gc, g);
 		for (IconButton tIB : icons)
@@ -195,9 +186,11 @@ public class World
 		currencybar.render(gc, sbg, g);
 		
 		if (machineBeingPlaced != null){
-			if (machineBeingPlaced instanceof Pipe){
-				InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press C to rotate, Press V to switch form,", "Press X to add another pipe.");
+			if (machineBeingPlaced instanceof Pipe && !(machineBeingPlaced instanceof Router)){
+				InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press C to rotate, Press V to switch form, Press escape to cancel", "Keep X down to chain place pipes.");
 			}
+			else
+				InfoWindow.renderWindow(gc, g, uFontRealSmall, "Press escape to cancel placement");
 			
 			float mx = gc.getInput().getMouseX();
 			float my = gc.getInput().getMouseY();
@@ -274,161 +267,193 @@ public class World
 		igMenu.render(gc, sbg, g);
 	}
 	
-	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
+	private void updateCheckForMouseInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
+	{
 		float mx = gc.getInput().getMouseX();
 		float my = gc.getInput().getMouseY();
 
+		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))
+		{
+			// Menu button
+			if (btnMenu.contains(mx, my))
+            {
+				igMenu.setActivated(true);
+				return;
+			}
+			// Placing order
+            if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+            {
+                int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+                if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
+                    if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
+                            gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
+                            gd.getCurrentLevel().getPossibleOrders().remove(order);
+                            getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+                    }
+                }
+			}
+			// Play pause Btns
+			if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
+				// Play game director
+				gd.start();
+			}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
+				// Pause game director
+				gd.pause();
+			}
+			// Placing a machine ?
+			if (machineBeingPlaced == null)
+			{
+				if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
+					// Build menu
+					buildMenu.setActivated(true);
+					activateIcons(false);
+				}else if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
+					// Add pipe
+					enterPlacePipe();
+				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
+					// Destroy!
+					destroySelection();
+				}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
+					// Add router!
+					enterPlaceRouter();
+				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
+					enterSelectMode((int)mx, (int)my);
+				}
+			}
+			else
+			{
+				// Get tile X and Y
+				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
+					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+				// If hover factory
+				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
+					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+					// Place machine
+					currencybar.removeCurrency(machineBeingPlaced.getCost());
+					lastMachineBeingPlaced = machineBeingPlaced;
+					// Processor
+					if (machineBeingPlaced instanceof Processor)
+					{
+						Processor machine = (Processor)machineBeingPlaced;
+						buildMenu.removeAvailableMachine(machine);
+						factory.addProcessor(tileX, tileY, 
+											 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
+											 machine.getShapeIns(), machine.getShapeOut(), 
+											 machineBeingPlaced.getColor());
+					}
+					// Router
+					else if (machineBeingPlaced instanceof Router)
+					{
+						factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
+					}
+					// Pipe
+					else if (machineBeingPlaced instanceof Pipe)
+					{
+						Pipe machine = (Pipe)machineBeingPlaced;
+						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
+					}
+					// Deactivate building mode
+					if ((machineBeingPlaced instanceof Router ||
+						 machineBeingPlaced instanceof Processor) ||
+						 !gc.getInput().isKeyDown(Input.KEY_X))
+					{
+						machineBeingPlaced = null;
+						activateIcons(true);
+						activateIconsTiedToSelection(false);
+					}
+				}
+			}
+		}
+	}
+	private void updateCheckForKeyInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
+	{
+		// Keys pressed
+		// X //
+		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
+			if (machineBeingPlaced == null && !buildMenu.getActivated()){
+				enterPlacePipe();
+			}
+		}
+		// R //
+		if (gc.getInput().isKeyPressed(Input.KEY_R)) {
+			if (machineBeingPlaced == null && !buildMenu.getActivated()){
+				enterPlaceRouter();
+			}
+		}
+		// C //
+		if (gc.getInput().isKeyPressed(Input.KEY_C)) {
+			if (machineBeingPlaced instanceof Pipe){
+				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
+				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+				tmpPipe.calculateSprite();
+			}
+		}
+		// V //
+		if (gc.getInput().isKeyPressed(Input.KEY_V)){
+			if (machineBeingPlaced instanceof Pipe){
+				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
+					tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
+				}
+				tmpPipe.calculateSprite();
+			}
+		}
+		// DELETE && D //
+		if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
+			// Destroy selection
+			destroySelection();	
+		}
+		// B //
+		if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
+			// Open build menu
+			buildMenu.setActivated(true);
+			activateIcons(false);
+		}
+		// ESCAPE //
+		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated())
+		{
+			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
+			{
+				currentSelection = new Rectangle(-1, -1, 0, 0);
+				activateIconsTiedToSelection(false);
+			}
+			else if (machineBeingPlaced != null)
+			{
+				machineBeingPlaced = null;
+				activateIcons(true);
+				activateIconsTiedToSelection(false);
+			}
+			else
+			{
+				System.out.println("jean");
+				igMenu.setActivated(true);
+			}
+		}
+		// P //
+		if (gc.getInput().isKeyPressed(Input.KEY_P)){
+			if (gd.getPaused())
+				gd.start();
+			else
+				gd.pause();
+		}
+	
+	}
+	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		if (!igMenu.getActivated())
 		{
-			if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))
-			{
-				if (btnMenu.contains(mx, my))
-                {
-					igMenu.setActivated(true);
-					return;
-				}
-                if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
-                {
-                    int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-                    if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
-                        if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
-                                gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
-                                gd.getCurrentLevel().getPossibleOrders().remove(order);
-                                getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
-                        }
-                    }
-				}
-				// Play pause Btns
-				if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
-					// Play game director
-					gd.start();
-				}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
-					// Pause game director
-					gd.pause();
-				}
-				// Placing a machine ?
-				if (machineBeingPlaced == null)
-				{
-					if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
-						// Build menu
-						buildMenu.setActivated(true);
-						activateIcons(false);
-					}else if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
-						// Add pipe
-						enterPlacePipe();
-					}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
-						// Destroy!
-						destroySelection();
-					}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
-						// Add router!
-						enterPlaceRouter();
-					}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
-						enterSelectMode((int)mx, (int)my);
-					}
-				}
-				else
-				{
-					// Get tile X and Y
-					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
-						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
-					// If hover factory
-					if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
-						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
-						// Place machine
-						currencybar.removeCurrency(machineBeingPlaced.getCost());
-						lastMachineBeingPlaced = machineBeingPlaced;
-						if (machineBeingPlaced instanceof Processor)
-						{
-							Processor machine = (Processor)machineBeingPlaced;
-							buildMenu.removeAvailableMachine(machine);
-							factory.addProcessor(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), machine.getShapeIns(), machine.getShapeOut(), machineBeingPlaced.getColor());
-							machineBeingPlaced = null;
-							activateIcons(true);
-							activateIconsTiedToSelection(false);
-						}
-						else if (machineBeingPlaced instanceof Router)
-							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
-						else if (machineBeingPlaced instanceof Pipe)
-						{
-							Pipe machine = (Pipe)machineBeingPlaced;
-							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
-						}
-					}
-				}
-			}
-			// Keys pressed
-			if (gc.getInput().isKeyPressed(Input.KEY_X)) {
-				if (machineBeingPlaced == null && !buildMenu.getActivated()){
-					enterPlacePipe();
-				}
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_R)) {
-				if (machineBeingPlaced == null && !buildMenu.getActivated()){
-					enterPlaceRouter();
-				}
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_C)) {
-				if (machineBeingPlaced instanceof Pipe){
-					Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-					tmpPipe.setAngle(tmpPipe.getAngle() + 90);
-					tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-					tmpPipe.calculateSprite();
-				}
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_V)){
-				if (machineBeingPlaced instanceof Pipe){
-					Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-					tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-					if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
-						tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
-					}
-					tmpPipe.calculateSprite();
-				}
-			}
-			if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
-				// Destroy selection
-				destroySelection();	
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
-				// Open build menu
-				buildMenu.setActivated(true);
-				activateIcons(false);
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated())
-			{
-				if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
-				{
-					currentSelection = new Rectangle(-1, -1, 0, 0);
-					activateIconsTiedToSelection(false);
-				}
-				else if (machineBeingPlaced != null)
-				{
-					machineBeingPlaced = null;
-					activateIcons(true);
-					activateIconsTiedToSelection(false);
-				}
-				else
-				{
-					System.out.println("jean");
-					igMenu.setActivated(true);
-				}
-			}
-			if (gc.getInput().isKeyPressed(Input.KEY_P)){
-				if (gd.getPaused())
-					gd.start();
-				else
-					gd.pause();
-			}
+			updateCheckForMouseInput(gc, sbg, d);
+			updateCheckForKeyInput(gc, sbg, d);
+			
 			buildMenu.update(gc, sbg, d);
 			currencybar.update(gc, sbg, d);
 			if (!gd.getPaused())
 				factory.update(d);
 			gd.update(d);
-		
-		}else{
-			// WE ARE IN THE MENU (no updates)
-			igMenu.update(gc, sbg, d);
 		}
+		else
+			igMenu.update(gc, sbg, d);
 	}
 	
 	// Getters and setters
@@ -551,5 +576,8 @@ public class World
 		gd.setLevel(save.level);
 		buildMenu.setAvailbleMachines(save.buildMenu);
 		getCurrencyBar().setCurrency(save.money);
+		try { initPositions(gc, sbg); } 
+		catch (SlickException e) 
+		{ e.printStackTrace(); }
 	}
 }

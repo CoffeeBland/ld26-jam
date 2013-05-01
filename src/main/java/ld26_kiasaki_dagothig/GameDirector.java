@@ -34,6 +34,7 @@ public class GameDirector {
 	
 	private Color black = new Color(0, 0 ,0);
 	private Color white = new Color(255, 255, 255);
+	private Color translucentBlack = new Color(0, 0, 0, 128);
 	private UnicodeFont uFont = FontFactory.get().getFont(60, java.awt.Color.WHITE);
 	private UnicodeFont uSmallFont = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 	
@@ -63,6 +64,7 @@ public class GameDirector {
 		setLevel(level);
 	}
 	public void setLevel(int pLevel){
+		pause();
 		level = pLevel;
 		newLevelMessageFadeStart = 2500;
 		for (Processor mach : getCurrentLevel().getProcessorShop())
@@ -172,8 +174,11 @@ public class GameDirector {
 				truck.x = Math.round(truckPosition);
 				truck.y = gc.getHeight() - 204;
 				truck.render(0, 0);
-				tOrder.getBlock().render(-28 - Math.round(truckPosition + 48), -(truck.y + 45));
-				uSmallFont.drawString(50 + (truckPosition + 48), truck.y + 48, "x " + tOrder.getQty());
+				int xpos = Math.max(6, 28 + Math.round(truckPosition + 48));
+				g.setColor(translucentBlack);
+				g.fillRect(xpos - 6, truck.y + 42, 78, 28);
+				tOrder.getBlock().render(-xpos, -(truck.y + 45));
+				uSmallFont.drawString(22 + xpos, truck.y + 48, "x " + tOrder.getQty());
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}
