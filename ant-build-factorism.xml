@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ld26-Kiasaki-Dagothig with libraries in sub-folder">
+    <target name="create_run_jar">
+        <jar destfile="/Users/frederic/Downloads/FacBuild/Factorism.jar">
+            <manifest>
+                <attribute name="Main-Class" value="ld26_kiasaki_dagothig.Main"/>
+                <attribute name="Class-Path" value=". lib/ibxm.jar lib/jinput.jar lib/lwjgl.jar lib/slick.jar"/>
+            </manifest>
+            <fileset dir="/Users/frederic/Code/GitRepos/ld26-jam-april2013/target/classes"/>
+        </jar>
+        <delete dir="/Users/frederic/Downloads/FacBuild/lib"/>
+        <mkdir dir="/Users/frederic/Downloads/FacBuild/lib"/>
+        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/ibxm.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
+        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/jinput.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
+        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/lwjgl.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
+        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/slick.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
+
+        <delete dir="/Users/frederic/Downloads/FacBuild/saves"/>
+        <mkdir dir="/Users/frederic/Downloads/FacBuild/saves"/>
+
+        <delete dir="/Users/frederic/Downloads/FacBuild/res"/>
+        <mkdir dir="/Users/frederic/Downloads/FacBuild/res"/>
+    </target>
+</project>
