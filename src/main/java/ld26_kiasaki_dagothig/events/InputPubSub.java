@@ -110,80 +110,80 @@ public class InputPubSub {
 		}
 	}
 	
-	public static void publishKeyDown(World pWorld, Input pInput)
+	public static void publishKeyRelease(World pWorld, Input pInput)
 	{
 		if (pInput.isKeyPressed(Input.KEY_ESCAPE))
-			notifyKeyDown(pWorld, pInput, Input.KEY_ESCAPE);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_ESCAPE);
 		else if (pInput.isKeyPressed(Input.KEY_END))
-			notifyKeyDown(pWorld, pInput, Input.KEY_END);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_END);
 		else if (pInput.isKeyPressed(Input.KEY_DELETE))
-			notifyKeyDown(pWorld, pInput, Input.KEY_DELETE);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_DELETE);
 		else if (pInput.isKeyPressed(Input.KEY_BACK))
-			notifyKeyDown(pWorld, pInput, Input.KEY_BACK);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_BACK);
 		else if (pInput.isKeyPressed(Input.KEY_ENTER))
-			notifyKeyDown(pWorld, pInput, Input.KEY_ENTER);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_ENTER);
 		else if (pInput.isKeyPressed(Input.KEY_LEFT))
-			notifyKeyDown(pWorld, pInput, Input.KEY_LEFT);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_LEFT);
 		else if (pInput.isKeyPressed(Input.KEY_RIGHT))
-			notifyKeyDown(pWorld, pInput, Input.KEY_RIGHT);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_RIGHT);
 		else if (pInput.isKeyPressed(Input.KEY_UP))
-			notifyKeyDown(pWorld, pInput, Input.KEY_UP);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_UP);
 		else if (pInput.isKeyPressed(Input.KEY_DOWN))
-			notifyKeyDown(pWorld, pInput, Input.KEY_DOWN);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_DOWN);
 		else if (pInput.isKeyPressed(Input.KEY_A))
-			notifyKeyDown(pWorld, pInput, Input.KEY_A);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_A);
 		else if (pInput.isKeyPressed(Input.KEY_B))
-			notifyKeyDown(pWorld, pInput, Input.KEY_B);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_B);
 		else if (pInput.isKeyPressed(Input.KEY_C))
-			notifyKeyDown(pWorld, pInput, Input.KEY_C);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_C);
 		else if (pInput.isKeyPressed(Input.KEY_D))
-			notifyKeyDown(pWorld, pInput, Input.KEY_D);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_D);
 		else if (pInput.isKeyPressed(Input.KEY_E))
-			notifyKeyDown(pWorld, pInput, Input.KEY_E);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_E);
 		else if (pInput.isKeyPressed(Input.KEY_F))
-			notifyKeyDown(pWorld, pInput, Input.KEY_F);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_F);
 		else if (pInput.isKeyPressed(Input.KEY_G))
-			notifyKeyDown(pWorld, pInput, Input.KEY_G);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_G);
 		else if (pInput.isKeyPressed(Input.KEY_H))
-			notifyKeyDown(pWorld, pInput, Input.KEY_H);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_H);
 		else if (pInput.isKeyPressed(Input.KEY_I))
-			notifyKeyDown(pWorld, pInput, Input.KEY_I);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_I);
 		else if (pInput.isKeyPressed(Input.KEY_J))
-			notifyKeyDown(pWorld, pInput, Input.KEY_J);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_J);
 		else if (pInput.isKeyPressed(Input.KEY_K))
-			notifyKeyDown(pWorld, pInput, Input.KEY_K);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_K);
 		else if (pInput.isKeyPressed(Input.KEY_L))
-			notifyKeyDown(pWorld, pInput, Input.KEY_L);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_L);
 		else if (pInput.isKeyPressed(Input.KEY_M))
-			notifyKeyDown(pWorld, pInput, Input.KEY_M);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_M);
 		else if (pInput.isKeyPressed(Input.KEY_N))
-			notifyKeyDown(pWorld, pInput, Input.KEY_N);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_N);
 		else if (pInput.isKeyPressed(Input.KEY_O))
-			notifyKeyDown(pWorld, pInput, Input.KEY_O);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_O);
 		else if (pInput.isKeyPressed(Input.KEY_P))
-			notifyKeyDown(pWorld, pInput, Input.KEY_P);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_P);
 		else if (pInput.isKeyPressed(Input.KEY_Q))
-			notifyKeyDown(pWorld, pInput, Input.KEY_Q);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_Q);
 		else if (pInput.isKeyPressed(Input.KEY_R))
-			notifyKeyDown(pWorld, pInput, Input.KEY_R);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_R);
 		else if (pInput.isKeyPressed(Input.KEY_S))
-			notifyKeyDown(pWorld, pInput, Input.KEY_S);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_S);
 		else if (pInput.isKeyPressed(Input.KEY_T))
-			notifyKeyDown(pWorld, pInput, Input.KEY_T);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_T);
 		else if (pInput.isKeyPressed(Input.KEY_U))
-			notifyKeyDown(pWorld, pInput, Input.KEY_U);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_U);
 		else if (pInput.isKeyPressed(Input.KEY_V))
-			notifyKeyDown(pWorld, pInput, Input.KEY_V);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_V);
 		else if (pInput.isKeyPressed(Input.KEY_W))
-			notifyKeyDown(pWorld, pInput, Input.KEY_W);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_W);
 		else if (pInput.isKeyPressed(Input.KEY_X))
-			notifyKeyDown(pWorld, pInput, Input.KEY_X);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_X);
 		else if (pInput.isKeyPressed(Input.KEY_Y))
-			notifyKeyDown(pWorld, pInput, Input.KEY_Y);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_Y);
 		else if (pInput.isKeyPressed(Input.KEY_Z))
-			notifyKeyDown(pWorld, pInput, Input.KEY_Z);
+			notifyKeyRelease(pWorld, pInput, Input.KEY_Z);
 	}
-	private static void notifyKeyDown(World pWorld, Input pInput, int pKey)
+	private static void notifyKeyRelease(World pWorld, Input pInput, int pKey)
 	{
 		for (Integer tKey : subscribers.keySet())
 		{

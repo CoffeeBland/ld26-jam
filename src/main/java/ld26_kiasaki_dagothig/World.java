@@ -173,6 +173,85 @@ public class World
 				}
 			}
 		}, 15);
+	
+		// Place machines btns : 20
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				try {
+					if (!currentStates.contains(WorldActionState.PLACING_PIPE) &&
+						!currentStates.contains(WorldActionState.PLACING_ROUTER) &&
+						!currentStates.contains(WorldActionState.PLACING_PROCESSOR) &&
+						!currentStates.contains(WorldActionState.IN_BUILDMENU))
+					{
+						/// 3 : Add pipe
+						/// 4 : Delete
+						/// 5 : Router
+						if (icons.get(3).getActivated() && icons.get(3).contains(mx, my))
+							pWorld.enterPlacePipe();
+						else if (icons.get(4).getActivated() && icons.get(4).contains(mx, my))
+							pWorld.destroySelection();
+						else if (icons.get(5).getActivated() && icons.get(5).contains(mx, my))
+								pWorld.enterPlaceRouter();
+						if (pWorld.factory.getBounds().contains(mx, my))
+							enterSelectMode((int)mx, (int)my);
+					}
+				} catch (SlickException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 20);
+		
+		// Is Placing a machine : 15
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				try {
+					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
+						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+					// If hover factory
+					if (factory.getBounds().contains(mx, my) && 
+						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+						// Place machine
+						currencybar.removeCurrency(machineBeingPlaced.getCost());
+						lastMachineBeingPlaced = machineBeingPlaced;
+						// Processor
+						if (currentStates.contains(WorldActionState.PLACING_PROCESSOR))
+						{
+							Processor machine = (Processor)machineBeingPlaced;
+							buildMenu.removeAvailableMachine(machine);
+							factory.addProcessor(tileX, tileY, 
+												 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
+												 machine.getShapeIns(), machine.getShapeOut(), 
+												 machineBeingPlaced.getColor());
+						}
+						// Router
+						else if (currentStates.contains(WorldActionState.PLACING_ROUTER))
+						{
+							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
+						}
+						// Pipe
+						else if (currentStates.contains(WorldActionState.PLACING_PIPE))
+						{
+							Pipe machine = (Pipe)machineBeingPlaced;
+							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
+						}
+						// Deactivate building mode
+						if ((currentStates.contains(WorldActionState.PLACING_ROUTER) ||
+								currentStates.contains(WorldActionState.PLACING_PROCESSOR)) ||
+							 !gc.getInput().isKeyDown(Input.KEY_X))
+						{
+							machineBeingPlaced = null;
+							activateIcons(true);
+							activateIconsTiedToSelection(false);
+						}
+					}
+				} catch (SlickException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 15);
+		
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
@@ -321,78 +400,20 @@ public class World
 		igMenu.render(gc, sbg, g);
 	}
 	
-	private void updateCheckForMouseInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
+	// Event publishing
+	public void keyReleased(int key, char c)
 	{
-		// TODO : Not put in update add listener to input then publish (game 1000x faster)
-		InputPubSub.publishKeyDown(this, gc.getInput());
-		InputPubSub.publishKeyPress(this, gc.getInput());
-		InputPubSub.publishMousePress(this, gc.getInput());
-			
-
-			
-			
-			// Placing a machine ?
-			if (machineBeingPlaced == null)
-			{
-
-				if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
-					// Add pipe
-					enterPlacePipe();
-				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
-					// Destroy!
-					destroySelection();
-				}else if (!buildMenu.getActivated() && icons.get(5).getActivated() && icons.get(5).contains(mx, my)){
-					// Add router!
-					enterPlaceRouter();
-				}else if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my)){
-					enterSelectMode((int)mx, (int)my);
-				}
-			}
-			else
-			{
-				// Get tile X and Y
-				int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
-					tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
-				// If hover factory
-				if (new Rectangle(factory.getX(), factory.getY(), factory.getTileXAmount() * TileBased.TILE_SIZE, factory.getTileYAmount() * TileBased.TILE_SIZE).contains(mx, my) && 
-					factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
-					// Place machine
-					currencybar.removeCurrency(machineBeingPlaced.getCost());
-					lastMachineBeingPlaced = machineBeingPlaced;
-					// Processor
-					if (machineBeingPlaced instanceof Processor)
-					{
-						Processor machine = (Processor)machineBeingPlaced;
-						buildMenu.removeAvailableMachine(machine);
-						factory.addProcessor(tileX, tileY, 
-											 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
-											 machine.getShapeIns(), machine.getShapeOut(), 
-											 machineBeingPlaced.getColor());
-					}
-					// Router
-					else if (machineBeingPlaced instanceof Router)
-					{
-						factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
-					}
-					// Pipe
-					else if (machineBeingPlaced instanceof Pipe)
-					{
-						Pipe machine = (Pipe)machineBeingPlaced;
-						factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
-					}
-					// Deactivate building mode
-					if ((machineBeingPlaced instanceof Router ||
-						 machineBeingPlaced instanceof Processor) ||
-						 !gc.getInput().isKeyDown(Input.KEY_X))
-					{
-						machineBeingPlaced = null;
-						activateIcons(true);
-						activateIconsTiedToSelection(false);
-					}
-				}
-			}
-		}
+		InputPubSub.publishKeyRelease(this, gc.getInput());
 	}
+	public void keyDown(int key, char c)
+	{
+		InputPubSub.publishKeyPress(this, gc.getInput());
+	}
+	public void mouseReleased(int button, int x, int y)
+	{
+		InputPubSub.publishMousePress(this, gc.getInput());		
+	}
+	
 	private void updateCheckForKeyInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
 	{
 		// Keys pressed
@@ -471,7 +492,6 @@ public class World
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		if (currentStates.contains(WorldActionState.IN_MAINMENU))
 		{
-			updateCheckForMouseInput(gc, sbg, d);
 			updateCheckForKeyInput(gc, sbg, d);
 			
 			buildMenu.update(gc, sbg, d);

@@ -2,12 +2,10 @@ package ld26_kiasaki_dagothig.states;
 
 import ld26_kiasaki_dagothig.GameDirector;
 import ld26_kiasaki_dagothig.World;
-import ld26_kiasaki_dagothig.helpers.KeyListenerImpl;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -41,12 +39,21 @@ public class GameState extends BasicGameState {
 	}
 	
 	@Override
-	public void keyReleased(int key, char c) {
-		/*if (key == Input.KEY_ESCAPE) {
-			exitGame();					
-		}*/
-	} 
-
+	public void keyPressed(int key, char c)
+	{
+		world.keyDown(key, c);
+	}
+	@Override
+	public void keyReleased(int key, char c)
+	{
+		world.keyReleased(key, c);
+	}
+	@Override
+	public void mouseReleased(int button, int x, int y)
+	{
+		world.mouseReleased(button, x, y);
+	}
+	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		g.setColor(new Color(255, 255, 255));

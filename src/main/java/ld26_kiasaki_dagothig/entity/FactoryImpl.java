@@ -8,6 +8,7 @@ import ld26_kiasaki_dagothig.helpers.BlockImage;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 public class FactoryImpl implements Factory
 {
@@ -94,7 +95,11 @@ public class FactoryImpl implements Factory
 	{
 		return transformedBlocks;
 	}
-
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(this.getX(), this.getY(), this.getTileXAmount() * TileBased.TILE_SIZE, this.getTileYAmount() * TileBased.TILE_SIZE);
+	}
+	
 	public List<BlockImage> sfxs = new ArrayList<BlockImage>();
 	public void addSFX(BlockImage pImage)
 	{
@@ -385,4 +390,5 @@ public class FactoryImpl implements Factory
 		else
 			return 0;
 	}
+	
 }

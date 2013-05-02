@@ -6,6 +6,7 @@ import ld26_kiasaki_dagothig.helpers.BlockImage;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 public interface Factory 
 {
@@ -19,6 +20,7 @@ public interface Factory
 	public boolean spaceAvailable(int pTileX, int pTileY, int pTileW, int pTileH);
 	public Pipe getEntryPoint();
 	public Pipe getExitPoint();
+	public Rectangle getBounds();
 	
 	public List<Machine> getMachines();
 	
