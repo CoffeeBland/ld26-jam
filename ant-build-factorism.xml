@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project ld26-Kiasaki-Dagothig with libraries in sub-folder">
-    <property name="build.dir" value="/Users/frederic/Downloads/FacBuild/">
+    <property name="build.dir" value="${user.home}/FactorismBuild/">
     </property>
 	<target name="create_run_jar">
     	<jar destfile="${build.dir}Factorism.jar">
