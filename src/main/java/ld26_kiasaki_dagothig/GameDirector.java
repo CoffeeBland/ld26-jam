@@ -165,7 +165,7 @@ public class GameDirector {
 			uSmallFont.drawString(gc.getWidth()/2 - uSmallFont.getWidth(getCurrentLevel().getName()) / 2, gc.getHeight()/2 + 32, getCurrentLevel().getName(), white);
 		}
 		
-		// Render the needed stuff
+		// Render the truck
 		Order tOrder = getCurrentLevel().getTruckContent();
 		if (tOrder != null)
 			try {
@@ -186,8 +186,8 @@ public class GameDirector {
 		int i = 0;
 		for (Order tB : getCurrentLevel().getNeeded()){
 			try {
-				tB.getBlock().render(-gc.getWidth() + 154, -((gc.getHeight()-459)+i));
-				uSmallFont.drawString(gc.getWidth() - 134, (gc.getHeight()-456)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
+				tB.getBlock().render(-gc.getWidth() + 166, -((gc.getHeight()-459)+i));
+				uSmallFont.drawString(gc.getWidth() - 142, (gc.getHeight()-456)+i, "x " + tB.getQty() + " (" + tB.getValue() + "$)");
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}

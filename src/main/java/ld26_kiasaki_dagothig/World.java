@@ -234,7 +234,8 @@ public class World
 		
 		gd.render(gc, sbg, g);
 		
-		if(gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+		// Placing orders
+		if(gd.getCurrentLevel() != null)
 		{
 			uFontSmall.drawString(28, 92, "Place order");
 			g.setColor(InfoWindow.black60);
@@ -254,12 +255,12 @@ public class World
 					ex.printStackTrace();
 				}
 			}
-			int orderX = (gc.getInput().getMouseX() - 28);
-			int orderY = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-			if (orderX > 0 && orderX < 120 && orderY >= 0 && orderY < gd.getCurrentLevel().getPossibleOrders().size())
+			int orderX = (gc.getInput().getMouseX() - 22);
+			int orderY = (int)Math.floor((gc.getInput().getMouseY() - 122) / 32f);
+			if (gd.getCurrentLevel().getTruckContent() == null && orderX > 0 && orderX < 140 && orderY >= 0 && orderY < gd.getCurrentLevel().getPossibleOrders().size())
 			{
 				g.setColor(Color.gray);
-				g.drawRect(28, orderY * 32 + 120, 120, 32);
+				g.drawRect(22, orderY * 32 + 122, 140, 32);
 			}
 		}
 		
@@ -284,7 +285,8 @@ public class World
             if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
             {
                 int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-                if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
+    			int orderX = (int)(mx - 22);
+                if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && orderX > 0 && orderX < 140){
                     if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
                             gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
                             gd.getCurrentLevel().getPossibleOrders().remove(order);
