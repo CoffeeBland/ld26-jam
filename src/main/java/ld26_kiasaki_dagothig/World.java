@@ -323,6 +323,7 @@ public class World
 	
 	private void updateCheckForMouseInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
 	{
+		// TODO : Not put in update add listener to input then publish (game 1000x faster)
 		InputPubSub.publishKeyDown(this, gc.getInput());
 		InputPubSub.publishKeyPress(this, gc.getInput());
 		InputPubSub.publishMousePress(this, gc.getInput());
