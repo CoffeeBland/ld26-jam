@@ -41,6 +41,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class World
 {
+	///////////////////////////////////////////////////////////
+	//	VARIABLES MEMBRES
+	///////////////////////////////////////////////////////////
 	public GameDirector gd;
 	public GameContainer gc;
 	public StateBasedGame sbg;
@@ -69,11 +72,13 @@ public class World
 	private final Color darkGray = new Color(60,60,60);
 	private final Color skyColor = new Color(213, 235, 246);
 	private BlockImage grass, groundImg, sky, panel;
+	///////////////////////////////////////////////////////////
 	
 	public World(GameDirector pGameDirector){
 		this.gd = pGameDirector;
 	}
 	
+	// Initialisation
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		this.gc = gc;
@@ -116,6 +121,7 @@ public class World
 	}
 	public void initEventListeners()
 	{
+		//// MOUSE
 		// BtnMenuPess 50
 		InputPubSub.subscribe(new InputListenerImpl(){
 			@Override
@@ -214,16 +220,15 @@ public class World
 						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
 						// Place machine
 						currencybar.removeCurrency(machineBeingPlaced.getCost());
-						lastMachineBeingPlaced = machineBeingPlaced;
 						// Processor
 						if (currentStates.contains(WorldActionState.PLACING_PROCESSOR))
 						{
 							Processor machine = (Processor)machineBeingPlaced;
 							buildMenu.removeAvailableMachine(machine);
 							factory.addProcessor(tileX, tileY, 
-												 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
-												 machine.getShapeIns(), machine.getShapeOut(), 
-												 machineBeingPlaced.getColor());
+										 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
+										 machine.getShapeIns(), machine.getShapeOut(), 
+										 machineBeingPlaced.getColor());
 						}
 						// Router
 						else if (currentStates.contains(WorldActionState.PLACING_ROUTER))
@@ -241,9 +246,7 @@ public class World
 								currentStates.contains(WorldActionState.PLACING_PROCESSOR)) ||
 							 !gc.getInput().isKeyDown(Input.KEY_X))
 						{
-							machineBeingPlaced = null;
-							activateIcons(true);
-							activateIconsTiedToSelection(false);
+							exitPlaceMachineMode();
 						}
 					}
 				} catch (SlickException e) {
@@ -252,6 +255,103 @@ public class World
 			}
 		}, 15);
 		
+		//// KEYS
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void keyPress(World pWorld, Input pInput, int pKey) {
+				// Keys release
+				// X //
+				if (pKey == Input.KEY_X) {
+					if (!currentStates.contains(WorldActionState.IN_BUILDMENU) && 
+						!currentStates.contains(WorldActionState.IN_MAINMENU) && (
+								currentStates.contains(WorldActionState.PLACING_PIPE) &&
+								lastMachineBeingPlaced instanceof Pipe
+							)
+						)
+					{
+						exitPlaceMachineMode();
+					}
+				}
+			}
+
+			@Override
+			public void keyDown(World pWorld, Input pInput, int pKey) {
+				try{
+					// X //
+					if (pKey == Input.KEY_X) {
+						if (machineBeingPlaced == null && !currentStates.contains(WorldActionState.IN_BUILDMENU)){
+							enterPlacePipe();
+						}
+					}
+					// R //
+					if (pKey == Input.KEY_R) {
+						if (machineBeingPlaced == null && !currentStates.contains(WorldActionState.IN_BUILDMENU)){
+							enterPlaceRouter();
+						}
+					}
+					// C //
+					if (pKey == Input.KEY_C) {
+						if (currentStates.contains(WorldActionState.PLACING_PIPE)){
+							Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+							tmpPipe.setAngle(tmpPipe.getAngle() + 90);
+							tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+							tmpPipe.calculateSprite();
+						}
+					}
+					// V //
+					if (pKey == Input.KEY_V){
+						if (currentStates.contains(WorldActionState.PLACING_PIPE)){
+							Pipe tmpPipe = ((Pipe)machineBeingPlaced);
+							tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
+							if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
+								tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
+							}
+							tmpPipe.calculateSprite();
+						}
+					}
+					// DELETE && D //
+					if ((pKey == Input.KEY_DELETE || pKey == Input.KEY_D) && icons.get(4).getActivated()){
+						// Destroy selection
+						destroySelection();	
+					}
+					// B //
+					if (pKey == Input.KEY_B && icons.get(2).getActivated()){
+						// Open build menu
+						buildMenu.setActivated(true);
+						activateIcons(false);
+					}
+					// ESCAPE //
+					if (pKey == Input.KEY_ESCAPE && !currentStates.contains(WorldActionState.IN_BUILDMENU))
+					{
+						if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
+						{
+							exitSelectMode();
+							activateIconsTiedToSelection(false);
+						}
+						else if (machineBeingPlaced != null)
+						{
+							machineBeingPlaced = null;
+							activateIcons(true);
+							activateIconsTiedToSelection(false);
+						}
+						else
+						{
+							System.out.println("jean");
+							igMenu.setActivated(true);
+						}
+					}
+					// P //
+					if (pKey == Input.KEY_P){
+						if (gd.getPaused())
+							gd.start();
+						else
+							gd.pause();
+					}
+				}catch (SlickException e){
+					e.printStackTrace();
+				}
+			}
+		}, 5);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
@@ -414,86 +514,9 @@ public class World
 		InputPubSub.publishMousePress(this, gc.getInput());		
 	}
 	
-	private void updateCheckForKeyInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
-	{
-		// Keys pressed
-		// X //
-		if (gc.getInput().isKeyPressed(Input.KEY_X)) {
-			if (machineBeingPlaced == null && !buildMenu.getActivated()){
-				enterPlacePipe();
-			}
-		}
-		// R //
-		if (gc.getInput().isKeyPressed(Input.KEY_R)) {
-			if (machineBeingPlaced == null && !buildMenu.getActivated()){
-				enterPlaceRouter();
-			}
-		}
-		// C //
-		if (gc.getInput().isKeyPressed(Input.KEY_C)) {
-			if (machineBeingPlaced instanceof Pipe){
-				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngle(tmpPipe.getAngle() + 90);
-				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-				tmpPipe.calculateSprite();
-			}
-		}
-		// V //
-		if (gc.getInput().isKeyPressed(Input.KEY_V)){
-			if (machineBeingPlaced instanceof Pipe){
-				Pipe tmpPipe = ((Pipe)machineBeingPlaced);
-				tmpPipe.setAngleOut(tmpPipe.getAngleOut() + 90);
-				if (tmpPipe.getAngle() == tmpPipe.getAngleOut()){
-					tmpPipe.setAngleOut(tmpPipe.getAngleOut()+90);
-				}
-				tmpPipe.calculateSprite();
-			}
-		}
-		// DELETE && D //
-		if ((gc.getInput().isKeyPressed(Input.KEY_DELETE) || gc.getInput().isKeyPressed(Input.KEY_D)) && icons.get(4).getActivated()){
-			// Destroy selection
-			destroySelection();	
-		}
-		// B //
-		if (gc.getInput().isKeyPressed(Input.KEY_B) && icons.get(2).getActivated()){
-			// Open build menu
-			buildMenu.setActivated(true);
-			activateIcons(false);
-		}
-		// ESCAPE //
-		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && !buildMenu.getActivated())
-		{
-			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
-			{
-				exitSelectMode();
-				activateIconsTiedToSelection(false);
-			}
-			else if (machineBeingPlaced != null)
-			{
-				machineBeingPlaced = null;
-				activateIcons(true);
-				activateIconsTiedToSelection(false);
-			}
-			else
-			{
-				System.out.println("jean");
-				igMenu.setActivated(true);
-			}
-		}
-		// P //
-		if (gc.getInput().isKeyPressed(Input.KEY_P)){
-			if (gd.getPaused())
-				gd.start();
-			else
-				gd.pause();
-		}
-	
-	}
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
 		if (currentStates.contains(WorldActionState.IN_MAINMENU))
-		{
-			updateCheckForKeyInput(gc, sbg, d);
-			
+		{	
 			buildMenu.update(gc, sbg, d);
 			currencybar.update(gc, sbg, d);
 			if (!gd.getPaused())
@@ -601,6 +624,13 @@ public class World
 	public void exitSelectMode(){
 		currentSelection = new Rectangle(-1, -1, 0, 0);
 		currentStates.remove(WorldActionState.HAS_SELECTION);
+	}
+	public void exitPlaceMachineMode()
+	{
+		lastMachineBeingPlaced = machineBeingPlaced;
+		machineBeingPlaced = null;
+		activateIcons(true);
+		activateIconsTiedToSelection(false);
 	}
 	
 	// Clamping to tile set
