@@ -186,7 +186,8 @@ public class MachineImpl extends EntityImpl implements Machine
 	public void sendBlock(Block pBlock) throws SlickException
 	{
 		getProgress().remove(pBlock);
-		getOuts().get(rnd.nextInt(getOuts().size())).receiveBlock(pBlock);
+		if (getOuts().size() > 0)
+			getOuts().get(rnd.nextInt(getOuts().size())).receiveBlock(pBlock);
 	}
 	
 	@Override
