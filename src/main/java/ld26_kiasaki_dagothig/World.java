@@ -14,9 +14,14 @@ import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.Router;
 import ld26_kiasaki_dagothig.entity.RouterImpl;
 import ld26_kiasaki_dagothig.entity.TileBased;
+import ld26_kiasaki_dagothig.events.InputPubSub;
+import ld26_kiasaki_dagothig.events.ProgressionPubAction;
+import ld26_kiasaki_dagothig.events.ProgressionPubSub;
+import ld26_kiasaki_dagothig.events.listeners.InputListenerImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.SavingHelper;
+import ld26_kiasaki_dagothig.helpers.WorldActionState;
 import ld26_kiasaki_dagothig.ui.BuildMenu;
 import ld26_kiasaki_dagothig.ui.Button;
 import ld26_kiasaki_dagothig.ui.CurrencyBar;
@@ -39,6 +44,7 @@ public class World
 	public GameDirector gd;
 	public GameContainer gc;
 	public StateBasedGame sbg;
+	public List<WorldActionState> currentStates;
 	
 	private UnicodeFont uFontSmall;
 	private UnicodeFont uFontRealSmall;
@@ -72,28 +78,16 @@ public class World
 			throws SlickException {
 		this.gc = gc;
 		this.sbg = sbg;
+		currentStates = new ArrayList<WorldActionState>();
 		
 		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 		uFontRealSmall = FontFactory.get().getFont(14, java.awt.Color.WHITE);
 		
-		btnMenu = new Button(gc.getWidth() - 90, 0, 90, 48, uFontSmall, darkGray, "MENU");
-		btnNeeded = new Button(gc.getWidth() - 164, gc.getHeight() - 500, 144, 48, uFontSmall, null, "NEEDED");
-		btnDone = new Button(gc.getWidth() - 164, gc.getHeight() - 320, 144, 48, uFontSmall, null, "DONE");
-		icons = new ArrayList<IconButton>();
-		icons.add(new IconButton(300, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/play.png"), "Play [p]"));
-		icons.add(new IconButton(348, 0, Color.lightGray, new Color(247,226,2), new Image("res/icons/pause.png"), "Pause factory [p]"));
-		icons.add(new IconButton(396, 0, Color.lightGray, new Color(23,78,217), new Image("res/icons/build.png"), "Build a machine [b]"));
-		icons.add(new IconButton(444, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/pipe_add.png"), "Add a pipe [x]"));
-		icons.add(new IconButton(540, 0, Color.lightGray, new Color(255,0,0), new Image("res/icons/trash.png"), "Destroy! [d]"));
-		icons.add(new IconButton(492, 0, Color.lightGray, new Color(25,145,47), new Image("res/icons/router_add.png"), "Add a router [r]"));
-		
 		factory = new FactoryImpl(24, 24, gc.getWidth()/2-288, gc.getHeight() - 24 * 24 - 92);
+
+		initPositions(gc, sbg);		
 		
-		currencybar.init(gc, sbg);
-		buildMenu.init(gc, sbg);
-		igMenu.init(gc, sbg);
-		
-		activateIconsTiedToSelection(false);
+		initEventListeners();
 		
 		gd.setWorld(this);
 		gd.pause();
@@ -119,6 +113,66 @@ public class World
 		factory.setY(gc.getHeight() - 24 * 24 - 92);
 		
 		activateIconsTiedToSelection(false);
+	}
+	public void initEventListeners()
+	{
+		// BtnMenuPess 50
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				if (btnMenu.contains(mx, my))
+					igMenu.setActivated(true);				
+			}
+		}, 50);
+
+		// Placing order 40
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
+	            {
+	                int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
+	                if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
+	                    if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
+	                            gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
+	                            gd.getCurrentLevel().getPossibleOrders().remove(order);
+	                            getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
+	                    }
+	                }
+				}			
+			}
+		}, 40);
+		
+		// Pplay pause btns : 10
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				if (!currentStates.contains(WorldActionState.IN_BUILDMENU))
+				{
+					if (icons.get(0).getActivated() && icons.get(0).contains(mx, my))
+					{
+						// Play game director
+						gd.start();
+					}
+					else if (icons.get(1).getActivated() && icons.get(1).contains(mx, my))
+					{
+						// Pause game director
+						gd.pause();
+					}
+				}
+			}
+		}, 10);
+		
+		// Build menu btn : 15
+		InputPubSub.subscribe(new InputListenerImpl(){
+			@Override
+			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+				if (!currentStates.contains(WorldActionState.IN_BUILDMENU) && icons.get(2).contains(mx, my)){
+					buildMenu.setActivated(true);
+					activateIcons(false);
+				}
+			}
+		}, 15);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
@@ -269,45 +323,18 @@ public class World
 	
 	private void updateCheckForMouseInput(GameContainer gc, StateBasedGame sbg, int d) throws SlickException
 	{
-		float mx = gc.getInput().getMouseX();
-		float my = gc.getInput().getMouseY();
+		InputPubSub.publishKeyDown(this, gc.getInput());
+		InputPubSub.publishKeyPress(this, gc.getInput());
+		InputPubSub.publishMousePress(this, gc.getInput());
+			
 
-		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))
-		{
-			// Menu button
-			if (btnMenu.contains(mx, my))
-            {
-				igMenu.setActivated(true);
-				return;
-			}
-			// Placing order
-            if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null)
-            {
-                int order = (int)Math.floor((gc.getInput().getMouseY() - 120) / 32f);
-                if (order >= 0 && order < gd.getCurrentLevel().getPossibleOrders().size() && mx > 0 && mx < 120){
-                    if (gd.getCurrentLevel() != null && gd.getCurrentLevel().getTruckContent() == null){
-                            gd.getCurrentLevel().setTruckContent(gd.getCurrentLevel().getPossibleOrders().get(order));
-                            gd.getCurrentLevel().getPossibleOrders().remove(order);
-                            getCurrencyBar().addCurrency(-gd.getCurrentLevel().getTruckContent().getValue());
-                    }
-                }
-			}
-			// Play pause Btns
-			if (!buildMenu.getActivated() && icons.get(0).getActivated() && icons.get(0).contains(mx, my)){
-				// Play game director
-				gd.start();
-			}else if (!buildMenu.getActivated() && icons.get(1).getActivated() && icons.get(1).contains(mx, my)){
-				// Pause game director
-				gd.pause();
-			}
+			
+			
 			// Placing a machine ?
 			if (machineBeingPlaced == null)
 			{
-				if (!buildMenu.getActivated() && icons.get(2).contains(mx, my)){
-					// Build menu
-					buildMenu.setActivated(true);
-					activateIcons(false);
-				}else if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
+
+				if (!buildMenu.getActivated() && icons.get(3).getActivated() && icons.get(3).contains(mx, my)){
 					// Add pipe
 					enterPlacePipe();
 				}else if (!buildMenu.getActivated() && icons.get(4).getActivated() && icons.get(4).contains(mx, my)){
@@ -416,7 +443,7 @@ public class World
 		{
 			if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0)
 			{
-				currentSelection = new Rectangle(-1, -1, 0, 0);
+				exitSelectMode();
 				activateIconsTiedToSelection(false);
 			}
 			else if (machineBeingPlaced != null)
@@ -441,7 +468,7 @@ public class World
 	
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
-		if (!igMenu.getActivated())
+		if (currentStates.contains(WorldActionState.IN_MAINMENU))
 		{
 			updateCheckForMouseInput(gc, sbg, d);
 			updateCheckForKeyInput(gc, sbg, d);
@@ -477,7 +504,7 @@ public class World
 		if (currentSelection.getX() >= 0 && currentSelection.getY() >= 0){
 			Machine tMach = factory.getMachine((int)currentSelection.getX(), (int)currentSelection.getY());
 			currencybar.addCurrency( factory.destroy( tMach ) );
-			currentSelection = new Rectangle(-1, -1, 0, 0);
+			exitSelectMode();
 			icons.get(4).setActivated(false);
 			if (tMach instanceof Processor)
 				buildMenu.addAvailbleMachine((Processor)tMach);
@@ -495,6 +522,15 @@ public class World
 		machineBeingPlaced = pMachine;
 		machineBeingPlaced.setX(0);
 		machineBeingPlaced.setY(0);
+		currentStates.remove(WorldActionState.PLACING_PROCESSOR);
+		currentStates.remove(WorldActionState.PLACING_PIPE);
+		currentStates.remove(WorldActionState.PLACING_ROUTER);
+		if (pMachine instanceof Processor)
+			currentStates.add(WorldActionState.PLACING_PROCESSOR);
+		else if (pMachine instanceof Pipe)
+			currentStates.add(WorldActionState.PLACING_PIPE);
+		else if (pMachine instanceof Router)
+			currentStates.add(WorldActionState.PLACING_ROUTER);
 	}
 	public void	enterPlacePipe() throws SlickException{
 		Pipe tPipe = new PipeImpl();
@@ -511,7 +547,7 @@ public class World
 		tPipe.setTileWidth(1);
 		enterPlaceMachine(tPipe);
 		activateIcons(false);
-		currentSelection = new Rectangle(-1, -1, 0, 0);
+		exitSelectMode();
 	}
 	public void	enterPlaceRouter() throws SlickException{
 		Router tRouter = new RouterImpl();
@@ -521,7 +557,7 @@ public class World
 		tRouter.setTileWidth(1);
 		enterPlaceMachine(tRouter);
 		activateIcons(false);
-		currentSelection = new Rectangle(-1, -1, 0, 0);
+		exitSelectMode();
 	}
 	public void enterSelectMode(int pMx, int pMy){
 		currentSelection.setX(clampCursorToTileMapXCeil(pMx-24, 1));
@@ -534,12 +570,16 @@ public class World
 			currentSelection.setY(tmpMach.getTileY());
 			currentSelection.setWidth(tmpMach.getTileWidth());
 			currentSelection.setHeight(tmpMach.getTileHeight());
-			activateIconsTiedToSelection(true);
+			currentStates.add(WorldActionState.HAS_SELECTION);
 		}else{
 			currentSelection.setX(-1);
 			currentSelection.setY(-1);
-			activateIconsTiedToSelection(false);
+			currentStates.remove(WorldActionState.HAS_SELECTION);
 		}
+	}
+	public void exitSelectMode(){
+		currentSelection = new Rectangle(-1, -1, 0, 0);
+		currentStates.remove(WorldActionState.HAS_SELECTION);
 	}
 	
 	// Clamping to tile set
@@ -560,14 +600,16 @@ public class World
 		return (int) Math.max(0, Math.min(factory.getTileYAmount() -pMaxOffset, Math.ceil((pY - factory.getY()) / (float)TileBased.TILE_SIZE)));	
 	}
 	
-	
 	// Saving and loading
 	public void save(int pLevel)
 	{
+		ProgressionPubSub.publish(this, gd.getCurrentLevel(), ProgressionPubAction.LEVEL_PRE_SAVE);
 		SavingHelper.saveToFile(factory, getCurrencyBar().getCurrency(), buildMenu.getAvailableMachines(), pLevel);
+		ProgressionPubSub.publish(this, gd.getCurrentLevel(), ProgressionPubAction.LEVEL_POST_SAVE);
 	}
 	public void load(int pLevel)
 	{
+		ProgressionPubSub.publish(this, gd.getCurrentLevel(), ProgressionPubAction.LEVEL_PRE_LOAD);
 		SavingHelper save = SavingHelper.readWorldFromFile(pLevel);
 		
 		factory = save.factory;
@@ -579,5 +621,6 @@ public class World
 		try { initPositions(gc, sbg); } 
 		catch (SlickException e) 
 		{ e.printStackTrace(); }
+		ProgressionPubSub.publish(this, gd.getCurrentLevel(), ProgressionPubAction.LEVEL_POST_SAVE);
 	}
 }

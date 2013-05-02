@@ -21,6 +21,7 @@ import ld26_kiasaki_dagothig.entity.ProcessorImpl;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.Renderable;
+import ld26_kiasaki_dagothig.helpers.WorldActionState;
 
 public class BuildMenu implements Renderable {
 
@@ -37,6 +38,10 @@ public class BuildMenu implements Renderable {
 	}
 	public void setActivated(boolean pActivated){
 		this.activated = pActivated;
+		if (pActivated)
+			world.currentStates.add(WorldActionState.IN_BUILDMENU);
+		else
+			world.currentStates.remove(WorldActionState.IN_BUILDMENU);
 	}
 	public void addAvailbleMachine(Processor pMachine){
 		pMachine.setX(0);

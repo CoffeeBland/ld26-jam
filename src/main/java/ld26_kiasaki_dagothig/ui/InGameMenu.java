@@ -17,6 +17,7 @@ import ld26_kiasaki_dagothig.Main;
 import ld26_kiasaki_dagothig.World;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.helpers.Renderable;
+import ld26_kiasaki_dagothig.helpers.WorldActionState;
 import ld26_kiasaki_dagothig.states.GameState;
 import ld26_kiasaki_dagothig.states.MenuState;
 
@@ -152,6 +153,10 @@ public class InGameMenu implements Renderable {
 	}
 	public void setActivated(boolean pActivated){
 		this.activated = pActivated;
+		if (pActivated)
+			world.currentStates.add(WorldActionState.IN_MAINMENU);
+		else
+			world.currentStates.remove(WorldActionState.IN_MAINMENU);
 	}
 
 }

@@ -16,6 +16,8 @@ import ld26_kiasaki_dagothig.entity.BlockShape;
 import ld26_kiasaki_dagothig.entity.Order;
 import ld26_kiasaki_dagothig.entity.Processor;
 import ld26_kiasaki_dagothig.entity.ProcessorImpl;
+import ld26_kiasaki_dagothig.events.WorldStatePubAction;
+import ld26_kiasaki_dagothig.events.WorldStatePubSub;
 import ld26_kiasaki_dagothig.helpers.BlockImage;
 import ld26_kiasaki_dagothig.helpers.FontFactory;
 import ld26_kiasaki_dagothig.states.GameWinState;
@@ -83,10 +85,12 @@ public class GameDirector {
 	public void start(){
 		paused = false;
 		checkIcons();
+		WorldStatePubSub.publish(world, WorldStatePubAction.PLAY);
 	}
 	public void pause(){
 		paused = true;
 		checkIcons();
+		WorldStatePubSub.publish(world, WorldStatePubAction.PAUSE);
 	}
 	
 	public void update(int delta) throws SlickException

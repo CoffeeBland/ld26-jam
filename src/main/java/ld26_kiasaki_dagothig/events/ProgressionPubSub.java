@@ -25,10 +25,14 @@ public class ProgressionPubSub {
 	{
 		for (ProgressionListener tPL : subscribers)
 		{
-			if (pAction == ProgressionPubAction.LEVEL_SAVE)
-				tPL.playerLevelSave(pWorld, pGameLevel);
-			else if (pAction == ProgressionPubAction.LEVEL_LOAD)
-				tPL.playerLevelLoad(pWorld, pGameLevel);
+			if (pAction == ProgressionPubAction.LEVEL_PRE_LOAD)
+				tPL.playerLevelPreLoad(pWorld, pGameLevel);
+			else if (pAction == ProgressionPubAction.LEVEL_POST_LOAD)
+				tPL.playerLevelPostLoad(pWorld, pGameLevel);
+			else if (pAction == ProgressionPubAction.LEVEL_PRE_SAVE)
+				tPL.playerLevelPreSave(pWorld, pGameLevel);
+			else if (pAction == ProgressionPubAction.LEVEL_POST_SAVE)
+				tPL.playerLevelPostSave(pWorld, pGameLevel);
 			else if (pAction == ProgressionPubAction.LEVEL_UP)
 				tPL.playerLevelUp(pWorld, pGameLevel);
 			else if (pAction == ProgressionPubAction.LEVEL_RESTART)

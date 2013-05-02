@@ -6,13 +6,23 @@ import ld26_kiasaki_dagothig.World;
 public class ProgressionListenerImpl implements ProgressionListener {
 
 	@Override
-	public void playerLevelSave(World world, GameLevel level) {
-
+	public void playerLevelPreSave(World world, GameLevel level) {
+		
 	}
-
+	
 	@Override
-	public void playerLevelLoad(World world, GameLevel newLevel) {
-
+	public void playerLevelPreLoad(World world, GameLevel newLevel) {
+		
+	}
+	
+	@Override
+	public void playerLevelPostSave(World world, GameLevel level) {
+		
+	}
+	
+	@Override
+	public void playerLevelPostLoad(World world, GameLevel newLevel) {
+		
 	}
 
 	@Override
