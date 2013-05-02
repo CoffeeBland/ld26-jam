@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project ld26-Kiasaki-Dagothig with libraries in sub-folder">
-    <target name="create_run_jar">
-        <jar destfile="/Users/frederic/Downloads/FacBuild/Factorism.jar">
+    <property name="build.dir" value="/Users/frederic/Downloads/FacBuild/">
+    </property>
+	<target name="create_run_jar">
+    	<jar destfile="${build.dir}Factorism.jar">
             <manifest>
                 <attribute name="Main-Class" value="ld26_kiasaki_dagothig.Main"/>
                 <attribute name="Class-Path" value=". lib/ibxm.jar lib/jinput.jar lib/lwjgl.jar lib/slick.jar"/>
             </manifest>
-            <fileset dir="/Users/frederic/Code/GitRepos/ld26-jam-april2013/target/classes"/>
+            <fileset dir="target/classes"/>
         </jar>
-        <delete dir="/Users/frederic/Downloads/FacBuild/lib"/>
-        <mkdir dir="/Users/frederic/Downloads/FacBuild/lib"/>
-        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/ibxm.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
-        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/jinput.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
-        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/lwjgl.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
-        <copy file="/Users/frederic/Code/GitRepos/ld26-jam-april2013/lib/slick.jar" todir="/Users/frederic/Downloads/FacBuild/lib"/>
+		
+        <delete dir="${build.dir}lib"/>
+        <mkdir dir="${build.dir}lib"/>
+        <copy file="lib/ibxm.jar" todir="${build.dir}lib"/>
+        <copy file="lib/jinput.jar" todir="${build.dir}lib"/>
+        <copy file="lib/lwjgl.jar" todir="${build.dir}lib"/>
+        <copy file="lib/slick.jar" todir="${build.dir}lib"/>
+    	
+	    <copy todir="${build.dir}">
+	      <fileset dir="lib/natives"/>
+	    </copy>
+    	
+        <delete dir="${build.dir}saves"/>
+        <mkdir dir="${build.dir}saves"/>
 
-        <delete dir="/Users/frederic/Downloads/FacBuild/saves"/>
-        <mkdir dir="/Users/frederic/Downloads/FacBuild/saves"/>
-
-        <delete dir="/Users/frederic/Downloads/FacBuild/res"/>
-        <mkdir dir="/Users/frederic/Downloads/FacBuild/res"/>
+        <delete dir="${build.dir}res"/>
+        <mkdir dir="${build.dir}res"/>
+	    <copy todir="${build.dir}res">
+	      <fileset dir="res" excludes="media/"/>
+	    </copy>
     </target>
 </project>
