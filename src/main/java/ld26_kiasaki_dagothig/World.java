@@ -572,6 +572,7 @@ public class World
 	{
 		SavingHelper save = SavingHelper.readWorldFromFile(pLevel);
 		
+		currentSelection = new Rectangle(-1, -1, 0, 0);
 		factory = save.factory;
 		gd.resetTruckPosition();
 		gd.generateLevels();
