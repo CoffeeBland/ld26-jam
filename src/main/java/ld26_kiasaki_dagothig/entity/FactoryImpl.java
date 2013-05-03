@@ -252,7 +252,9 @@ public class FactoryImpl implements Factory
 				mach = getMachine(pTileX + 1, pTileY);
 				break;
 		}
-		if (mach != null && (mach instanceof Processor || mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - pipe.getAngle()) == 180))
+		if (mach != null && (mach instanceof Processor || 
+							 mach instanceof Pipe && Math.abs(((Pipe)mach).getAngleOut() - pipe.getAngle()) == 180 || 
+							 mach instanceof Router && ((Router)mach).getAngleOut() == (pipe.getAngle() + 180) % 360))
 			pipe.addIn(mach, true);
 		
 		switch (pExitAngle)
@@ -273,7 +275,9 @@ public class FactoryImpl implements Factory
 				mach = getMachine(pTileX - 1, pTileY);
 				break;
 		}
-		if (mach != null && (mach instanceof Processor || Math.abs(mach.getAngle() - pipe.getAngleOut()) == 180))
+		if (mach != null && (mach instanceof Processor || 
+							 mach instanceof Pipe &&  Math.abs(mach.getAngle() - pipe.getAngleOut()) == 180 || 
+							 mach instanceof Router && ((Router)mach).getAngleOut() != (pipe.getAngleOut() + 180) % 360))
 			pipe.addOut(mach, true);
 		
 		getMachines().add(pipe);
