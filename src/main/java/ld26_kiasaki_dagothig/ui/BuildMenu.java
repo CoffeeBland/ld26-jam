@@ -65,6 +65,7 @@ public class BuildMenu implements Renderable {
 		uFontSmall = FontFactory.get().getFont(18, java.awt.Color.WHITE);
 		uFontSmallBlack = FontFactory.get().getFont(16, java.awt.Color.BLACK);
 		setActivated(false);
+		icons = new ArrayList<IconButton>();
 		icons.add(new IconButton(gc.getWidth()/2+352, gc.getHeight()/2-324, Color.lightGray, new Color(194,74,56), new Image("res/icons/close.png"), "Close"));
 	}
 

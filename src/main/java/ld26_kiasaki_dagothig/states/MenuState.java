@@ -40,7 +40,6 @@ public class MenuState extends BasicGameState {
 		this.gc = gc;
 		this.sbg = sbg;
 		
-		saves = SavingHelper.getSaveFiles();
 		
 		gameLogo = new Image("res/game_logo.png");
 		
@@ -120,6 +119,7 @@ public class MenuState extends BasicGameState {
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		File tFile = new File("saves");
 		tFile.mkdir();
+		saves = SavingHelper.getSaveFiles();
 	}
 
 	@Override
