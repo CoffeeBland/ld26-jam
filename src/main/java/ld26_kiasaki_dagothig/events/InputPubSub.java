@@ -194,13 +194,13 @@ public class InputPubSub {
 		}
 	}
 	
-	public static void publishMousePress(World pWorld, Input pInput)
+	public static void publishMousePress(World pWorld, Input pInput, int pKey, int mx, int my)
 	{
-		if (pInput.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+		if (pKey == Input.MOUSE_LEFT_BUTTON)
 			notifyMouseLeftClick(pWorld, pInput);
-		else if (pInput.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON))
+		else if (pKey == Input.MOUSE_RIGHT_BUTTON)
 			notifyMouseRightClick(pWorld, pInput);
-		else if (pInput.isMouseButtonDown(Input.MOUSE_MIDDLE_BUTTON))
+		else if (pKey == Input.MOUSE_MIDDLE_BUTTON)
 			notifyMouseMiddleClick(pWorld, pInput);
 	}
 	private static void notifyMouseLeftClick(World pWorld, Input pInput)
@@ -209,6 +209,7 @@ public class InputPubSub {
 		{
 			for (InputListener tIL : subscribers.get(tKey))
 			{
+				System.out.println("notified!");
 				tIL.mouseLeftClick(pWorld, pInput, pInput.getMouseX(), pInput.getMouseY());
 			}
 		}

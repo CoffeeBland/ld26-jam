@@ -211,40 +211,40 @@ public class World
 		// Is Placing a machine : 15
 		InputPubSub.subscribe(new InputListenerImpl(){
 			@Override
-			public void mouseLeftClick(World pWorld, Input pInput, int mx, int my) {
+			public void mouseLeftClick(World w, Input pInput, int mx, int my) {
 				try {
-					int tileX = clampCursorToTileMapX((int)(mx-machineBeingPlaced.getW()/2), machineBeingPlaced.getTileWidth()),
-						tileY = clampCursorToTileMapY((int)(my-machineBeingPlaced.getH()/2), machineBeingPlaced.getTileHeight());
+					int tileX = clampCursorToTileMapX((int)(mx-w.machineBeingPlaced.getW()/2), w.machineBeingPlaced.getTileWidth()),
+						tileY = clampCursorToTileMapY((int)(my-w.machineBeingPlaced.getH()/2), w.machineBeingPlaced.getTileHeight());
 					// If hover factory
-					if (factory.getBounds().contains(mx, my) && 
-						factory.spaceAvailable(tileX, tileY, machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight())){
+					if (w.factory.getBounds().contains(mx, my) && 
+						w.factory.spaceAvailable(tileX, tileY, w.machineBeingPlaced.getTileWidth(), w.machineBeingPlaced.getTileHeight())){
 						// Place machine
-						currencybar.removeCurrency(machineBeingPlaced.getCost());
+						w.currencybar.removeCurrency(w.machineBeingPlaced.getCost());
 						// Processor
-						if (currentStates.contains(WorldActionState.PLACING_PROCESSOR))
+						if (w.currentStates.contains(WorldActionState.PLACING_PROCESSOR))
 						{
-							Processor machine = (Processor)machineBeingPlaced;
-							buildMenu.removeAvailableMachine(machine);
-							factory.addProcessor(tileX, tileY, 
-										 machineBeingPlaced.getTileWidth(), machineBeingPlaced.getTileHeight(), 
+							Processor machine = (Processor)w.machineBeingPlaced;
+							w.buildMenu.removeAvailableMachine(machine);
+							w.factory.addProcessor(tileX, tileY, 
+										 w.machineBeingPlaced.getTileWidth(), w.machineBeingPlaced.getTileHeight(), 
 										 machine.getShapeIns(), machine.getShapeOut(), 
-										 machineBeingPlaced.getColor());
+										 w.machineBeingPlaced.getColor());
 						}
 						// Router
-						else if (currentStates.contains(WorldActionState.PLACING_ROUTER))
+						else if (w.currentStates.contains(WorldActionState.PLACING_ROUTER))
 						{
-							factory.addRouter(tileX,  tileY, machineBeingPlaced.getAngle());
+							w.factory.addRouter(tileX,  tileY, w.machineBeingPlaced.getAngle());
 						}
 						// Pipe
-						else if (currentStates.contains(WorldActionState.PLACING_PIPE))
+						else if (w.currentStates.contains(WorldActionState.PLACING_PIPE))
 						{
-							Pipe machine = (Pipe)machineBeingPlaced;
-							factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
+							Pipe machine = (Pipe)w.machineBeingPlaced;
+							w.factory.addPipe(tileX, tileY, machine.getAngle(), machine.getAngleOut());
 						}
 						// Deactivate building mode
-						if ((currentStates.contains(WorldActionState.PLACING_ROUTER) ||
-								currentStates.contains(WorldActionState.PLACING_PROCESSOR)) ||
-							 !gc.getInput().isKeyDown(Input.KEY_X))
+						if ((w.currentStates.contains(WorldActionState.PLACING_ROUTER) ||
+								w.currentStates.contains(WorldActionState.PLACING_PROCESSOR)) ||
+							 !w.gc.getInput().isKeyDown(Input.KEY_X))
 						{
 							exitPlaceMachineMode();
 						}
@@ -511,11 +511,11 @@ public class World
 	}
 	public void mouseReleased(int button, int x, int y)
 	{
-		InputPubSub.publishMousePress(this, gc.getInput());		
+		InputPubSub.publishMousePress(this, gc.getInput(), button, x, y);		
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int d) throws SlickException {
-		if (currentStates.contains(WorldActionState.IN_MAINMENU))
+		if (!currentStates.contains(WorldActionState.IN_MAINMENU))
 		{	
 			buildMenu.update(gc, sbg, d);
 			currencybar.update(gc, sbg, d);
