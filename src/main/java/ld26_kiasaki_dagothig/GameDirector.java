@@ -356,7 +356,7 @@ public class GameDirector {
 		tPossibleOrders = new ArrayList<Order>();
 		tProcessorShop = new ArrayList<Processor>();
 		
-		tTruckContent = new Order(BlockShape.Square, BlockColor.Brown, 40, 45);
+		tTruckContent = new Order(BlockShape.Square, BlockColor.Brown, 24, 45);
 		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Yellow, 12, 45));
 		tNeeded.add(new Order(BlockShape.Triangle, BlockColor.Blue, 12, 40));
 		
